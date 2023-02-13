@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "389718582340",
+    "firebase_url": "https://moblivre-4e5b2-default-rtdb.firebaseio.com",
+    "project_id": "moblivre-4e5b2",
+    "storage_bucket": "moblivre-4e5b2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:389718582340:android:d3578afd08fd0083400811",
+        "android_client_info": {
+          "package_name": "com.biomob.moblivre"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "389718582340-15acaq4fc639ltb6vdehbigt5g1j21es.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWFRhtxnRmjdG6aqU7IB23TIwPpTzB5nc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "389718582340-15acaq4fc639ltb6vdehbigt5g1j21es.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "389718582340-6tg7ng8tri9agfj609fi2p4sbk4vl5u5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.biomob.moblivre"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
