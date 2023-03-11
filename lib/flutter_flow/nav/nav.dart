@@ -68,13 +68,13 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       debugLogDiagnostics: true,
       refreshListenable: appStateNotifier,
       errorBuilder: (context, _) =>
-          appStateNotifier.loggedIn ? MapaWidget() : PermissaoWidget(),
+          appStateNotifier.loggedIn ? MapaLogadoWidget() : PermissaoWidget(),
       routes: [
         FFRoute(
           name: '_initialize',
           path: '/',
           builder: (context, _) =>
-              appStateNotifier.loggedIn ? MapaWidget() : PermissaoWidget(),
+              appStateNotifier.loggedIn ? MapaLogadoWidget() : PermissaoWidget(),
           routes: [
             FFRoute(
               name: 'Permissao',
@@ -84,9 +84,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
             FFRoute(
               name: 'Mapa',
               path: 'mapa',
-              builder: (context, params) => MapaWidget(
-                dadosUser: params.getParam('dadosUser', ParamType.JSON),
-              ),
+              builder: (context, params) => MapaWidget(),
             ),
             FFRoute(
               name: 'MapaReservado',
@@ -101,7 +99,10 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
             FFRoute(
               name: 'MapaAlugado',
               path: 'mapaAlugado',
-              builder: (context, params) => MapaAlugadoWidget(),
+              builder: (context, params) => MapaAlugadoWidget(
+                detalhesEquip: params.getParam('detalhesEquip', ParamType.JSON),
+                detailUser: params.getParam('detailUser', ParamType.JSON),
+              ),
             ),
             FFRoute(
               name: 'CadastroPrimeiro',
@@ -114,14 +115,43 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               builder: (context, params) => CadastroDadosWidget(),
             ),
             FFRoute(
-              name: 'LoginSenha',
-              path: 'loginSenha',
-              builder: (context, params) => LoginSenhaWidget(),
+              name: 'EditarPerfil',
+              path: 'editarPerfil',
+              builder: (context, params) => EditarPerfilWidget(
+                dadosUser: params.getParam('dadosUser', ParamType.JSON),
+              ),
             ),
             FFRoute(
               name: 'RedefinirSenha',
               path: 'redefinirSenha',
               builder: (context, params) => RedefinirSenhaWidget(),
+            ),
+            
+            FFRoute(
+              name: 'Viagens',
+              path: 'viagens',
+              builder: (context, params) => ViagensWidget(
+                detalhesEquip: params.getParam('detalhesEquip', ParamType.JSON),
+                detailUser: params.getParam('detailUser', ParamType.JSON),
+              ),
+            ),
+            FFRoute(
+              name: 'LoginSenha',
+              path: 'loginSenha',
+              builder: (context, params) => LoginSenhaWidget(),
+            ),
+            FFRoute(
+              name: 'MapaLogado',
+              path: 'mapaLogado',
+              builder: (context, params) => MapaLogadoWidget(),
+            ),
+            FFRoute(
+              name: 'DetalheEquipamentoRetirar',
+              path: 'detalheEquipamentoRetirar',
+              builder: (context, params) => DetalheEquipamentoRetirarWidget(
+                detalhesEquip: params.getParam('detalhesEquip', ParamType.JSON),
+                detailUser: params.getParam('detailUser', ParamType.JSON),
+              ),
             ),
             FFRoute(
               name: 'RecuperarSenha',
@@ -148,27 +178,24 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               path: 'parceiro',
               builder: (context, params) => ParceiroWidget(
                 detalhesParceiro:
-                    params.getParam('parceiro', ParamType.JSON),
+                    params.getParam('detalhesParceiro', ParamType.JSON),
               ),
             ),
-             FFRoute(
-              name: 'DetalheEquipamento',
-              path: 'detalheEquipamento',
-              builder: (context, params) => DetalheEquipamentoWidget(
-                detalhesEquip: params.getParam('detalhesEquip', ParamType.JSON),
-              ),
-             ),
- 
             FFRoute(
               name: 'Pagamento',
               path: 'pagamento',
               builder: (context, params) => PagamentoWidget(),
             ),
             FFRoute(
-              name: 'EditarPerfil',
-              path: 'editarPerfil',
-              builder: (context, params) => EditarPerfilWidget(
-                dadosUser: params.getParam('dadosUser', ParamType.JSON),
+              name: 'Emergencia',
+              path: 'emergencia',
+              builder: (context, params) => EmergenciaWidget(),
+            ),
+            FFRoute(
+              name: 'DetalheEquipamento',
+              path: 'detalheEquipamento',
+              builder: (context, params) => DetalheEquipamentoWidget(
+                detalhesEquip: params.getParam('detalhesEquip', ParamType.JSON),
               ),
             )
           ].map((r) => r.toRoute(appStateNotifier)).toList(),
@@ -347,8 +374,8 @@ class FFRoute {
           final child = appStateNotifier.loading
               ? Center(
                   child: SizedBox(
-                    width: 50,
-                    height: 50,
+                    width: 50.0,
+                    height: 50.0,
                     child: CircularProgressIndicator(
                       color: FlutterFlowTheme.of(context).primaryColor,
                     ),

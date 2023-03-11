@@ -1,10 +1,15 @@
-import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
-import '../flutter_flow/flutter_flow_widgets.dart';
-import '../flutter_flow/permissions_util.dart';
+import '../flutter_flow/flutter_flow_model.dart';
+import '/backend/api_requests/api_calls.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/flutter_flow_widgets.dart';
+import '/flutter_flow/permissions_util.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+
+import 'permissao_model.dart';
+export 'permissao_model.dart';
 
 class PermissaoWidget extends StatefulWidget {
   const PermissaoWidget({Key? key}) : super(key: key);
@@ -14,11 +19,21 @@ class PermissaoWidget extends StatefulWidget {
 }
 
 class _PermissaoWidgetState extends State<PermissaoWidget> {
-  final _unfocusNode = FocusNode();
+  late PermissaoModel _model;
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  final _unfocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _model = createModel(context, () => PermissaoModel());
+  }
 
   @override
   void dispose() {
+    _model.dispose();
+
     _unfocusNode.dispose();
     super.dispose();
   }
@@ -163,7 +178,7 @@ class _PermissaoWidgetState extends State<PermissaoWidget> {
                             alignment: AlignmentDirectional(0, 0.85),
                             child: Padding(
                               padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 0, 0, 50),
+                                  EdgeInsetsDirectional.fromSTEB(0, 0, 0, 30),
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -172,13 +187,59 @@ class _PermissaoWidgetState extends State<PermissaoWidget> {
                                     onPressed: () async {
                                       await requestPermission(
                                           locationPermission);
+                                      _model.apiResultipv =
+                                          await UsuarioGroup.buscaCpfCall.call(
+                                        documentoo: FFAppState().documento,
+                                      );
+                                      if ((_model.apiResultipv?.succeeded ??
+                                          true)) {
+                                        _model.apiResult7vn = await UsuarioGroup
+                                            .usuarioSolicitacaoCall
+                                            .call(
+                                          documento: FFAppState().documento,
+                                        );
+                                        if ((_model.apiResult7vn?.succeeded ??
+                                            true)) {
+                                          context.pushNamed(
+                                            'MapaAlugado',
+                                            queryParams: {
+                                              'detalhesEquip': serializeParam(
+                                                getJsonField(
+                                                  FFAppState().dadosEquipamento,
+                                                  r'''$''',
+                                                ),
+                                                ParamType.JSON,
+                                              ),
+                                            }.withoutNulls,
+                                          );
+                                        } else {
+                                          context.pushNamed(
+                                            'MapaLogado',
+                                            queryParams: {
+                                              'dadosUser': serializeParam(
+                                                (_model.apiResultipv
+                                                        ?.jsonBody ??
+                                                    ''),
+                                                ParamType.JSON,
+                                              ),
+                                            }.withoutNulls,
+                                          );
+                                        }
+                                      } else {
+                                        context.pushNamed('MapaDeslogado');
+                                      }
 
-                                      context.pushNamed('Mapa');
+                                      setState(() {});
                                     },
                                     text: 'Continuar',
                                     options: FFButtonOptions(
                                       width: 190,
                                       height: 45,
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0, 0, 0, 0),
+                                      iconPadding:
+                                          EdgeInsetsDirectional.fromSTEB(
+                                              0, 0, 0, 0),
                                       color: Color(0xFF1D4F9A),
                                       textStyle: FlutterFlowTheme.of(context)
                                           .subtitle2

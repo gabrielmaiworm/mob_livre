@@ -17,5 +17,10 @@ export 'redefinir_senha_finalizado/redefinir_senha_finalizado_widget.dart'
 export 'parceiro/parceiro_widget.dart' show ParceiroWidget;
 export 'detalhe_equipamento/detalhe_equipamento_widget.dart'
     show DetalheEquipamentoWidget;
+    export 'detalhe_equipamento_retirar/detalhe_equipamento_retirar_widget.dart'
+    show DetalheEquipamentoRetirarWidget;
 export 'pagamento/pagamento_widget.dart' show PagamentoWidget;
 export 'editar_perfil/editar_perfil_widget.dart' show EditarPerfilWidget;
+export 'viagens/viagens_widget.dart' show ViagensWidget;
+export 'mapa_logado/mapa_logado_widget.dart' show MapaLogadoWidget;
+export 'emergencia/emergencia_widget.dart' show EmergenciaWidget;

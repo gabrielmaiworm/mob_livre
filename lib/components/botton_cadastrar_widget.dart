@@ -1,9 +1,13 @@
-import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
-import '../flutter_flow/flutter_flow_widgets.dart';
+import '../flutter_flow/flutter_flow_model.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+
+import 'botton_cadastrar_model.dart';
+export 'botton_cadastrar_model.dart';
 
 class BottonCadastrarWidget extends StatefulWidget {
   const BottonCadastrarWidget({Key? key}) : super(key: key);
@@ -13,6 +17,27 @@ class BottonCadastrarWidget extends StatefulWidget {
 }
 
 class _BottonCadastrarWidgetState extends State<BottonCadastrarWidget> {
+  late BottonCadastrarModel _model;
+
+  @override
+  void setState(VoidCallback callback) {
+    super.setState(callback);
+    _model.onUpdate();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _model = createModel(context, () => BottonCadastrarModel());
+  }
+
+  @override
+  void dispose() {
+
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
@@ -55,7 +80,7 @@ class _BottonCadastrarWidgetState extends State<BottonCadastrarWidget> {
                 ),
               ),
               Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0, 5, 0, 0),
+                padding: EdgeInsetsDirectional.fromSTEB(0, 15, 0, 0),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -68,6 +93,8 @@ class _BottonCadastrarWidgetState extends State<BottonCadastrarWidget> {
                       options: FFButtonOptions(
                         width: 210,
                         height: 40,
+                        padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                        iconPadding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                         color: Color(0xFF1D4F9A),
                         textStyle:
                             FlutterFlowTheme.of(context).subtitle2.override(

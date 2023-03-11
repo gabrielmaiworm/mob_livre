@@ -1,9 +1,13 @@
+import '../flutter_flow/flutter_flow_model.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+
+import 'definir_horario_model.dart';
+export 'definir_horario_model.dart';
 
 class DefinirHorarioWidget extends StatefulWidget {
   const DefinirHorarioWidget({Key? key}) : super(key: key);
@@ -13,7 +17,26 @@ class DefinirHorarioWidget extends StatefulWidget {
 }
 
 class _DefinirHorarioWidgetState extends State<DefinirHorarioWidget> {
-  DateTime? datePicked;
+  late DefinirHorarioModel _model;
+
+  @override
+  void setState(VoidCallback callback) {
+    super.setState(callback);
+    _model.onUpdate();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _model = createModel(context, () => DefinirHorarioModel());
+  }
+
+  @override
+  void dispose() {
+    _model.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +54,7 @@ class _DefinirHorarioWidgetState extends State<DefinirHorarioWidget> {
                 padding: EdgeInsetsDirectional.fromSTEB(20, 0, 20, 50),
                 child: Container(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.60,
+                  height: MediaQuery.of(context).size.height * 0.55,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
@@ -76,7 +99,7 @@ class _DefinirHorarioWidgetState extends State<DefinirHorarioWidget> {
                               SelectionArea(
                                   child: Text(
                                 valueOrDefault<String>(
-                                  dateTimeFormat('Hm', datePicked),
+                                  dateTimeFormat('d/M H:mm', _model.datePicked),
                                   '00 : 00',
                                 ),
                                 textAlign: TextAlign.center,
@@ -85,7 +108,7 @@ class _DefinirHorarioWidgetState extends State<DefinirHorarioWidget> {
                                     .override(
                                       fontFamily: 'Poppins',
                                       color: Color(0xFF1D4F9A),
-                                      fontSize: 60,
+                                      fontSize: 42,
                                     ),
                               )),
                             ],
@@ -95,13 +118,16 @@ class _DefinirHorarioWidgetState extends State<DefinirHorarioWidget> {
                           padding: EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
                           child: InkWell(
                             onTap: () async {
-                              await DatePicker.showTimePicker(
+                              await DatePicker.showDateTimePicker(
                                 context,
                                 showTitleActions: true,
                                 onConfirm: (date) {
-                                  setState(() => datePicked = date);
+                                  setState(() {
+                                    _model.datePicked = date;
+                                  });
                                 },
                                 currentTime: getCurrentTimestamp,
+                                minTime: getCurrentTimestamp,
                               );
                             },
                             child: Icon(
@@ -123,7 +149,8 @@ class _DefinirHorarioWidgetState extends State<DefinirHorarioWidget> {
                                 child: InkWell(
                                   onTap: () async {
                                     FFAppState().update(() {
-                                      FFAppState().horaReserva = datePicked;
+                                      FFAppState().horaReserva =
+                                          _model.datePicked;
                                     });
                                     Navigator.pop(context);
                                   },

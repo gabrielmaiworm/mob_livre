@@ -146,7 +146,7 @@ class _DetalheEquipamentoWidgetState extends State<DetalheEquipamentoWidget> {
                     )),
                     SelectionArea(
                         child: Text(
-                      dateTimeFormat('Hm', FFAppState().horaReserva),
+                      dateTimeFormat('d/M H:mm', FFAppState().horaReserva),
                       style: FlutterFlowTheme.of(context).bodyText1,
                     )),
                   ],

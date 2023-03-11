@@ -23,6 +23,11 @@ class UsuarioGroup {
   static DetalhesDoUsuarioCall detalhesDoUsuarioCall = DetalhesDoUsuarioCall();
   static CadastrarUsuarioCall cadastrarUsuarioCall = CadastrarUsuarioCall();
   static EditarUsuarioCall editarUsuarioCall = EditarUsuarioCall();
+  static HistoricoSolicitacoesCall historicoSolicitacoesCall =
+      HistoricoSolicitacoesCall();
+  static BuscaCpfCall buscaCpfCall = BuscaCpfCall();
+  static UsuarioSolicitacaoCall usuarioSolicitacaoCall =
+      UsuarioSolicitacaoCall();
 }
 
 class RedefinirSenhaCall {
@@ -110,20 +115,16 @@ class BuscaUsuarioPorCpfCall {
   Future<ApiCallResponse> call({
     String? documento = '',
   }) {
-    final body = '''
-{
-  "documento": "${documento}"
-}''';
     return ApiManager.instance.makeApiCall(
       callName: 'Busca usuario por cpf',
       apiUrl: '${UsuarioGroup.baseUrl}usuario',
-      callType: ApiCallType.POST,
+      callType: ApiCallType.GET,
       headers: {
         ...UsuarioGroup.headers,
       },
-      params: {},
-      body: body,
-      bodyType: BodyType.JSON,
+      params: {
+        'documento': documento,
+      },
       returnBody: true,
       encodeBodyUtf8: false,
       decodeUtf8: false,
@@ -294,6 +295,76 @@ class EditarUsuarioCall {
   }
 }
 
+class HistoricoSolicitacoesCall {
+  Future<ApiCallResponse> call() {
+    return ApiManager.instance.makeApiCall(
+      callName: 'Historico Solicitacoes',
+      apiUrl: '${UsuarioGroup.baseUrl}solicitacao-completo',
+      callType: ApiCallType.GET,
+      headers: {
+        ...UsuarioGroup.headers,
+      },
+      params: {},
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
+class BuscaCpfCall {
+  Future<ApiCallResponse> call({
+    String? documentoo = '',
+  }) {
+    final body = '''
+{
+  "documento": "${documentoo}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'Busca cpf',
+      apiUrl: '${UsuarioGroup.baseUrl}usuario-cpf',
+      callType: ApiCallType.POST,
+      headers: {
+        ...UsuarioGroup.headers,
+      },
+      params: {},
+      body: body,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
+class UsuarioSolicitacaoCall {
+  Future<ApiCallResponse> call({
+    String? documento = '',
+  }) {
+    final body = '''
+{
+  "documento": "${documento}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'Usuario Solicitacao',
+      apiUrl: '${UsuarioGroup.baseUrl}solicitacao-documento',
+      callType: ApiCallType.POST,
+      headers: {
+        ...UsuarioGroup.headers,
+      },
+      params: {},
+      body: body,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
 /// End Usuario Group Code
 
 /// Start Parceiro Group Code
@@ -345,6 +416,136 @@ class GETDetalhesParceiroCall {
 }
 
 /// End Parceiro Group Code
+
+/// Start Equipamento Group Code
+
+class EquipamentoGroup {
+  static String baseUrl = 'http://177.70.102.109:3005/';
+  static Map<String, String> headers = {};
+  static GETDetalhesEquipamentoCall gETDetalhesEquipamentoCall =
+      GETDetalhesEquipamentoCall();
+  static POSTSolicitacaoCall pOSTSolicitacaoCall = POSTSolicitacaoCall();
+  static PUTDevolucaoCall pUTDevolucaoCall = PUTDevolucaoCall();
+  static PUTEmergenciaCall pUTEmergenciaCall = PUTEmergenciaCall();
+}
+
+class GETDetalhesEquipamentoCall {
+  Future<ApiCallResponse> call({
+    String? numeroSerieEquipamento = '',
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'GET Detalhes Equipamento',
+      apiUrl: '${EquipamentoGroup.baseUrl}estoque',
+      callType: ApiCallType.GET,
+      headers: {
+        ...EquipamentoGroup.headers,
+      },
+      params: {
+        'numero_serie_equipamento': numeroSerieEquipamento,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
+class POSTSolicitacaoCall {
+  Future<ApiCallResponse> call({
+    String? numeroSerieEquipamento = '',
+    String? documento = '',
+  }) {
+    final body = '''
+{
+  "numero_serie_equipamento": "${numeroSerieEquipamento}",
+  "documento": "${documento}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'POST Solicitacao',
+      apiUrl: '${EquipamentoGroup.baseUrl}solicitacao',
+      callType: ApiCallType.POST,
+      headers: {
+        ...EquipamentoGroup.headers,
+      },
+      params: {},
+      body: body,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
+class PUTDevolucaoCall {
+  Future<ApiCallResponse> call({
+    String? dataDevolucao = '',
+    String? status = '',
+    String? sugestao = '',
+    String? avaliacao = '',
+    String? devolvido = '',
+    String? foto = '',
+    String? documento = '',
+  }) {
+    final body = '''
+{
+  "data_devolucao": "${dataDevolucao}",
+  "status": "${status}",
+  "sugestao": "${sugestao}",
+  "avaliacao": "${avaliacao}",
+  "devolvido": "${devolvido}",
+  "foto": "${foto}",
+  "documento": "${documento}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'PUT Devolucao',
+      apiUrl: '${EquipamentoGroup.baseUrl}solicitacao',
+      callType: ApiCallType.PUT,
+      headers: {
+        ...EquipamentoGroup.headers,
+      },
+      params: {},
+      body: body,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
+class PUTEmergenciaCall {
+  Future<ApiCallResponse> call({
+    int? kit,
+    String? motivoEmergencia = '',
+  }) {
+    final body = '''
+{
+  "kit": ${kit},
+  "motivo_emergencia": ${motivoEmergencia}
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'PUT Emergencia',
+      apiUrl: '${EquipamentoGroup.baseUrl}estoque-emergencia',
+      callType: ApiCallType.PUT,
+      headers: {
+        ...EquipamentoGroup.headers,
+      },
+      params: {},
+      body: body,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
+/// End Equipamento Group Code
 
 class ApiPagingParams {
   int nextPageNumber = 0;

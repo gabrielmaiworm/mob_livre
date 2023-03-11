@@ -1,10 +1,15 @@
 import '../backend/api_requests/api_calls.dart';
+import '../flutter_flow/flutter_flow_model.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import '../flutter_flow/custom_functions.dart' as functions;
+
+import 'login_senha_model.dart';
+export 'login_senha_model.dart';
 
 class LoginSenhaWidget extends StatefulWidget {
   const LoginSenhaWidget({Key? key}) : super(key: key);
@@ -14,25 +19,24 @@ class LoginSenhaWidget extends StatefulWidget {
 }
 
 class _LoginSenhaWidgetState extends State<LoginSenhaWidget> {
-  ApiCallResponse? apiResultst7;
-  ApiCallResponse? apiResultw03;
-  TextEditingController? senhaController;
-  late bool senhaVisibility;
-  final _unfocusNode = FocusNode();
+  late LoginSenhaModel _model;
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final formKey = GlobalKey<FormState>();
+  final _unfocusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    senhaController = TextEditingController();
-    senhaVisibility = false;
+    _model = createModel(context, () => LoginSenhaModel());
+
+    _model.senhaController = TextEditingController();
   }
 
   @override
   void dispose() {
+    _model.dispose();
+
     _unfocusNode.dispose();
-    senhaController?.dispose();
     super.dispose();
   }
 
@@ -102,13 +106,13 @@ class _LoginSenhaWidgetState extends State<LoginSenhaWidget> {
                   children: [
                     Expanded(
                       child: Form(
-                        key: formKey,
+                        key: _model.formKey,
                         autovalidateMode: AutovalidateMode.disabled,
                         child: Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
                           child: TextFormField(
-                            controller: senhaController,
-                            obscureText: !senhaVisibility,
+                            controller: _model.senhaController,
+                            obscureText: !_model.senhaVisibility,
                             decoration: InputDecoration(
                               labelText: 'Senha',
                               hintStyle: FlutterFlowTheme.of(context)
@@ -149,11 +153,12 @@ class _LoginSenhaWidgetState extends State<LoginSenhaWidget> {
                                   EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
                               suffixIcon: InkWell(
                                 onTap: () => setState(
-                                  () => senhaVisibility = !senhaVisibility,
+                                  () => _model.senhaVisibility =
+                                      !_model.senhaVisibility,
                                 ),
                                 focusNode: FocusNode(skipTraversal: true),
                                 child: Icon(
-                                  senhaVisibility
+                                  _model.senhaVisibility
                                       ? Icons.visibility_outlined
                                       : Icons.visibility_off_outlined,
                                   color: Color(0xFF757575),
@@ -220,64 +225,148 @@ class _LoginSenhaWidgetState extends State<LoginSenhaWidget> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0, 60, 0, 0),
-                  child: FFButtonWidget(
-                    onPressed: () async {
-                      apiResultw03 = await UsuarioGroup.loginCall.call(
-                        email: FFAppState().emailCadastro,
-                        senha: senhaController!.text,
-                      );
-                      FFAppState().update(() {
-                        FFAppState().emailLogado = FFAppState().emailCadastro;
-                        FFAppState().emailPersist = FFAppState().emailCadastro;
-                      });
-                      if ((apiResultw03?.succeeded ?? true)) {
-                        context.pushNamed(
-                          'Mapa',
-                          queryParams: {
-                            'dadosUser': serializeParam(
-                              (apiResultw03?.jsonBody ?? ''),
-                              ParamType.JSON,
-                            ),
-                          }.withoutNulls,
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              getJsonField(
-                                (apiResultw03?.jsonBody ?? ''),
-                                r'''$..error''',
-                              ).toString(),
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                            duration: Duration(milliseconds: 4000),
-                            backgroundColor: Color(0xFFC15C5C),
-                          ),
-                        );
-                      }
-                      setState(() {});
-                    },
-                    text: 'Continuar',
-                    options: FFButtonOptions(
-                      width: 210,
-                      height: 40,
-                      color: Color(0xFF1D4F9A),
-                      textStyle: FlutterFlowTheme.of(context).subtitle2.override(
-                            fontFamily: 'Poppins',
-                            color: Colors.white,
-                          ),
-                      borderSide: BorderSide(
-                        color: Colors.white,
-                        width: 1,
-                      ),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),  
+                // Generated code for this Button Widget...
+Padding(
+  padding: EdgeInsetsDirectional.fromSTEB(0, 60, 0, 0),
+  child: FFButtonWidget(
+    onPressed: () async {
+      _model.apiResultw03 = await UsuarioGroup.loginCall.call(
+        email: FFAppState().emailCadastro,
+        senha: _model.senhaController!.text,
+      );
+      if ((_model.apiResultw03?.succeeded ?? true)) {
+        FFAppState().update(() {
+          FFAppState().emailLogado = FFAppState().emailCadastro;
+          FFAppState().emailPersist = FFAppState().emailCadastro;
+          FFAppState().sobrenome = getJsonField(
+            (_model.apiResultw03?.jsonBody ?? ''),
+            r'''$..sobrenome''',
+          ).toString();
+          FFAppState().nome = getJsonField(
+            (_model.apiResultw03?.jsonBody ?? ''),
+            r'''$['nome']''',
+          ).toString();
+          FFAppState().documento = getJsonField(
+            (_model.apiResultw03?.jsonBody ?? ''),
+            r'''$['documento']''',
+          ).toString();
+          FFAppState().nascimento = functions.formatDateTime(getJsonField(
+            (_model.apiResultw03?.jsonBody ?? ''),
+            r'''$..data_de_nascicmento''',
+          ).toString());
+          FFAppState().celular = getJsonField(
+            (_model.apiResultw03?.jsonBody ?? ''),
+            r'''$..telefone''',
+          ).toString();
+          FFAppState().tipoLesao = getJsonField(
+            (_model.apiResultw03?.jsonBody ?? ''),
+            r'''$..nivel_lesao''',
+          ).toString();
+          FFAppState().situacaoLesao = getJsonField(
+            (_model.apiResultw03?.jsonBody ?? ''),
+            r'''$..situacao_lesao''',
+          ).toString();
+          FFAppState().detalhesLesao = getJsonField(
+            (_model.apiResultw03?.jsonBody ?? ''),
+            r'''$..detalhe_lesao''',
+          ).toString();
+          FFAppState().estado = getJsonField(
+            (_model.apiResultw03?.jsonBody ?? ''),
+            r'''$..estado''',
+          ).toString();
+          FFAppState().cidade = getJsonField(
+            (_model.apiResultw03?.jsonBody ?? ''),
+            r'''$..cidade''',
+          ).toString();
+          FFAppState().bairro = getJsonField(
+            (_model.apiResultw03?.jsonBody ?? ''),
+            r'''$..bairro''',
+          ).toString();
+          FFAppState().cep = getJsonField(
+            (_model.apiResultw03?.jsonBody ?? ''),
+            r'''$..cep''',
+          ).toString();
+          FFAppState().logradouro = getJsonField(
+            (_model.apiResultw03?.jsonBody ?? ''),
+            r'''$..logradouro''',
+          ).toString();
+          FFAppState().numero = getJsonField(
+            (_model.apiResultw03?.jsonBody ?? ''),
+            r'''$..numero''',
+          ).toString();
+          FFAppState().complemento = getJsonField(
+            (_model.apiResultw03?.jsonBody ?? ''),
+            r'''$..complemento''',
+          ).toString();
+          FFAppState().logado = true;
+          FFAppState().senhaCadastro = _model.senhaController!.text;
+        });
+        _model.apiResult7vn = await UsuarioGroup.usuarioSolicitacaoCall.call(
+          documento: FFAppState().documento,
+        );
+        if ((_model.apiResult7vn?.succeeded ?? true)) {
+          context.pushNamed(
+            'MapaAlugado',
+            queryParams: {
+              'detalhesEquip': serializeParam(
+                getJsonField(
+                  FFAppState().dadosEquipamento,
+                  r'''$''',
+                ),
+                ParamType.JSON,
+              ),
+            }.withoutNulls,
+          );
+        } else {
+          context.pushNamed(
+            'MapaLogado',
+            queryParams: {
+              'dadosUser': serializeParam(
+                (_model.apiResultw03?.jsonBody ?? ''),
+                ParamType.JSON,
+              ),
+            }.withoutNulls,
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              getJsonField(
+                (_model.apiResultw03?.jsonBody ?? ''),
+                r'''$..error''',
+              ).toString(),
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            duration: Duration(milliseconds: 4000),
+            backgroundColor: Color(0xFFC15C5C),
+          ),
+        );
+      }
+      setState(() {});
+    },
+    text: 'Continuar',
+    options: FFButtonOptions(
+      width: 210,
+      height: 40,
+      padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+      iconPadding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+      color: Color(0xFF1D4F9A),
+      textStyle: FlutterFlowTheme.of(context).subtitle2.override(
+            fontFamily: 'Poppins',
+            color: Colors.white,
+          ),
+      borderSide: BorderSide(
+        color: Colors.white,
+        width: 1,
+      ),
+      borderRadius: BorderRadius.circular(8),
+    ),
+  ),
+)
+,
               ],
             ),
           ),

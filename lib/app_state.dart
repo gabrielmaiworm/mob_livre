@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'flutter_flow/lat_lng.dart';
+import 'dart:convert';
 
 class FFAppState extends ChangeNotifier {
   static final FFAppState _instance = FFAppState._internal();
@@ -18,6 +19,31 @@ class FFAppState extends ChangeNotifier {
     _emailLogado = prefs.getString('ff_emailLogado') ?? _emailLogado;
     _nome = prefs.getString('ff_nome') ?? _nome;
     _emailPersist = prefs.getString('ff_emailPersist') ?? _emailPersist;
+    _sobrenome = prefs.getString('ff_sobrenome') ?? _sobrenome;
+    _documento = prefs.getString('ff_documento') ?? _documento;
+    _nascimento = prefs.getString('ff_nascimento') ?? _nascimento;
+    _celular = prefs.getString('ff_celular') ?? _celular;
+    _tipoLesao = prefs.getString('ff_tipoLesao') ?? _tipoLesao;
+    _situacaoLesao = prefs.getString('ff_situacaoLesao') ?? _situacaoLesao;
+    _detalhesLesao = prefs.getString('ff_detalhesLesao') ?? _detalhesLesao;
+    _fotoPerfil = prefs.getString('ff_fotoPerfil') ?? _fotoPerfil;
+    _fotoDocumento = prefs.getString('ff_fotoDocumento') ?? _fotoDocumento;
+    _estado = prefs.getString('ff_estado') ?? _estado;
+    _cidade = prefs.getString('ff_cidade') ?? _cidade;
+    _bairro = prefs.getString('ff_bairro') ?? _bairro;
+    _cep = prefs.getString('ff_cep') ?? _cep;
+    _logradouro = prefs.getString('ff_logradouro') ?? _logradouro;
+    _numero = prefs.getString('ff_numero') ?? _numero;
+    _complemento = prefs.getString('ff_complemento') ?? _complemento;
+    _logado = prefs.getBool('ff_logado') ?? _logado;
+    if (prefs.containsKey('ff_dadosEquipamento')) {
+      try {
+        _dadosEquipamento =
+            jsonDecode(prefs.getString('ff_dadosEquipamento') ?? '');
+      } catch (e) {
+        print("Can't decode persisted json. Error: $e.");
+      }
+    }
   }
 
   void update(VoidCallback callback) {
@@ -71,10 +97,143 @@ class FFAppState extends ChangeNotifier {
     _emailPersist = _value;
     prefs.setString('ff_emailPersist', _value);
   }
-  DateTime? _horaReserva;
+
+  DateTime? _horaReserva = DateTime.fromMillisecondsSinceEpoch(1677590340000);
   DateTime? get horaReserva => _horaReserva;
   set horaReserva(DateTime? _value) {
     _horaReserva = _value;
+  }
+
+  String _sobrenome = '';
+  String get sobrenome => _sobrenome;
+  set sobrenome(String _value) {
+    _sobrenome = _value;
+    prefs.setString('ff_sobrenome', _value);
+  }
+
+  String _documento = '';
+  String get documento => _documento;
+  set documento(String _value) {
+    _documento = _value;
+    prefs.setString('ff_documento', _value);
+  }
+
+  String _nascimento = '';
+  String get nascimento => _nascimento;
+  set nascimento(String _value) {
+    _nascimento = _value;
+    prefs.setString('ff_nascimento', _value);
+  }
+
+  String _celular = '';
+  String get celular => _celular;
+  set celular(String _value) {
+    _celular = _value;
+    prefs.setString('ff_celular', _value);
+  }
+
+  String _tipoLesao = '';
+  String get tipoLesao => _tipoLesao;
+  set tipoLesao(String _value) {
+    _tipoLesao = _value;
+    prefs.setString('ff_tipoLesao', _value);
+  }
+
+  String _situacaoLesao = '';
+  String get situacaoLesao => _situacaoLesao;
+  set situacaoLesao(String _value) {
+    _situacaoLesao = _value;
+    prefs.setString('ff_situacaoLesao', _value);
+  }
+
+  String _detalhesLesao = '';
+  String get detalhesLesao => _detalhesLesao;
+  set detalhesLesao(String _value) {
+    _detalhesLesao = _value;
+    prefs.setString('ff_detalhesLesao', _value);
+  }
+
+  String _fotoPerfil = '';
+  String get fotoPerfil => _fotoPerfil;
+  set fotoPerfil(String _value) {
+    _fotoPerfil = _value;
+    prefs.setString('ff_fotoPerfil', _value);
+  }
+
+  String _fotoDocumento = '';
+  String get fotoDocumento => _fotoDocumento;
+  set fotoDocumento(String _value) {
+    _fotoDocumento = _value;
+    prefs.setString('ff_fotoDocumento', _value);
+  }
+
+  String _estado = '';
+  String get estado => _estado;
+  set estado(String _value) {
+    _estado = _value;
+    prefs.setString('ff_estado', _value);
+  }
+
+  String _cidade = '';
+  String get cidade => _cidade;
+  set cidade(String _value) {
+    _cidade = _value;
+    prefs.setString('ff_cidade', _value);
+  }
+
+  String _bairro = '';
+  String get bairro => _bairro;
+  set bairro(String _value) {
+    _bairro = _value;
+    prefs.setString('ff_bairro', _value);
+  }
+
+  String _cep = '';
+  String get cep => _cep;
+  set cep(String _value) {
+    _cep = _value;
+    prefs.setString('ff_cep', _value);
+  }
+
+  String _logradouro = '';
+  String get logradouro => _logradouro;
+  set logradouro(String _value) {
+    _logradouro = _value;
+    prefs.setString('ff_logradouro', _value);
+  }
+
+  String _numero = '';
+  String get numero => _numero;
+  set numero(String _value) {
+    _numero = _value;
+    prefs.setString('ff_numero', _value);
+  }
+
+  String _complemento = '';
+  String get complemento => _complemento;
+  set complemento(String _value) {
+    _complemento = _value;
+    prefs.setString('ff_complemento', _value);
+  }
+
+  bool _logado = false;
+  bool get logado => _logado;
+  set logado(bool _value) {
+    _logado = _value;
+    prefs.setBool('ff_logado', _value);
+  }
+
+  bool _maisOpcoes = false;
+  bool get maisOpcoes => _maisOpcoes;
+  set maisOpcoes(bool _value) {
+    _maisOpcoes = _value;
+  }
+
+  dynamic _dadosEquipamento;
+  dynamic get dadosEquipamento => _dadosEquipamento;
+  set dadosEquipamento(dynamic _value) {
+    _dadosEquipamento = _value;
+    prefs.setString('ff_dadosEquipamento', jsonEncode(_value));
   }
 }
 

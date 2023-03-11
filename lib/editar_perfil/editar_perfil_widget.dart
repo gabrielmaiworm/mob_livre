@@ -1,21 +1,24 @@
 import '../backend/api_requests/api_calls.dart';
 import '../backend/supabase/supabase.dart';
 import '../flutter_flow/flutter_flow_drop_down.dart';
+import '../flutter_flow/flutter_flow_model.dart';
 import '../flutter_flow/flutter_flow_radio_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
 import '../flutter_flow/upload_media.dart';
 import '../custom_code/actions/index.dart' as actions;
-import '../flutter_flow/custom_functions.dart' as functions;
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
+
+import '../flutter_flow/uploaded_file.dart';
+import 'editar_perfil_model.dart';
+export 'editar_perfil_model.dart';
 
 class EditarPerfilWidget extends StatefulWidget {
   const EditarPerfilWidget({
@@ -30,131 +33,48 @@ class EditarPerfilWidget extends StatefulWidget {
 }
 
 class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
-  bool isMediaUploading1 = false;
-  String uploadedFileUrl1 = '';
+  late EditarPerfilModel _model;
 
-  String? dropDownLesaoValue;
-  TextEditingController? celularController;
-  final celularMask = MaskTextInputFormatter(mask: '+55 (##) # ####-####');
-  TextEditingController? cpfController;
-  final cpfMask = MaskTextInputFormatter(mask: '###.###.###-##');
-  bool? validacaoCPF;
-  TextEditingController? nomeController;
-  TextEditingController? sobrenomeController;
-  TextEditingController? dataNascimentoController;
-  final dataNascimentoMask = MaskTextInputFormatter(mask: '##/##/####');
-  String? radioButtonSituacaoValue;
-  TextEditingController? detalheLesaoController;
-  bool isMediaUploading2 = false;
-  String uploadedFileUrl2 = '';
-
-  TextEditingController? estadoController;
-  TextEditingController? cidadeController;
-  TextEditingController? bairroController;
-  TextEditingController? cepController;
-  TextEditingController? logradouroController;
-  TextEditingController? numeroController;
-  TextEditingController? complementoController;
-  bool? switchValue;
-  ApiCallResponse? apiCallOutput;
-  ApiCallResponse? apiResultff1;
-  final _unfocusNode = FocusNode();
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final formKey = GlobalKey<FormState>();
+  final _unfocusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
+    _model = createModel(context, () => EditarPerfilModel());
+
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      apiResultff1 = await UsuarioGroup.buscarUsuarioPorEmailCall.call(
+      _model.apiResultff1 = await UsuarioGroup.buscarUsuarioPorEmailCall.call(
         email: FFAppState().emailPersist,
       );
     });
 
-    bairroController = TextEditingController(
-        text: getJsonField(
-      widget.dadosUser,
-      r'''$..bairro''',
-    ).toString().toString());
-    celularController = TextEditingController(
-        text: getJsonField(
-      widget.dadosUser,
-      r'''$..telefone''',
-    ).toString().toString());
-    cpfController = TextEditingController(
-        text: getJsonField(
-      widget.dadosUser,
-      r'''$..documento''',
-    ).toString().toString());
-    nomeController = TextEditingController(
-        text: getJsonField(
-      widget.dadosUser,
-      r'''$..nome''',
-    ).toString().toString());
-    sobrenomeController = TextEditingController(
-        text: getJsonField(
-      widget.dadosUser,
-      r'''$..sobrenome''',
-    ).toString().toString());
-    dataNascimentoController = TextEditingController(
-        text: functions.formatDateTime(getJsonField(
-      widget.dadosUser,
-      r'''$..data_de_nascicmento''',
-    ).toString().toString()));
-    detalheLesaoController = TextEditingController(
-        text: getJsonField(
-      widget.dadosUser,
-      r'''$..detalhe_lesao''',
-    ).toString().toString());
-    estadoController = TextEditingController(
-        text: getJsonField(
-      widget.dadosUser,
-      r'''$..estado''',
-    ).toString().toString());
-    cidadeController = TextEditingController(
-        text: getJsonField(
-      widget.dadosUser,
-      r'''$..cidade''',
-    ).toString().toString());
-    cepController = TextEditingController(
-        text: getJsonField(
-      widget.dadosUser,
-      r'''$..cep''',
-    ).toString().toString());
-    logradouroController = TextEditingController(
-        text: getJsonField(
-      widget.dadosUser,
-      r'''$..logradouro''',
-    ).toString().toString());
-    numeroController = TextEditingController(
-        text: getJsonField(
-      widget.dadosUser,
-      r'''$..numero''',
-    ).toString().toString());
-    complementoController = TextEditingController(
-        text: getJsonField(
-      widget.dadosUser,
-      r'''$..complemento''',
-    ).toString().toString());
+    _model.nomeController = TextEditingController(text: FFAppState().nome);
+    _model.sobrenomeController =
+        TextEditingController(text: FFAppState().sobrenome);
+    _model.cpfController = TextEditingController(text: FFAppState().documento);
+    _model.dataNascimentoController =
+        TextEditingController(text: FFAppState().nascimento);
+    _model.celularController =
+        TextEditingController(text: FFAppState().celular);
+    _model.detalheLesaoController = TextEditingController(text: FFAppState().detalhesLesao); 
+    _model.estadoController = TextEditingController(text: FFAppState().estado);
+    _model.cidadeController = TextEditingController(text: FFAppState().cidade);
+    _model.bairroController = TextEditingController(text: FFAppState().bairro);
+    _model.cepController = TextEditingController(text: FFAppState().cep);
+    _model.logradouroController =
+        TextEditingController(text: FFAppState().logradouro);
+    _model.numeroController = TextEditingController(text: FFAppState().numero);
+    _model.complementoController =
+        TextEditingController(text: FFAppState().complemento);
   }
 
   @override
   void dispose() {
+    _model.dispose();
+
     _unfocusNode.dispose();
-    bairroController?.dispose();
-    celularController?.dispose();
-    cpfController?.dispose();
-    nomeController?.dispose();
-    sobrenomeController?.dispose();
-    dataNascimentoController?.dispose();
-    detalheLesaoController?.dispose();
-    estadoController?.dispose();
-    cidadeController?.dispose();
-    cepController?.dispose();
-    logradouroController?.dispose();
-    numeroController?.dispose();
-    complementoController?.dispose();
     super.dispose();
   }
 
@@ -195,7 +115,7 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
         child: GestureDetector(
           onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
           child: Form(
-            key: formKey,
+            key: _model.formKey,
             autovalidateMode: AutovalidateMode.disabled,
             child: Padding(
               padding: EdgeInsetsDirectional.fromSTEB(15, 50, 15, 0),
@@ -231,7 +151,7 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                             padding:
                                 EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
                             child: TextFormField(
-                              controller: nomeController,
+                              controller: _model.nomeController,
                               obscureText: false,
                               decoration: InputDecoration(
                                 labelText: 'Nome',
@@ -279,17 +199,6 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                                     color: Color(0xFF1D4F9A),
                                     fontWeight: FontWeight.w600,
                                   ),
-                              validator: (val) {
-                                if (val == null || val.isEmpty) {
-                                  return 'Campo obrigatório';
-                                }
-
-                                return null;
-                              },
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                    RegExp('[a-zA-Z]'))
-                              ],
                             ),
                           ),
                         ),
@@ -305,7 +214,7 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                               padding:
                                   EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
                               child: TextFormField(
-                                controller: sobrenomeController,
+                                controller: _model.sobrenomeController,
                                 obscureText: false,
                                 decoration: InputDecoration(
                                   labelText: 'Sobrenome',
@@ -354,17 +263,6 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                                       color: Color(0xFF1D4F9A),
                                       fontWeight: FontWeight.w600,
                                     ),
-                                validator: (val) {
-                                  if (val == null || val.isEmpty) {
-                                    return 'Campo obrigatório';
-                                  }
-
-                                  return null;
-                                },
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                      RegExp('[a-zA-Z]'))
-                                ],
                               ),
                             ),
                           ),
@@ -384,14 +282,14 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       10, 0, 10, 0),
                                   child: TextFormField(
-                                    controller: cpfController,
+                                    controller: _model.cpfController,
                                     onChanged: (_) => EasyDebounce.debounce(
-                                      'cpfController',
+                                      '_model.cpfController',
                                       Duration(milliseconds: 2500),
                                       () async {
-                                        validacaoCPF =
+                                        _model.validacaoCPF =
                                             await actions.validadorCpf(
-                                          cpfController!.text,
+                                          _model.cpfController!.text,
                                         );
 
                                         setState(() {});
@@ -446,17 +344,10 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                                           fontWeight: FontWeight.w600,
                                         ),
                                     keyboardType: TextInputType.number,
-                                    validator: (val) {
-                                      if (val == null || val.isEmpty) {
-                                        return 'Campo obrigatório';
-                                      }
-
-                                      return null;
-                                    },
-                                    inputFormatters: [cpfMask],
+                                    inputFormatters: [_model.cpfMask],
                                   ),
                                 ),
-                                if (validacaoCPF == false)
+                                if (_model.validacaoCPF == false)
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         15, 5, 15, 0),
@@ -495,7 +386,7 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       10, 0, 10, 0),
                                   child: TextFormField(
-                                    controller: dataNascimentoController,
+                                    controller: _model.dataNascimentoController,
                                     obscureText: false,
                                     decoration: InputDecoration(
                                       labelText: 'Data de nascimento',
@@ -539,7 +430,9 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                                           fontWeight: FontWeight.w600,
                                         ),
                                     keyboardType: TextInputType.number,
-                                    inputFormatters: [dataNascimentoMask],
+                                    inputFormatters: [
+                                      _model.dataNascimentoMask
+                                    ],
                                   ),
                                 ),
                               ],
@@ -558,7 +451,7 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                               padding:
                                   EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
                               child: TextFormField(
-                                controller: celularController,
+                                controller: _model.celularController,
                                 obscureText: false,
                                 decoration: InputDecoration(
                                   labelText: 'Celular',
@@ -608,14 +501,7 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                                       fontWeight: FontWeight.w600,
                                     ),
                                 keyboardType: TextInputType.number,
-                                validator: (val) {
-                                  if (val == null || val.isEmpty) {
-                                    return 'Campo obrigatório';
-                                  }
-
-                                  return null;
-                                },
-                                inputFormatters: [celularMask],
+                                inputFormatters: [_model.celularMask],
                               ),
                             ),
                           ),
@@ -632,19 +518,16 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                               padding:
                                   EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
                               child: FlutterFlowDropDown<String>(
-                                initialOption: dropDownLesaoValue ??=
-                                    getJsonField(
-                                  widget.dadosUser,
-                                  r'''$..nivel_lesao''',
-                                ).toString(),
+                                initialOption: _model.dropDownLesaoValue ??=
+                                    FFAppState().tipoLesao,
                                 options: [
                                   'Amputado',
                                   'Mobilidade Reduzida',
                                   'Intelectual/Mental',
                                   'Sem Lesão'
                                 ],
-                                onChanged: (val) =>
-                                    setState(() => dropDownLesaoValue = val),
+                                onChanged: (val) => setState(
+                                    () => _model.dropDownLesaoValue = val),
                                 width: 180,
                                 height: 50,
                                 textStyle: FlutterFlowTheme.of(context)
@@ -701,8 +584,8 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                       children: [
                         FlutterFlowRadioButton(
                           options: ['Temporária', 'Permanente'].toList(),
-                          onChanged: (val) =>
-                              setState(() => radioButtonSituacaoValue = val),
+                          onChanged: (val) => setState(
+                              () => _model.radioButtonSituacaoValue = val),
                           optionHeight: 25,
                           textStyle:
                               FlutterFlowTheme.of(context).bodyText1.override(
@@ -729,7 +612,7 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                               padding:
                                   EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
                               child: TextFormField(
-                                controller: detalheLesaoController,
+                                controller: _model.detalheLesaoController,
                                 textCapitalization:
                                     TextCapitalization.sentences,
                                 obscureText: false,
@@ -791,78 +674,104 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                       padding: EdgeInsetsDirectional.fromSTEB(10, 20, 0, 0),
                       child: InkWell(
                         onTap: () async {
-                          final selectedMedia =
-                              await selectMediaWithSourceBottomSheet(
+                          final selectedMedia = await selectMediaWithSourceBottomSheet(
                             context: context,
                             storageFolderPath: 'documento',
                             allowPhoto: true,
-                            backgroundColor:
-                                FlutterFlowTheme.of(context).primaryColor,
+                            backgroundColor: FlutterFlowTheme.of(context).primaryColor,
                             textColor: Colors.white,
                           );
                           if (selectedMedia != null &&
-                              selectedMedia.every((m) =>
-                                  validateFileFormat(m.storagePath, context))) {
-                            setState(() => isMediaUploading1 = true);
+                              selectedMedia
+                                  .every((m) => validateFileFormat(m.storagePath, context))) {
+                            setState(() => _model.isMediaUploading1 = true);
+                            var selectedUploadedFiles = <FFUploadedFile>[];
                             var downloadUrls = <String>[];
                             try {
+                              showUploadMessage(
+                                context,
+                                'Uploading file...',
+                                showLoading: true,
+                              );
+                              selectedUploadedFiles = selectedMedia
+                                  .map((m) => FFUploadedFile(
+                                        name: m.storagePath.split('/').last,
+                                        bytes: m.bytes,
+                                        height: m.dimensions?.height,
+                                        width: m.dimensions?.width,
+                                      ))
+                                  .toList();
                               downloadUrls = await uploadSupabaseStorageFiles(
                                 bucketName: 'moblivre',
                                 selectedMedia: selectedMedia,
                               );
                             } finally {
-                              isMediaUploading1 = false;
+                              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                              _model.isMediaUploading1 = false;
                             }
-                            if (downloadUrls.length == selectedMedia.length) {
-                              setState(
-                                  () => uploadedFileUrl1 = downloadUrls.first);
+                            if (selectedUploadedFiles.length == selectedMedia.length &&
+                                downloadUrls.length == selectedMedia.length) {
+                              setState(() {
+                                _model.uploadedLocalFile1 = selectedUploadedFiles.first;
+                                _model.uploadedFileUrl1 = downloadUrls.first;
+                              });
+                              showUploadMessage(context, 'Success!');
                             } else {
                               setState(() {});
+                              showUploadMessage(context, 'Failed to upload media');
                               return;
                             }
                           }
+                          setState(() {
+                            FFAppState().fotoPerfil = _model.uploadedFileUrl1;
+                          });
                         },
                         child: Row(
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 0, 20, 0),
-                              child: FaIcon(
-                                FontAwesomeIcons.image,
-                                color:
-                                    FlutterFlowTheme.of(context).primaryColor,
-                                size: 35,
-                              ),
-                            ),
-                            Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            Stack(
                               children: [
-                                Text(
-                                  'Anexar imagem do documento',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyText1
-                                      .override(
-                                        fontFamily: 'Poppins',
-                                        color: Color(0xFF989898),
-                                        fontWeight: FontWeight.bold,
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Image.network(
+                                      valueOrDefault<String>(
+                                        FFAppState().fotoPerfil,
+                                        'https://inforpress.cv/wp-content/uploads/2020/05/empty.jpg',
                                       ),
-                                ),
-                                Text(
-                                  'Clique aqui',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyText1
-                                      .override(
-                                        fontFamily: 'Poppins',
-                                        color: Color(0xFF989898),
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                ),
+                                      width: 100,
+                                      height: 100,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
                               ],
+                            ),
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Anexar imagem de perfil',
+                                    style: FlutterFlowTheme.of(context).bodyText1.override(
+                                          fontFamily: 'Poppins',
+                                          color: Color(0xFF989898),
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                  ),
+                                  Text(
+                                    'Clique aqui',
+                                    style: FlutterFlowTheme.of(context).bodyText1.override(
+                                          fontFamily: 'Poppins',
+                                          color: Color(0xFF989898),
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -872,78 +781,104 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                       padding: EdgeInsetsDirectional.fromSTEB(10, 20, 0, 0),
                       child: InkWell(
                         onTap: () async {
-                          final selectedMedia =
-                              await selectMediaWithSourceBottomSheet(
+                          final selectedMedia = await selectMediaWithSourceBottomSheet(
                             context: context,
                             storageFolderPath: 'comDocumento',
                             allowPhoto: true,
-                            backgroundColor:
-                                FlutterFlowTheme.of(context).primaryColor,
+                            backgroundColor: FlutterFlowTheme.of(context).primaryColor,
                             textColor: Colors.white,
                           );
                           if (selectedMedia != null &&
-                              selectedMedia.every((m) =>
-                                  validateFileFormat(m.storagePath, context))) {
-                            setState(() => isMediaUploading2 = true);
+                              selectedMedia
+                                  .every((m) => validateFileFormat(m.storagePath, context))) {
+                            setState(() => _model.isMediaUploading2 = true);
+                            var selectedUploadedFiles = <FFUploadedFile>[];
                             var downloadUrls = <String>[];
                             try {
+                              showUploadMessage(
+                                context,
+                                'Uploading file...',
+                                showLoading: true,
+                              );
+                              selectedUploadedFiles = selectedMedia
+                                  .map((m) => FFUploadedFile(
+                                        name: m.storagePath.split('/').last,
+                                        bytes: m.bytes,
+                                        height: m.dimensions?.height,
+                                        width: m.dimensions?.width,
+                                      ))
+                                  .toList();
                               downloadUrls = await uploadSupabaseStorageFiles(
                                 bucketName: 'moblivre',
                                 selectedMedia: selectedMedia,
                               );
                             } finally {
-                              isMediaUploading2 = false;
+                              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                              _model.isMediaUploading2 = false;
                             }
-                            if (downloadUrls.length == selectedMedia.length) {
-                              setState(
-                                  () => uploadedFileUrl2 = downloadUrls.first);
+                            if (selectedUploadedFiles.length == selectedMedia.length &&
+                                downloadUrls.length == selectedMedia.length) {
+                              setState(() {
+                                _model.uploadedLocalFile2 = selectedUploadedFiles.first;
+                                _model.uploadedFileUrl2 = downloadUrls.first;
+                              });
+                              showUploadMessage(context, 'Success!');
                             } else {
                               setState(() {});
+                              showUploadMessage(context, 'Failed to upload media');
                               return;
                             }
                           }
+                          setState(() {
+                            FFAppState().fotoDocumento = _model.uploadedFileUrl2;
+                          });
                         },
                         child: Row(
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 0, 20, 0),
-                              child: FaIcon(
-                                FontAwesomeIcons.image,
-                                color:
-                                    FlutterFlowTheme.of(context).primaryColor,
-                                size: 35,
-                              ),
-                            ),
-                            Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            Stack(
                               children: [
-                                Text(
-                                  'Anexar imagem com o documento',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyText1
-                                      .override(
-                                        fontFamily: 'Poppins',
-                                        color: Color(0xFF989898),
-                                        fontWeight: FontWeight.bold,
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Image.network(
+                                      valueOrDefault<String>(
+                                        FFAppState().fotoDocumento,
+                                        'https://inforpress.cv/wp-content/uploads/2020/05/empty.jpg',
                                       ),
-                                ),
-                                Text(
-                                  'Clique aqui',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyText1
-                                      .override(
-                                        fontFamily: 'Poppins',
-                                        color: Color(0xFF989898),
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                ),
+                                      width: 100,
+                                      height: 100,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
                               ],
+                            ),
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Anexar imagem do documento',
+                                    style: FlutterFlowTheme.of(context).bodyText1.override(
+                                          fontFamily: 'Poppins',
+                                          color: Color(0xFF989898),
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                  ),
+                                  Text(
+                                    'Clique aqui',
+                                    style: FlutterFlowTheme.of(context).bodyText1.override(
+                                          fontFamily: 'Poppins',
+                                          color: Color(0xFF989898),
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -982,7 +917,7 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                               padding:
                                   EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
                               child: TextFormField(
-                                controller: estadoController,
+                                controller: _model.estadoController,
                                 obscureText: false,
                                 decoration: InputDecoration(
                                   labelText: 'Estado',
@@ -1048,7 +983,7 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                               padding:
                                   EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
                               child: TextFormField(
-                                controller: cidadeController,
+                                controller: _model.cidadeController,
                                 obscureText: false,
                                 decoration: InputDecoration(
                                   labelText: 'Cidade',
@@ -1114,7 +1049,7 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                               padding:
                                   EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
                               child: TextFormField(
-                                controller: bairroController,
+                                controller: _model.bairroController,
                                 obscureText: false,
                                 decoration: InputDecoration(
                                   labelText: 'Bairro',
@@ -1180,7 +1115,7 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                               padding:
                                   EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
                               child: TextFormField(
-                                controller: cepController,
+                                controller: _model.cepController,
                                 obscureText: false,
                                 decoration: InputDecoration(
                                   labelText: 'CEP',
@@ -1246,7 +1181,7 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                               padding:
                                   EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
                               child: TextFormField(
-                                controller: logradouroController,
+                                controller: _model.logradouroController,
                                 obscureText: false,
                                 decoration: InputDecoration(
                                   labelText: 'Logradouro',
@@ -1312,7 +1247,7 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                               padding:
                                   EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
                               child: TextFormField(
-                                controller: numeroController,
+                                controller: _model.numeroController,
                                 obscureText: false,
                                 decoration: InputDecoration(
                                   labelText: 'Número',
@@ -1379,7 +1314,7 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                               padding:
                                   EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
                               child: TextFormField(
-                                controller: complementoController,
+                                controller: _model.complementoController,
                                 obscureText: false,
                                 decoration: InputDecoration(
                                   labelText: 'Complemento',
@@ -1441,9 +1376,9 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           Switch.adaptive(
-                            value: switchValue ??= true,
+                            value: _model.switchValue ??= true,
                             onChanged: (newValue) async {
-                              setState(() => switchValue = newValue!);
+                              setState(() => _model.switchValue = newValue!);
                             },
                           ),
                           Expanded(
@@ -1456,55 +1391,39 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                         ],
                       ),
                     ),
-                    if (switchValue ?? true)
+                    if (_model.switchValue ?? true)
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(0, 60, 0, 20),
                         child: FFButtonWidget(
                           onPressed: () async {
-                            if (formKey.currentState == null ||
-                                !formKey.currentState!.validate()) {
+                            if (_model.formKey.currentState == null ||
+                                !_model.formKey.currentState!.validate()) {
                               return;
                             }
-                            if (radioButtonSituacaoValue == null) {
+                            if (_model.radioButtonSituacaoValue == null) {
                               return;
                             }
-
-                            if (uploadedFileUrl1 == null ||
-                                uploadedFileUrl1.isEmpty) {
-                              return;
-                            }
-                            if (uploadedFileUrl2 == null ||
-                                uploadedFileUrl2.isEmpty) {
-                              return;
-                            }
-
-                            apiCallOutput =
+                            _model.apiCallOutput =
                                 await UsuarioGroup.editarUsuarioCall.call(
-                              nome: nomeController!.text,
-                              email: getJsonField(
-                                widget.dadosUser,
-                                r'''$..email''',
-                              ).toString(),
-                              sobrenome: cidadeController!.text,
-                              documento: cpfController!.text,
-                              dataDeNascicmento: dataNascimentoController!.text,
-                              telefone: celularController!.text,
-                              senha: getJsonField(
-                                widget.dadosUser,
-                                r'''$..senha''',
-                              ).toString(),
-                              situacaoLesao: radioButtonSituacaoValue,
-                              nivelLesao: dropDownLesaoValue,
-                              detalheLesao: detalheLesaoController!.text,
-                              fotoDocumento64: uploadedFileUrl1,
-                              fotoComDocumento64: uploadedFileUrl2,
-                              cep: cepController!.text,
-                              logradouro: logradouroController!.text,
-                              numero: numeroController!.text,
-                              bairro: bairroController!.text,
-                              cidade: cidadeController!.text,
-                              estado: estadoController!.text,
-                              complemento: complementoController!.text,
+                              nome: _model.nomeController!.text,
+                              email: FFAppState().emailPersist,
+                              sobrenome: _model.sobrenomeController!.text,
+                              documento: _model.cpfController!.text,
+                              dataDeNascicmento:
+                                  _model.dataNascimentoController!.text,
+                              telefone: _model.celularController!.text,
+                              situacaoLesao: _model.radioButtonSituacaoValue,
+                              nivelLesao: _model.dropDownLesaoValue,
+                              detalheLesao: _model.detalheLesaoController!.text,
+                              fotoDocumento64: _model.uploadedFileUrl1,
+                              fotoComDocumento64: _model.uploadedFileUrl2,
+                              cep: _model.cepController!.text,
+                              logradouro: _model.logradouroController!.text,
+                              numero: _model.numeroController!.text,
+                              bairro: _model.bairroController!.text,
+                              cidade: _model.cidadeController!.text,
+                              estado: _model.estadoController!.text,
+                              complemento: _model.complementoController!.text,
                               telefoneFixo: getJsonField(
                                 widget.dadosUser,
                                 r'''$..telefone_fixo''',
@@ -1515,23 +1434,46 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                               ).toString(),
                               nivel: 1,
                             );
-                            if ((apiCallOutput?.succeeded ?? true)) {
+                            if ((_model.apiCallOutput?.succeeded ?? true)) {
                               FFAppState().update(() {
-                                FFAppState().senhaCadastro = getJsonField(
-                                  widget.dadosUser,
-                                  r'''$..senha''',
-                                ).toString();
                                 FFAppState().receberEmail =
                                     FFAppState().receberEmail;
                                 FFAppState().emailLogado =
                                     FFAppState().emailCadastro;
-                                FFAppState().nome = nomeController!.text;
+                                FFAppState().nome = _model.nomeController!.text;
                                 FFAppState().emailPersist =
                                     FFAppState().emailCadastro;
+                                FFAppState().sobrenome =
+                                    _model.sobrenomeController!.text;
+                                FFAppState().documento =
+                                    _model.cpfController!.text;
+                                FFAppState().nascimento =
+                                    _model.dataNascimentoController!.text;
+                                FFAppState().celular =
+                                    _model.celularController!.text;
+                                FFAppState().tipoLesao =
+                                    _model.dropDownLesaoValue!;
+                                FFAppState().situacaoLesao =
+                                    _model.radioButtonSituacaoValue!;
+                                FFAppState().detalhesLesao =
+                                    _model.detalheLesaoController!.text;
+                                FFAppState().estado =
+                                    _model.estadoController!.text;
+                                FFAppState().cidade =
+                                    _model.cidadeController!.text;
+                                FFAppState().bairro =
+                                    _model.bairroController!.text;
+                                FFAppState().cep = _model.cepController!.text;
+                                FFAppState().logradouro =
+                                    _model.logradouroController!.text;
+                                FFAppState().numero =
+                                    _model.numeroController!.text;
+                                FFAppState().complemento =
+                                    _model.complementoController!.text;
                               });
 
                               context.pushNamed(
-                                'Mapa',
+                                'MapaLogado',
                                 queryParams: {
                                   'dadosUser': serializeParam(
                                     widget.dadosUser,
@@ -1574,7 +1516,7 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                           ),
                         ),
                       ),
-                    if (!switchValue!)
+                    if (!_model.switchValue!)
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(0, 60, 0, 0),
                         child: FFButtonWidget(
