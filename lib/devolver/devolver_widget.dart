@@ -1,5 +1,4 @@
 import '../flutter_flow/flutter_flow_model.dart';
-import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -7,11 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import 'detalhe_equipamento_retirar_model.dart';
-export 'detalhe_equipamento_retirar_model.dart';
+import 'devolver_model.dart';
+export 'devolver_model.dart';
 
-class DetalheEquipamentoRetirarWidget extends StatefulWidget {
-  const DetalheEquipamentoRetirarWidget({
+class DevolverWidget extends StatefulWidget {
+  const DevolverWidget({
     Key? key,
     this.detalhesEquip,
     this.detailUser,
@@ -21,13 +20,11 @@ class DetalheEquipamentoRetirarWidget extends StatefulWidget {
   final dynamic detailUser;
 
   @override
-  _DetalheEquipamentoRetirarWidgetState createState() =>
-      _DetalheEquipamentoRetirarWidgetState();
+  _DevolverWidgetState createState() => _DevolverWidgetState();
 }
 
-class _DetalheEquipamentoRetirarWidgetState
-    extends State<DetalheEquipamentoRetirarWidget> {
-  late DetalheEquipamentoRetirarModel _model;
+class _DevolverWidgetState extends State<DevolverWidget> {
+  late DevolverModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
@@ -35,7 +32,7 @@ class _DetalheEquipamentoRetirarWidgetState
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => DetalheEquipamentoRetirarModel());
+    _model = createModel(context, () => DevolverModel());
   }
 
   @override
@@ -56,9 +53,19 @@ class _DetalheEquipamentoRetirarWidgetState
       appBar: AppBar(
         backgroundColor: Colors.white,
         automaticallyImplyLeading: true,
+        leading: InkWell(
+          onTap: () async {
+            context.pop();
+          },
+          child: Icon(
+            Icons.arrow_back_rounded,
+            color: FlutterFlowTheme.of(context).primaryColor,
+            size: 30,
+          ),
+        ),
         title: SelectionArea(
             child: Text(
-          'Equipamento',
+          'Devolver conjunto',
           style: FlutterFlowTheme.of(context).bodyText1.override(
                 fontFamily: 'Poppins',
                 color: Color(0xFF1D4F9A),
@@ -150,7 +157,7 @@ class _DetalheEquipamentoRetirarWidgetState
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              if (getJsonField(
+                               if (getJsonField(
                                     widget.detalhesEquip,
                                     r'''$..rebocado''',
                                   ).toString() != "null" && getJsonField(
@@ -327,7 +334,7 @@ class _DetalheEquipamentoRetirarWidgetState
                   children: [
                     Expanded(
                       child: Text(
-                        'Clique no botão abaixo e aguarde o conjunto ser destravado da estação.',
+                        'Primeiro, trave o conjunto na estação e clique no botão abaixo para continuar a devolução.',
                         textAlign: TextAlign.center,
                         style: FlutterFlowTheme.of(context).bodyText1.override(
                               fontFamily: 'Poppins',
@@ -343,56 +350,27 @@ class _DetalheEquipamentoRetirarWidgetState
                 padding: EdgeInsetsDirectional.fromSTEB(0, 25, 0, 0),
                 child: FFButtonWidget(
                   onPressed: () async {
-                    _model.apiResultnsu =
-                        await EquipamentoGroup.pOSTSolicitacaoCall.call(
-                      documento: FFAppState().documento,
-                      numeroSerieEquipamento: getJsonField(
-                        widget.detalhesEquip,
-                        r'''$..numero_serie_equipamento''',
-                      ).toString(),
-                    );
-                    if ((_model.apiResultnsu?.succeeded ?? true)) {
-                      context.goNamed(
-                        'MapaAlugado',
-                        queryParams: {
-                          'detalhesEquip': serializeParam(
-                            getJsonField(
-                              widget.detalhesEquip,
-                              r'''$''',
-                            ),
-                            ParamType.JSON,
+                    context.pushNamed(
+                      'DevolverAvaliacao',
+                      queryParams: {
+                        'detalhesEquip': serializeParam(
+                          getJsonField(
+                            widget.detalhesEquip,
+                            r'''$''',
                           ),
-                          'detailUser': serializeParam(
-                            getJsonField(
-                              widget.detailUser,
-                              r'''$''',
-                            ),
-                            ParamType.JSON,
-                          ),
-                        }.withoutNulls,
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            getJsonField(
-                              (_model.apiResultnsu?.jsonBody ?? ''),
-                              r'''$..error''',
-                            ).toString(),
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                          duration: Duration(milliseconds: 4000),
-                          backgroundColor:
-                              FlutterFlowTheme.of(context).alternate,
+                          ParamType.JSON,
                         ),
-                      );
-                    }
-
-                    setState(() {});
+                        'detailUser': serializeParam(
+                          getJsonField(
+                            widget.detailUser,
+                            r'''$''',
+                          ),
+                          ParamType.JSON,
+                        ),
+                      }.withoutNulls,
+                    );
                   },
-                  text: 'Retirar agora',
+                  text: 'Continuar',
                   options: FFButtonOptions(
                     width: 250,
                     height: 45,

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:page_transition/page_transition.dart';
+import '../../devolver_avaliacao/devolver_avaliacao_widget.dart';
 import '../flutter_flow_theme.dart';
 
 import '../../auth/firebase_user_provider.dart';
@@ -187,9 +188,30 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               builder: (context, params) => PagamentoWidget(),
             ),
             FFRoute(
+              name: 'EmergenciaAlerta',
+              path: 'emergenciaAlerta',
+              builder: (context, params) => EmergenciaAlertaWidget(),
+            ),
+            FFRoute(
               name: 'Emergencia',
               path: 'emergencia',
               builder: (context, params) => EmergenciaWidget(),
+            ),
+            FFRoute(
+              name: 'Devolver',
+              path: 'devolver',
+              builder: (context, params) => DevolverWidget(
+                detalhesEquip: params.getParam('detalhesEquip', ParamType.JSON),
+                detailUser: params.getParam('detailUser', ParamType.JSON),
+              ),
+            ),
+            FFRoute(
+              name: 'DevolverAvaliacao',
+              path: 'devolverAvaliacao',
+              builder: (context, params) => DevolverAvaliacaoWidget(
+                detalhesEquip: params.getParam('detalhesEquip', ParamType.JSON),
+                detailUser: params.getParam('detailUser', ParamType.JSON),
+              ),
             ),
             FFRoute(
               name: 'DetalheEquipamento',

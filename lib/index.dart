@@ -24,3 +24,6 @@ export 'editar_perfil/editar_perfil_widget.dart' show EditarPerfilWidget;
 export 'viagens/viagens_widget.dart' show ViagensWidget;
 export 'mapa_logado/mapa_logado_widget.dart' show MapaLogadoWidget;
 export 'emergencia/emergencia_widget.dart' show EmergenciaWidget;
+export 'devolver/devolver_widget.dart' show DevolverWidget;
+export 'devolver_avaliacao/devolver_avaliacao_widget.dart' show DevolverAvalicaoWidget;
+export 'emergencia_alerta/emergencia_alerta_widget.dart' show EmergenciaAlertaWidget;

@@ -28,6 +28,7 @@ class UsuarioGroup {
   static BuscaCpfCall buscaCpfCall = BuscaCpfCall();
   static UsuarioSolicitacaoCall usuarioSolicitacaoCall =
       UsuarioSolicitacaoCall();
+      
 }
 
 class RedefinirSenhaCall {
@@ -484,8 +485,8 @@ class PUTDevolucaoCall {
     String? dataDevolucao = '',
     String? status = '',
     String? sugestao = '',
-    String? avaliacao = '',
-    String? devolvido = '',
+    int? avaliacao = 5,
+    String? devolvido = '1',
     String? foto = '',
     String? documento = '',
   }) {
@@ -520,12 +521,12 @@ class PUTDevolucaoCall {
 class PUTEmergenciaCall {
   Future<ApiCallResponse> call({
     int? kit,
-    String? motivoEmergencia = '',
+    String? motivoEmergencia = "Socorro",
   }) {
     final body = '''
 {
   "kit": ${kit},
-  "motivo_emergencia": ${motivoEmergencia}
+  "motivo_emergencia": "${motivoEmergencia}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'PUT Emergencia',

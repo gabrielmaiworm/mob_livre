@@ -202,28 +202,12 @@ class _EmergenciaWidgetState extends State<EmergenciaWidget> {
                   padding: EdgeInsetsDirectional.fromSTEB(0, 60, 0, 40),
                   child: FFButtonWidget(
                     onPressed: () async {
-                      _model.apiResultmdy =
-                          await EquipamentoGroup.pUTEmergenciaCall.call(
-                        kit: getJsonField(
-                          widget.detalhesApp,
-                          r'''$..kit''',
-                        ),
+                      _model.apiResultmdy = await EquipamentoGroup.pUTEmergenciaCall.call(
+                        kit: FFAppState().kit,
                         motivoEmergencia: _model.textController!.text,
                       );
                       if ((_model.apiResultmdy?.succeeded ?? true)) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'Emergência enviada!',
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                            duration: Duration(milliseconds: 4000),
-                            backgroundColor: Color(0xFF70BB73),
-                          ),
-                        );
-                        context.pop();
+                        context.pushNamed('EmergenciaAlerta');
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -234,12 +218,10 @@ class _EmergenciaWidgetState extends State<EmergenciaWidget> {
                               ),
                             ),
                             duration: Duration(milliseconds: 4000),
-                            backgroundColor:
-                                FlutterFlowTheme.of(context).alternate,
+                            backgroundColor: FlutterFlowTheme.of(context).alternate,
                           ),
                         );
                       }
-
                       setState(() {});
                     },
                     text: 'Enviar',
@@ -249,11 +231,10 @@ class _EmergenciaWidgetState extends State<EmergenciaWidget> {
                       padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                       iconPadding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                       color: Color(0xFF1D4F9A),
-                      textStyle:
-                          FlutterFlowTheme.of(context).subtitle2.override(
-                                fontFamily: 'Poppins',
-                                color: Colors.white,
-                              ),
+                      textStyle: FlutterFlowTheme.of(context).subtitle2.override(
+                            fontFamily: 'Poppins',
+                            color: Colors.white,
+                          ),
                       borderSide: BorderSide(
                         color: Colors.white,
                         width: 1,

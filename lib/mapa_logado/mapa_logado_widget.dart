@@ -263,248 +263,387 @@ class _MapaLogadoWidgetState extends State<MapaLogadoWidget> {
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(0, 15, 0, 15),
-                          child: InkWell(
-                            onTap: () async {
-                              _model.qrCode = await FlutterBarcodeScanner.scanBarcode(
-                                '#C62828', // scanning line color
-                                'Cancelar', // cancel button text
-                                true, // whether to show the flash icon
-                                ScanMode.QR,
-                              );
-                              if (_model.qrCode != null && _model.qrCode != '') {
-                                _model.apiResult4dt =
-                                    await EquipamentoGroup.gETDetalhesEquipamentoCall.call(
-                                  numeroSerieEquipamento: _model.qrCode,
-                                );
-                                setState(() {
-                                  FFAppState().dadosEquipamento =
-                                      (_model.apiResult4dt?.jsonBody ?? '');
-                                });
-                                if ((_model.apiResult4dt?.succeeded ?? true)) {
-                                  context.pushNamed(
-                                    'DetalheEquipamentoRetirar',
-                                    queryParams: {
-                                      'detalhesEquip': serializeParam(
-                                        (_model.apiResult4dt?.jsonBody ?? ''),
-                                        ParamType.JSON,
-                                      ),
-                                      'detailUser': serializeParam(
-                                        getJsonField(
-                                          widget.dadosUser,
-                                          r'''$''',
-                                        ),
-                                        ParamType.JSON,
-                                      ),
-                                    }.withoutNulls,
-                                  );
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        'Equipamento não encontrado!',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      duration: Duration(milliseconds: 4000),
-                                      backgroundColor: FlutterFlowTheme.of(context).alternate,
-                                    ),
-                                  );
-                                }
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'Falha ao scanear qrcode.',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    duration: Duration(milliseconds: 4000),
-                                    backgroundColor: FlutterFlowTheme.of(context).alternate,
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: MediaQuery.of(context).size.height * 0.06,
+                                  decoration: BoxDecoration(
+                                    color: FlutterFlowTheme.of(context).secondaryBackground,
+                                    borderRadius: BorderRadius.circular(8),
                                   ),
-                                );
-                              }
-                              setState(() {});
-                            },
+                                  child: Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(5, 5, 5, 5),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 5, 0),
+                                          child: Image.asset(
+                                            'assets/images/Cadeirante_azul.png',
+                                            width: 35,
+                                            height: 35,
+                                            fit: BoxFit.contain,
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: FFButtonWidget(
+                                            onPressed: () async {
+                                              _model.qrCode =
+                                                  await FlutterBarcodeScanner.scanBarcode(
+                                                '#C62828', // scanning line color
+                                                'Cancelar', // cancel button text
+                                                true, // whether to show the flash icon
+                                                ScanMode.QR,
+                                              );
+                                              if (_model.qrCode != null && _model.qrCode != '') {
+                                                _model.apiResult4dt = await EquipamentoGroup
+                                                    .gETDetalhesEquipamentoCall
+                                                    .call(
+                                                  numeroSerieEquipamento: _model.qrCode,
+                                                );
+                                                setState(() {
+                                                  FFAppState().dadosEquipamento =
+                                                      (_model.apiResult4dt?.jsonBody ?? '');
+                                                  FFAppState().kit = getJsonField(
+                                                    (_model.apiResult4dt?.jsonBody ?? ''),
+                                                    r'''$..kit''',
+                                                  );
+                                                });
+                                                if ((_model.apiResult4dt?.succeeded ?? true)) {
+                                                  context.pushNamed(
+                                                    'DetalheEquipamentoRetirar',
+                                                    queryParams: {
+                                                      'detalhesEquip': serializeParam(
+                                                        (_model.apiResult4dt?.jsonBody ?? ''),
+                                                        ParamType.JSON,
+                                                      ),
+                                                      'detailUser': serializeParam(
+                                                        getJsonField(
+                                                          widget.dadosUser,
+                                                          r'''$''',
+                                                        ),
+                                                        ParamType.JSON,
+                                                      ),
+                                                    }.withoutNulls,
+                                                  );
+                                                } else {
+                                                  ScaffoldMessenger.of(context).showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                        'Equipamento não encontrado!',
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                      duration: Duration(milliseconds: 4000),
+                                                      backgroundColor:
+                                                          FlutterFlowTheme.of(context).alternate,
+                                                    ),
+                                                  );
+                                                }
+                                              } else {
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      'Falha ao scanear qrcode.',
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                    duration: Duration(milliseconds: 4000),
+                                                    backgroundColor:
+                                                        FlutterFlowTheme.of(context).alternate,
+                                                  ),
+                                                );
+                                              }
+                                              setState(() {});
+                                            },
+                                            text: 'Retirar Equipamento',
+                                            options: FFButtonOptions(
+                                              width: 130,
+                                              height: 40,
+                                              padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                              iconPadding:
+                                                  EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                              color: Colors.white,
+                                              textStyle: FlutterFlowTheme.of(context)
+                                                  .subtitle2
+                                                  .override(
+                                                    fontFamily: 'Poppins',
+                                                    color:
+                                                        FlutterFlowTheme.of(context).primaryColor,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                              elevation: 0,
+                                              borderSide: BorderSide(
+                                                color: Colors.transparent,
+                                                width: 1,
+                                              ),
+                                              borderRadius: BorderRadius.circular(8),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(0, 15, 0, 0),
                             child: Row(
                               mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Image.asset(
-                                  'assets/images/_icon__wheelchair_.png',
-                                  width: MediaQuery.of(context).size.width * 0.08,
-                                  height: MediaQuery.of(context).size.height * 0.04,
-                                  fit: BoxFit.contain,
-                                ),
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
-                                  child: SelectionArea(
-                                      child: Text(
-                                    'Retirar Equipamento',
-                                    style: FlutterFlowTheme.of(context).bodyText1.override(
-                                          fontFamily: 'Poppins',
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                  )),
+                                Expanded(
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    height: MediaQuery.of(context).size.height * 0.06,
+                                    decoration: BoxDecoration(
+                                      color: FlutterFlowTheme.of(context).secondaryBackground,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(5, 5, 5, 5),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Icon(
+                                            Icons.notifications_none,
+                                            color: FlutterFlowTheme.of(context).primaryColor,
+                                            size: 35,
+                                          ),
+                                          Expanded(
+                                            child: FFButtonWidget(
+                                              onPressed: () {
+                                                print('Button pressed ...');
+                                              },
+                                              text: 'Notificações',
+                                              options: FFButtonOptions(
+                                                width: 130,
+                                                height: 40,
+                                                padding:
+                                                    EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                                iconPadding:
+                                                    EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                                color: Colors.white,
+                                                textStyle: FlutterFlowTheme.of(context)
+                                                    .subtitle2
+                                                    .override(
+                                                      fontFamily: 'Poppins',
+                                                      color: FlutterFlowTheme.of(context)
+                                                          .primaryColor,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                elevation: 0,
+                                                borderSide: BorderSide(
+                                                  color: Colors.transparent,
+                                                  width: 1,
+                                                ),
+                                                borderRadius: BorderRadius.circular(8),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
                           ),
-                        ),
                           Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(0, 15, 0, 15),
+                            padding: EdgeInsetsDirectional.fromSTEB(0, 15, 0, 0),
                             child: Row(
                               mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Image.asset(
-                                  'assets/images/_icon__notifications_.png',
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.08,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.04,
-                                  fit: BoxFit.contain,
-                                ),
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      10, 0, 0, 0),
-                                  child: SelectionArea(
-                                      child: Text(
-                                    'Notificações',
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyText1
-                                        .override(
-                                          fontFamily: 'Poppins',
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                  )),
+                                Expanded(
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    height: MediaQuery.of(context).size.height * 0.06,
+                                    decoration: BoxDecoration(
+                                      color: FlutterFlowTheme.of(context).secondaryBackground,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(5, 5, 5, 5),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Icon(
+                                            Icons.navigation_outlined,
+                                            color: FlutterFlowTheme.of(context).primaryColor,
+                                            size: 35,
+                                          ),
+                                          Expanded(
+                                            child: FFButtonWidget(
+                                              onPressed: () async {
+                                                context.pushNamed('Viagens');
+                                              },
+                                              text: 'Viagens',
+                                              options: FFButtonOptions(
+                                                width: 130,
+                                                height: 40,
+                                                padding:
+                                                    EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                                iconPadding:
+                                                    EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                                color: Colors.white,
+                                                textStyle: FlutterFlowTheme.of(context)
+                                                    .subtitle2
+                                                    .override(
+                                                      fontFamily: 'Poppins',
+                                                      color: FlutterFlowTheme.of(context)
+                                                          .primaryColor,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                elevation: 0,
+                                                borderSide: BorderSide(
+                                                  color: Colors.transparent,
+                                                  width: 1,
+                                                ),
+                                                borderRadius: BorderRadius.circular(8),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
                           ),
                           Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(0, 15, 0, 15),
-                            child: InkWell(
-                              onTap: () async {
-                                context.pushNamed('Viagens');
-                              },
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Image.asset(
-                                    'assets/images/_icon__maps_arrow_.png',
-                                    width: MediaQuery.of(context).size.width *
-                                        0.08,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.04,
-                                    fit: BoxFit.contain,
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        10, 0, 0, 0),
-                                    child: SelectionArea(
-                                        child: Text(
-                                      'Viagens',
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyText1
-                                          .override(
-                                            fontFamily: 'Poppins',
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                    )),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(0, 15, 0, 15),
-                            child: InkWell(
-                              onTap: () async {
-                                await launchURL('http://www.kitlivre.com/');
-                              },
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Image.asset(
-                                    'assets/images/_icon__Store_.png',
-                                    width: MediaQuery.of(context).size.width *
-                                        0.08,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.04,
-                                    fit: BoxFit.contain,
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        10, 0, 0, 0),
-                                    child: SelectionArea(
-                                        child: Text(
-                                      'Acessar Loja',
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyText1
-                                          .override(
-                                            fontFamily: 'Poppins',
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                    )),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(0, 15, 0, 15),
+                            padding: EdgeInsetsDirectional.fromSTEB(0, 15, 0, 0),
                             child: Row(
                               mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Image.asset(
-                                  'assets/images/_icon__help_circle_.png',
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.08,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.05,
-                                  fit: BoxFit.contain,
+                                Expanded(
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    height: MediaQuery.of(context).size.height * 0.06,
+                                    decoration: BoxDecoration(
+                                      color: FlutterFlowTheme.of(context).secondaryBackground,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(5, 5, 5, 5),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Icon(
+                                            Icons.local_grocery_store_outlined,
+                                            color: FlutterFlowTheme.of(context).primaryColor,
+                                            size: 35,
+                                          ),
+                                          Expanded(
+                                            child: FFButtonWidget(
+                                              onPressed: () async {
+                                                await launchURL('http://www.kitlivre.com/');
+                                              },
+                                              text: 'Acessar loja',
+                                              options: FFButtonOptions(
+                                                width: 130,
+                                                height: 40,
+                                                padding:
+                                                    EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                                iconPadding:
+                                                    EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                                color: Colors.white,
+                                                textStyle: FlutterFlowTheme.of(context)
+                                                    .subtitle2
+                                                    .override(
+                                                      fontFamily: 'Poppins',
+                                                      color: FlutterFlowTheme.of(context)
+                                                          .primaryColor,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                elevation: 0,
+                                                borderSide: BorderSide(
+                                                  color: Colors.transparent,
+                                                  width: 1,
+                                                ),
+                                                borderRadius: BorderRadius.circular(8),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      10, 0, 0, 0),
-                                  child: SelectionArea(
-                                      child: Text(
-                                    'Ajuda',
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyText1
-                                        .override(
-                                          fontFamily: 'Poppins',
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                  )),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(0, 15, 0, 0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    height: MediaQuery.of(context).size.height * 0.06,
+                                    decoration: BoxDecoration(
+                                      color: FlutterFlowTheme.of(context).secondaryBackground,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(5, 5, 5, 5),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Icon(
+                                            Icons.help_outline,
+                                            color: FlutterFlowTheme.of(context).primaryColor,
+                                            size: 35,
+                                          ),
+                                          Expanded(
+                                            child: FFButtonWidget(
+                                              onPressed: () {
+                                                print('Button pressed ...');
+                                              },
+                                              text: 'Ajuda',
+                                              options: FFButtonOptions(
+                                                width: 130,
+                                                height: 40,
+                                                padding:
+                                                    EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                                iconPadding:
+                                                    EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                                color: Colors.white,
+                                                textStyle: FlutterFlowTheme.of(context)
+                                                    .subtitle2
+                                                    .override(
+                                                      fontFamily: 'Poppins',
+                                                      color: FlutterFlowTheme.of(context)
+                                                          .primaryColor,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                elevation: 0,
+                                                borderSide: BorderSide(
+                                                  color: Colors.transparent,
+                                                  width: 1,
+                                                ),
+                                                borderRadius: BorderRadius.circular(8),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
                           ),
                         ],
                       ),
-                    ),
+                    ), 
                     Row(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.center,

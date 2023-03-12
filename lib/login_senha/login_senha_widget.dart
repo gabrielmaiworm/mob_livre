@@ -298,6 +298,10 @@ Padding(
             (_model.apiResultw03?.jsonBody ?? ''),
             r'''$..complemento''',
           ).toString();
+          FFAppState().kit = getJsonField(
+            (_model.apiResultw03?.jsonBody ?? ''),
+            r'''$..kit''',
+          );
           FFAppState().logado = true;
           FFAppState().senhaCadastro = _model.senhaController!.text;
         });

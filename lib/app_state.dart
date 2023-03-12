@@ -36,6 +36,7 @@ class FFAppState extends ChangeNotifier {
     _numero = prefs.getString('ff_numero') ?? _numero;
     _complemento = prefs.getString('ff_complemento') ?? _complemento;
     _logado = prefs.getBool('ff_logado') ?? _logado;
+    _kit = prefs.getInt('ff_kit') ?? _kit;
     if (prefs.containsKey('ff_dadosEquipamento')) {
       try {
         _dadosEquipamento =
@@ -214,6 +215,13 @@ class FFAppState extends ChangeNotifier {
   set complemento(String _value) {
     _complemento = _value;
     prefs.setString('ff_complemento', _value);
+  }
+
+  int _kit = 0;
+  int get kit => _kit;
+  set kit(int _value) {
+    _kit = _value;
+    prefs.setInt('ff_kit', _value);
   }
 
   bool _logado = false;

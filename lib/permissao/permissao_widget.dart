@@ -183,77 +183,71 @@ class _PermissaoWidgetState extends State<PermissaoWidget> {
                                 mainAxisSize: MainAxisSize.max,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  FFButtonWidget(
-                                    onPressed: () async {
-                                      await requestPermission(
-                                          locationPermission);
-                                      _model.apiResultipv =
-                                          await UsuarioGroup.buscaCpfCall.call(
-                                        documentoo: FFAppState().documento,
-                                      );
-                                      if ((_model.apiResultipv?.succeeded ??
-                                          true)) {
-                                        _model.apiResult7vn = await UsuarioGroup
-                                            .usuarioSolicitacaoCall
-                                            .call(
-                                          documento: FFAppState().documento,
-                                        );
-                                        if ((_model.apiResult7vn?.succeeded ??
-                                            true)) {
-                                          context.pushNamed(
-                                            'MapaAlugado',
-                                            queryParams: {
-                                              'detalhesEquip': serializeParam(
-                                                getJsonField(
-                                                  FFAppState().dadosEquipamento,
-                                                  r'''$''',
-                                                ),
-                                                ParamType.JSON,
-                                              ),
-                                            }.withoutNulls,
-                                          );
-                                        } else {
-                                          context.pushNamed(
-                                            'MapaLogado',
-                                            queryParams: {
-                                              'dadosUser': serializeParam(
-                                                (_model.apiResultipv
-                                                        ?.jsonBody ??
-                                                    ''),
-                                                ParamType.JSON,
-                                              ),
-                                            }.withoutNulls,
-                                          );
-                                        }
-                                      } else {
-                                        context.pushNamed('MapaDeslogado');
-                                      }
-
-                                      setState(() {});
-                                    },
-                                    text: 'Continuar',
-                                    options: FFButtonOptions(
-                                      width: 190,
-                                      height: 45,
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          0, 0, 0, 0),
-                                      iconPadding:
-                                          EdgeInsetsDirectional.fromSTEB(
-                                              0, 0, 0, 0),
-                                      color: Color(0xFF1D4F9A),
-                                      textStyle: FlutterFlowTheme.of(context)
-                                          .subtitle2
-                                          .override(
-                                            fontFamily: 'Poppins',
-                                            color: Colors.white,
-                                          ),
-                                      borderSide: BorderSide(
-                                        color: Colors.transparent,
-                                        width: 1,
-                                      ),
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                  ),
+                                  // Generated code for this Button Widget...
+FFButtonWidget(
+  onPressed: () async {
+    await requestPermission(locationPermission);
+    _model.apiResultipv = await UsuarioGroup.buscaCpfCall.call(
+      documentoo: FFAppState().documento,
+    );
+    if ((_model.apiResultipv?.succeeded ?? true)) {
+      _model.apiResult7vn = await UsuarioGroup.usuarioSolicitacaoCall.call(
+        documento: FFAppState().documento,
+      );
+      if ((_model.apiResult7vn?.succeeded ?? true)) {
+        setState(() {
+          FFAppState().kit = getJsonField(
+            (_model.apiResult7vn?.jsonBody ?? ''),
+            r'''$..kit''',
+          );
+        });
+        context.pushNamed(
+          'MapaAlugado',
+          queryParams: {
+            'detalhesEquip': serializeParam(
+              getJsonField(
+                FFAppState().dadosEquipamento,
+                r'''$''',
+              ),
+              ParamType.JSON,
+            ),
+          }.withoutNulls,
+        );
+      } else {
+        context.pushNamed(
+          'MapaLogado',
+          queryParams: {
+            'dadosUser': serializeParam(
+              (_model.apiResultipv?.jsonBody ?? ''),
+              ParamType.JSON,
+            ),
+          }.withoutNulls,
+        );
+      }
+    } else {
+      context.pushNamed('MapaDeslogado');
+    }
+    setState(() {});
+  },
+  text: 'Continuar',
+  options: FFButtonOptions(
+    width: 190,
+    height: 45,
+    padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+    iconPadding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+    color: Color(0xFF1D4F9A),
+    textStyle: FlutterFlowTheme.of(context).subtitle2.override(
+          fontFamily: 'Poppins',
+          color: Colors.white,
+        ),
+    borderSide: BorderSide(
+      color: Colors.transparent,
+      width: 1,
+    ),
+    borderRadius: BorderRadius.circular(12),
+  ),
+)
+,
                                 ],
                               ),
                             ),

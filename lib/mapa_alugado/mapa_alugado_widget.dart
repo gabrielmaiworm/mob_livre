@@ -732,45 +732,37 @@ class _MapaAlugadoWidgetState extends State<MapaAlugadoWidget> {
                               ),
                             ),
                             Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 10, 0, 20),
+                              padding: EdgeInsetsDirectional.fromSTEB(0, 10, 0, 20),
                               child: FFButtonWidget(
                                 onPressed: () async {
-                                  await showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    backgroundColor: Colors.transparent,
-                                    context: context,
-                                    builder: (context) {
-                                      return Padding(
-                                        padding:
-                                            MediaQuery.of(context).viewInsets,
-                                        child: Container(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height * 0.65,
-                                          child: EmailEnviadoCopyWidget(
-                                            detailUser: getJsonField(
-                                              widget.detailUser,
-                                              r'''$''',
-                                            ),
-                                          ),
+                                  context.pushNamed(
+                                    'Devolver',
+                                    queryParams: {
+                                      'detalhesEquip': serializeParam(
+                                        getJsonField(
+                                          widget.detalhesEquip,
+                                          r'''$''',
                                         ),
-                                      );
-                                    },
-                                  ).then((value) => setState(() {}));
+                                        ParamType.JSON,
+                                      ),
+                                      'detailUser': serializeParam(
+                                        getJsonField(
+                                          widget.detailUser,
+                                          r'''$''',
+                                        ),
+                                        ParamType.JSON,
+                                      ),
+                                    }.withoutNulls,
+                                  );
                                 },
                                 text: 'Devolver Equipamento',
                                 options: FFButtonOptions(
                                   width: 250,
                                   height: 45,
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      0, 0, 0, 0),
-                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                      0, 0, 0, 0),
+                                  padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                  iconPadding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                                   color: Colors.white,
-                                  textStyle: FlutterFlowTheme.of(context)
-                                      .subtitle2
-                                      .override(
+                                  textStyle: FlutterFlowTheme.of(context).subtitle2.override(
                                         fontFamily: 'Poppins',
                                         color: Color(0xFF1D4F9A),
                                         fontSize: 15,
