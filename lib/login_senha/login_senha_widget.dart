@@ -298,23 +298,32 @@ Padding(
             (_model.apiResultw03?.jsonBody ?? ''),
             r'''$..complemento''',
           ).toString();
-          FFAppState().kit = getJsonField(
-            (_model.apiResultw03?.jsonBody ?? ''),
-            r'''$..kit''',
-          );
           FFAppState().logado = true;
           FFAppState().senhaCadastro = _model.senhaController!.text;
+          FFAppState().kit = valueOrDefault<int>(
+            getJsonField(
+              (_model.apiResultw03?.jsonBody ?? ''),
+              r'''$..kit''',
+            ),
+            0,
+          );
         });
         _model.apiResult7vn = await UsuarioGroup.usuarioSolicitacaoCall.call(
           documento: FFAppState().documento,
         );
         if ((_model.apiResult7vn?.succeeded ?? true)) {
+          setState(() {
+            FFAppState().dadosEquipamento = getJsonField(
+              (_model.apiResult7vn?.jsonBody ?? ''),
+              r'''$''',
+            );
+          });
           context.pushNamed(
             'MapaAlugado',
             queryParams: {
               'detalhesEquip': serializeParam(
                 getJsonField(
-                  FFAppState().dadosEquipamento,
+                  (_model.apiResult7vn?.jsonBody ?? ''),
                   r'''$''',
                 ),
                 ParamType.JSON,

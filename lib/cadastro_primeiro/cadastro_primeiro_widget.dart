@@ -109,16 +109,20 @@ class _CadastroPrimeiroWidgetState extends State<CadastroPrimeiroWidget> {
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 80),
                   child: Row(
-                    mainAxisSize: MainAxisSize.max,
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SelectionArea(
-                          child: Text(
-                        'Para começarmos, informe seu e-mail',
-                        style: FlutterFlowTheme.of(context).bodyText1.override(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                            ),
-                      )),
+                      Expanded(
+                        child: Text(
+                          'Para começarmos, informe seu e-mail',
+                          textAlign: TextAlign.start,
+                          style:
+                              FlutterFlowTheme.of(context).bodyText1.override(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 16,
+                                  ),
+                        ),
+                      ),
                     ],
                   ),
                 ),

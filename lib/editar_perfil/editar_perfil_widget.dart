@@ -1406,7 +1406,7 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                             _model.apiCallOutput =
                                 await UsuarioGroup.editarUsuarioCall.call(
                               nome: _model.nomeController!.text,
-                              email: FFAppState().emailPersist,
+                              email: FFAppState().emailPersist.toUpperCase(),
                               sobrenome: _model.sobrenomeController!.text,
                               documento: _model.cpfController!.text,
                               dataDeNascicmento:
@@ -1471,7 +1471,7 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                                 FFAppState().complemento =
                                     _model.complementoController!.text;
                               });
-
+                              if(FFAppState().dadosEquipamento == null) {
                               context.pushNamed(
                                 'MapaLogado',
                                 queryParams: {
@@ -1481,6 +1481,17 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                                   ),
                                 }.withoutNulls,
                               );
+                              } else {
+                                 context.pushNamed(
+                                'MapaAlugado',
+                                queryParams: {
+                                  'dadosUser': serializeParam(
+                                    widget.dadosUser,
+                                    ParamType.JSON,
+                                  ),
+                                }.withoutNulls,
+                              );
+                              }
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(

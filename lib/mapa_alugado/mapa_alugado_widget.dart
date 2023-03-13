@@ -1,4 +1,7 @@
+import '../backend/api_requests/api_calls.dart';
+import '../backend/api_requests/api_manager.dart';
 import '../flutter_flow/flutter_flow_model.dart';
+import 'package:mob_livree/mapa/parceiro_panel.dart';
 import '/components/email_enviado_copy_widget.dart';
 import '/flutter_flow/flutter_flow_google_map.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -8,9 +11,14 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:dio/dio.dart';
 
 import 'mapa_alugado_model.dart';
 export 'mapa_alugado_model.dart';
+
+FlutterFlowMarker? marker;
+List<FlutterFlowMarker> docLatAndLong = [];
 
 class MapaAlugadoWidget extends StatefulWidget {
   const MapaAlugadoWidget({
@@ -29,15 +37,48 @@ class MapaAlugadoWidget extends StatefulWidget {
 class _MapaAlugadoWidgetState extends State<MapaAlugadoWidget> {
   late MapaAlugadoModel _model;
 
+  void setSelectedParceiro(dynamic parceiro) => setState(() => selectedParceiro = parceiro);
+  PanelController panelController = PanelController();
+  dynamic selectedParceiro;
+  List<dynamic> parceiros = [];
+
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
   LatLng? currentUserLocationValue;
+  LatLng? googleMapsCenter;
+  final googleMapsController = Completer<GoogleMapController>();
+
+    Future<List<FlutterFlowMarker>> getLatAndLong() async {
+    String url = "http://177.70.102.109:3005/parceiro-equipamento";
+
+    final response = await Dio().get(url);
+    final responseBody = response.data;
+
+    List<dynamic> parceirosToAdd = [];
+    for (final parceiro in responseBody) {
+      LatLng latLng = LatLng(parceiro['latitude'], parceiro['longitude']);
+      marker = FlutterFlowMarker(parceiro['documento_empresa'], latLng, () async {
+        setSelectedParceiro(parceiro);
+        panelController.open();
+      });
+      docLatAndLong.add(marker!);
+      parceirosToAdd.add(parceiro);
+    }
+
+    setState(() {
+      print(responseBody);
+      parceiros = parceirosToAdd;
+    });
+
+    return docLatAndLong;
+  }
 
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => MapaAlugadoModel());
-
+    getLatAndLong();
     getCurrentUserLocation(defaultLocation: LatLng(0.0, 0.0), cached: true)
         .then((loc) => setState(() => currentUserLocationValue = loc));
   }
@@ -160,22 +201,25 @@ class _MapaAlugadoWidgetState extends State<MapaAlugadoWidget> {
                                       )),
                                     ),
                                     FFButtonWidget(
-                                      onPressed: () {
-                                        print('Button pressed ...');
+                                      onPressed: () async {
+                                        context.pushNamed(
+                                          'EditarPerfil',
+                                          queryParams: {
+                                            'dadosUser': serializeParam(
+                                              widget.detailUser,
+                                              ParamType.JSON,
+                                            ),
+                                          }.withoutNulls,
+                                        );
                                       },
                                       text: 'Editar Perfil',
                                       options: FFButtonOptions(
                                         width: 110,
                                         height: 25,
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0, 0, 0, 0),
-                                        iconPadding:
-                                            EdgeInsetsDirectional.fromSTEB(
-                                                0, 0, 0, 0),
+                                        padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                        iconPadding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                                         color: Colors.white,
-                                        textStyle: FlutterFlowTheme.of(context)
-                                            .subtitle2
-                                            .override(
+                                        textStyle: FlutterFlowTheme.of(context).subtitle2.override(
                                               fontFamily: 'Poppins',
                                               color: Color(0xFF1D4F9A),
                                               fontSize: 14,
@@ -654,12 +698,33 @@ class _MapaAlugadoWidgetState extends State<MapaAlugadoWidget> {
                                           color: Color(0xFF1D4F9A),
                                           size: 24,
                                         ),
+                                        if (getJsonField(
+                                              widget.detalhesEquip,
+                                              r'''$..carga''',
+                                            ).toString() != "null")
                                         SelectionArea(
                                             child: Text(
-                                          '${getJsonField(
-                                            widget.detalhesEquip,
-                                            r'''$..carga''',
-                                          ).toString()} %',
+                                          '${valueOrDefault<String>(
+                                            getJsonField(
+                                              widget.detalhesEquip,
+                                              r'''$..carga''',
+                                            ).toString(),
+                                            '100',
+                                          )} %',
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyText1
+                                              .override(
+                                                fontFamily: 'Poppins',
+                                                color: Color(0xFF1D4F9A),
+                                              ),
+                                        )),
+                                        if (getJsonField(
+                                              widget.detalhesEquip,
+                                              r'''$..carga''',
+                                            ).toString() == "null")
+                                        SelectionArea(
+                                            child: Text(
+                                          "100%",
                                           style: FlutterFlowTheme.of(context)
                                               .bodyText1
                                               .override(
@@ -889,37 +954,38 @@ class _MapaAlugadoWidgetState extends State<MapaAlugadoWidget> {
                                         )),
                                       ),
                                      InkWell(
-                                        onTap: () async {
-                                          FFAppState().update(() {
-                                            FFAppState().emailCadastro = '';
-                                            FFAppState().senhaCadastro = '';
-                                            FFAppState().receberEmail = false;
-                                            FFAppState().emailEsqueciSenha = '';
-                                            FFAppState().emailLogado = '';
-                                            FFAppState().nome = '';
-                                            FFAppState().emailPersist = '';
-                                            FFAppState().documento = '';
-                                          });
-                                          context.goNamed('MapaDeslogado');
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                'Você foi desconectado.',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                ),
+                                      onTap: () async {
+                                        context.pushNamed('MapaDeslogado');
+                                        FFAppState().update(() {
+                                          FFAppState().senhaCadastro = '';
+                                          FFAppState().receberEmail = false;
+                                          FFAppState().emailEsqueciSenha = '';
+                                          FFAppState().emailLogado = '';
+                                          FFAppState().nome = '';
+                                          FFAppState().emailPersist = '';
+                                          FFAppState().documento = '';
+                                          FFAppState().logado = false;
+                                        });
+                                        
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              'Você foi desconectado.',
+                                              style: TextStyle(
+                                                color: Colors.white,
                                               ),
-                                              duration: Duration(milliseconds: 4000),
-                                              backgroundColor: Color(0xFF606060),
                                             ),
-                                          );
-                                        },
-                                        child: Icon(
-                                          Icons.exit_to_app,
-                                          color: Colors.white,
-                                          size: 40,
-                                        ),
+                                            duration: Duration(milliseconds: 4000),
+                                            backgroundColor: Color(0xFF606060),
+                                          ),
+                                        );
+                                      },
+                                      child: Icon(
+                                        Icons.exit_to_app,
+                                        color: Colors.white,
+                                        size: 40,
                                       ),
+                                    ),
                                     ],
                                   ),
                                 ),
@@ -945,24 +1011,56 @@ class _MapaAlugadoWidgetState extends State<MapaAlugadoWidget> {
               Expanded(
                 child: Stack(
                   children: [
-                    FlutterFlowGoogleMap(
-                      controller: _model.googleMapsController,
-                      onCameraIdle: (latLng) =>
-                          _model.googleMapsCenter = latLng,
-                      initialLocation: _model.googleMapsCenter ??=
-                          currentUserLocationValue!,
-                      markerColor: GoogleMarkerColor.violet,
-                      mapType: MapType.normal,
-                      style: GoogleMapStyle.standard,
-                      initialZoom: 14,
-                      allowInteraction: true,
-                      allowZoom: true,
-                      showZoomControls: true,
-                      showLocation: true,
-                      showCompass: false,
-                      showMapToolbar: false,
-                      showTraffic: false,
-                      centerMapOnMarkerTap: true,
+                    Align(
+                      alignment: AlignmentDirectional(0, 0),
+                      child: FutureBuilder<ApiCallResponse>(
+                        future: ParceiroGroup.gETParceirosCall.call(),
+                        builder: (context, snapshot) {
+                          // Customize what your widget looks like when it's loading.
+                          if (!snapshot.hasData) {
+                            return Center(
+                              child: SizedBox(
+                                width: 50,
+                                height: 50,
+                                child: CircularProgressIndicator(
+                                  color:
+                                      FlutterFlowTheme.of(context).primaryColor,
+                                ),
+                              ),
+                            );
+                          }
+                          return GestureDetector(
+                            onTap: () => FocusScope.of(context).unfocus(),
+                            child: SlidingUpPanel(
+                              controller: panelController,
+                              backdropColor: Colors.black,
+                              backdropOpacity: 0.6,
+                              backdropEnabled: true,
+                              backdropTapClosesPanel: true,
+                              minHeight: 0,
+                              panel: ParceiroPanel(parceiro: selectedParceiro),
+                              body: FlutterFlowGoogleMap(
+                                controller: googleMapsController,
+                                onCameraIdle: (latLng) => googleMapsCenter = latLng,
+                                initialLocation: googleMapsCenter ??= currentUserLocationValue,
+                                markerColor: GoogleMarkerColor.violet,
+                                markers: docLatAndLong,
+                                mapType: MapType.normal,
+                                style: GoogleMapStyle.standard,
+                                initialZoom: 10,
+                                allowInteraction: true,
+                                allowZoom: true,
+                                showZoomControls: true,
+                                showLocation: true,
+                                showCompass: false,
+                                showMapToolbar: false,
+                                showTraffic: false,
+                                centerMapOnMarkerTap: true,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                     Align(
                       alignment: AlignmentDirectional(-0.88, -0.96),

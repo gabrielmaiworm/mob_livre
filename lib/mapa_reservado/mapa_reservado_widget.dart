@@ -1,30 +1,48 @@
-import '../components/email_enviado_copy_widget.dart';
-import '../flutter_flow/flutter_flow_google_map.dart';
-import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
-import '../flutter_flow/flutter_flow_widgets.dart';
+import '../components/reserva_cancelada/reserva_cancelada_widger.dart';
+import '../flutter_flow/flutter_flow_model.dart';
+import '/backend/api_requests/api_calls.dart';
+import '/components/bottom_reservado/bottom_reservado_widget.dart';
+import '/flutter_flow/flutter_flow_google_map.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import 'mapa_reservado_model.dart';
+export 'mapa_reservado_model.dart';
+
 class MapaReservadoWidget extends StatefulWidget {
-  const MapaReservadoWidget({Key? key}) : super(key: key);
+  const MapaReservadoWidget({
+    Key? key,
+    this.detailUser,
+  }) : super(key: key);
+
+  final dynamic detailUser;
 
   @override
   _MapaReservadoWidgetState createState() => _MapaReservadoWidgetState();
 }
 
 class _MapaReservadoWidgetState extends State<MapaReservadoWidget> {
-  LatLng? googleMapsCenter;
-  final googleMapsController = Completer<GoogleMapController>();
-  final _unfocusNode = FocusNode();
+  late MapaReservadoModel _model;
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  var qrEquip = '';
+  final _unfocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _model = createModel(context, () => MapaReservadoModel());
+  }
 
   @override
   void dispose() {
+    _model.dispose();
+
     _unfocusNode.dispose();
     super.dispose();
   }
@@ -112,7 +130,10 @@ class _MapaReservadoWidgetState extends State<MapaReservadoWidget> {
                                           0, 0, 0, 20),
                                       child: SelectionArea(
                                           child: Text(
-                                        'Nome usuário',
+                                        valueOrDefault<String>(
+                                          FFAppState().nome,
+                                          'Usuário',
+                                        ),
                                         style: FlutterFlowTheme.of(context)
                                             .bodyText1
                                             .override(
@@ -122,13 +143,26 @@ class _MapaReservadoWidgetState extends State<MapaReservadoWidget> {
                                       )),
                                     ),
                                     FFButtonWidget(
-                                      onPressed: () {
-                                        print('Button pressed ...');
+                                      onPressed: () async {
+                                        context.pushNamed(
+                                          'EditarPerfil',
+                                          queryParams: {
+                                            'dadosUser': serializeParam(
+                                              widget.detailUser,
+                                              ParamType.JSON,
+                                            ),
+                                          }.withoutNulls,
+                                        );
                                       },
                                       text: 'Editar Perfil',
                                       options: FFButtonOptions(
                                         width: 110,
                                         height: 25,
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            0, 0, 0, 0),
+                                        iconPadding:
+                                            EdgeInsetsDirectional.fromSTEB(
+                                                0, 0, 0, 0),
                                         color: Colors.white,
                                         textStyle: FlutterFlowTheme.of(context)
                                             .subtitle2
@@ -163,245 +197,626 @@ class _MapaReservadoWidgetState extends State<MapaReservadoWidget> {
                 decoration: BoxDecoration(
                   color: Color(0xFF1D4F9A),
                 ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(20, 20, 20, 40),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.network(
-                              'https://tix.life/wp-content/uploads/2019/08/KIT-LIVRE-CHIVAS-3.jpg',
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.15,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(0, 15, 0, 15),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        10, 0, 0, 0),
-                                    child: SelectionArea(
-                                        child: Text(
-                                      'Retire seu equipamento até às [00:00]',
-                                      textAlign: TextAlign.center,
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyText1
-                                          .override(
-                                            fontFamily: 'Poppins',
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                    )),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      if (FFAppState().maisOpcoes == true)
+                        Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(20, 20, 20, 40),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: MediaQuery.of(context).size.height * 0.06,
+                                  decoration: BoxDecoration(
+                                    color: FlutterFlowTheme.of(context).secondaryBackground,
+                                    borderRadius: BorderRadius.circular(8),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(0, 15, 0, 15),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Expanded(
                                   child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        10, 0, 0, 0),
-                                    child: SelectionArea(
-                                        child: Text(
-                                      'Cancele sua reserva grátis até às [00:00]. Após esse horário será cobrado uma tarifa de R\$ 0,00',
-                                      textAlign: TextAlign.center,
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyText1
-                                          .override(
-                                            fontFamily: 'Poppins',
-                                            color: Colors.white,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500,
+                                    padding: EdgeInsetsDirectional.fromSTEB(5, 0, 0, 0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 5, 0),
+                                          child: Icon(
+                                            Icons.home,
+                                            color: FlutterFlowTheme.of(context).primaryColor,
+                                            size: 25,
                                           ),
-                                    )),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(0, 20, 0, 20),
-                            child: FFButtonWidget(
-                              onPressed: () async {
-                                qrEquip =
-                                    await FlutterBarcodeScanner.scanBarcode(
-                                  '#C62828', // scanning line color
-                                  'Cancelar', // cancel button text
-                                  true, // whether to show the flash icon
-                                  ScanMode.QR,
-                                );
-
-                                setState(() {});
-                              },
-                              text: 'Retirar Equipamento',
-                              options: FFButtonOptions(
-                                width: 250,
-                                height: 45,
-                                color: Colors.white,
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .subtitle2
-                                    .override(
-                                      fontFamily: 'Poppins',
-                                      color: Color(0xFF1D4F9A),
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
+                                        ),
+                                        Expanded(
+                                          child: FFButtonWidget(
+                                            onPressed: () async {
+                                              setState(() {
+                                                FFAppState().maisOpcoes = false;
+                                              });
+                                            },
+                                            text: 'Inicio',
+                                            options: FFButtonOptions(
+                                              width: 100,
+                                              height: 40,
+                                              padding:
+                                                  EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                              iconPadding:
+                                                  EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                              color: Colors.white,
+                                              textStyle: FlutterFlowTheme.of(context)
+                                                  .subtitle2
+                                                  .override(
+                                                    fontFamily: 'Poppins',
+                                                    color: FlutterFlowTheme.of(context)
+                                                        .primaryColor,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                              elevation: 0,
+                                              borderSide: BorderSide(
+                                                color: Colors.transparent,
+                                                width: 1,
+                                              ),
+                                              borderRadius: BorderRadius.circular(8),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                borderSide: BorderSide(
-                                  color: Colors.white,
-                                  width: 1,
+                                  ),
                                 ),
-                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: MediaQuery.of(context).size.height * 0.06,
+                                  decoration: BoxDecoration(
+                                    color: FlutterFlowTheme.of(context).secondaryBackground,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(5, 0, 0, 0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Image.asset(
+                                          'assets/images/Vector.png',
+                                          width: MediaQuery.of(context).size.width * 0.08,
+                                          height: MediaQuery.of(context).size.height * 0.04,
+                                          fit: BoxFit.contain,
+                                        ),
+                                        Expanded(
+                                          child: FFButtonWidget(
+                                            onPressed: () {
+                                              print('Button pressed ...');
+                                            },
+                                            text: 'Notificações',
+                                            options: FFButtonOptions(
+                                              width: 130,
+                                              height: 40,
+                                              padding:
+                                                  EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                              iconPadding:
+                                                  EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                              color: Colors.white,
+                                              textStyle: FlutterFlowTheme.of(context)
+                                                  .subtitle2
+                                                  .override(
+                                                    fontFamily: 'Poppins',
+                                                    color: FlutterFlowTheme.of(context)
+                                                        .primaryColor,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                              elevation: 0,
+                                              borderSide: BorderSide(
+                                                color: Colors.transparent,
+                                                width: 1,
+                                              ),
+                                              borderRadius: BorderRadius.circular(8),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: MediaQuery.of(context).size.height * 0.06,
+                                  decoration: BoxDecoration(
+                                    color: FlutterFlowTheme.of(context).secondaryBackground,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(5, 0, 0, 0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Image.asset(
+                                          'assets/images/navigator.png',
+                                          width: MediaQuery.of(context).size.width * 0.08,
+                                          height: MediaQuery.of(context).size.height * 0.04,
+                                          fit: BoxFit.contain,
+                                        ),
+                                        Expanded(
+                                          child: FFButtonWidget(
+                                            onPressed: () async {
+                                              context.pushNamed('Viagens');
+                                            },
+                                            text: 'Viagens',
+                                            options: FFButtonOptions(
+                                              width: 100,
+                                              height: 40,
+                                              padding:
+                                                  EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                              iconPadding:
+                                                  EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                              color: Colors.white,
+                                              textStyle: FlutterFlowTheme.of(context)
+                                                  .subtitle2
+                                                  .override(
+                                                    fontFamily: 'Poppins',
+                                                    color: FlutterFlowTheme.of(context)
+                                                        .primaryColor,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                              elevation: 0,
+                                              borderSide: BorderSide(
+                                                color: Colors.transparent,
+                                                width: 1,
+                                              ),
+                                              borderRadius: BorderRadius.circular(8),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: MediaQuery.of(context).size.height * 0.06,
+                                  decoration: BoxDecoration(
+                                    color: FlutterFlowTheme.of(context).secondaryBackground,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(5, 0, 0, 0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Image.asset(
+                                          'assets/images/loja.png',
+                                          width: MediaQuery.of(context).size.width * 0.08,
+                                          height: MediaQuery.of(context).size.height * 0.04,
+                                          fit: BoxFit.contain,
+                                        ),
+                                        Expanded(
+                                          child: Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
+                                            child: FFButtonWidget(
+                                              onPressed: () async {
+                                                await launchURL('http://www.kitlivre.com/');
+                                              },
+                                              text: 'Acessar Loja',
+                                              options: FFButtonOptions(
+                                                width: 120,
+                                                height: 40,
+                                                padding:
+                                                    EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                                iconPadding:
+                                                    EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                                color: Colors.white,
+                                                textStyle: FlutterFlowTheme.of(context)
+                                                    .subtitle2
+                                                    .override(
+                                                      fontFamily: 'Poppins',
+                                                      color: FlutterFlowTheme.of(context)
+                                                          .primaryColor,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                elevation: 0,
+                                                borderSide: BorderSide(
+                                                  color: Colors.transparent,
+                                                  width: 1,
+                                                ),
+                                                borderRadius: BorderRadius.circular(8),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: MediaQuery.of(context).size.height * 0.06,
+                                  decoration: BoxDecoration(
+                                    color: FlutterFlowTheme.of(context).secondaryBackground,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(5, 0, 0, 0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Image.asset(
+                                          'assets/images/ajuda.png',
+                                          width: MediaQuery.of(context).size.width * 0.08,
+                                          height: MediaQuery.of(context).size.height * 0.05,
+                                          fit: BoxFit.contain,
+                                        ),
+                                        Expanded(
+                                          child: FFButtonWidget(
+                                            onPressed: () {
+                                              print('Button pressed ...');
+                                            },
+                                            text: 'Ajuda',
+                                            options: FFButtonOptions(
+                                              width: 100,
+                                              height: 40,
+                                              padding:
+                                                  EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                              iconPadding:
+                                                  EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                              color: Colors.white,
+                                              textStyle: FlutterFlowTheme.of(context)
+                                                  .subtitle2
+                                                  .override(
+                                                    fontFamily: 'Poppins',
+                                                    color: FlutterFlowTheme.of(context)
+                                                        .primaryColor,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                              elevation: 0,
+                                              borderSide: BorderSide(
+                                                color: Colors.transparent,
+                                                width: 1,
+                                              ),
+                                              borderRadius: BorderRadius.circular(8),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      if (FFAppState().maisOpcoes == false)
+                      Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(20, 20, 20, 40),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.network(
+                                'https://tix.life/wp-content/uploads/2019/08/KIT-LIVRE-CHIVAS-3.jpg',
+                                width: MediaQuery.of(context).size.width,
+                                height: MediaQuery.of(context).size.height * 0.15,
+                                fit: BoxFit.cover,
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
-                            child: FFButtonWidget(
-                              onPressed: () async {
-                                await showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  backgroundColor: Colors.transparent,
-                                  context: context,
-                                  builder: (context) {
-                                    return Padding(
-                                      padding:
-                                          MediaQuery.of(context).viewInsets,
-                                      child: Container(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.3,
-                                        child: EmailEnviadoCopyWidget(),
+                            Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 15, 0, 15),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          10, 0, 0, 0),
+                                      child: SelectionArea(
+                                          child: Text(
+                                        'Retire seu equipamento na data marcada: ${dateTimeFormat('dd/MM/yyyy H:mm', FFAppState().horaReserva)}',
+                                        textAlign: TextAlign.center,
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyText1
+                                            .override(
+                                              fontFamily: 'Poppins',
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                      )),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 15, 0, 15),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          10, 0, 0, 0),
+                                      child: SelectionArea(
+                                          child: Text(
+                                        'Cancele sua reserva grátis até\n2h antes da retirada.\nApós esse horário será cobrado uma tarifa de R\$ 0,00.',
+                                        textAlign: TextAlign.center,
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyText1
+                                            .override(
+                                              fontFamily: 'Poppins',
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                      )),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 20, 0, 20),
+                              child: FFButtonWidget(
+                                onPressed: () async {
+                                  _model.qrCode =
+                                      await FlutterBarcodeScanner.scanBarcode(
+                                    '#C62828', // scanning line color
+                                    'Cancelar', // cancel button text
+                                    true, // whether to show the flash icon
+                                    ScanMode.QR,
+                                  );
+                
+                                  if (_model.qrCode != null &&
+                                      _model.qrCode != '') {
+                                    _model.apiResult4dt = await EquipamentoGroup
+                                        .gETDetalhesEquipamentoCall
+                                        .call(
+                                      numeroSerieEquipamento: _model.qrCode,
+                                    );
+                                    setState(() {
+                                      FFAppState().dadosEquipamento =
+                                          (_model.apiResult4dt?.jsonBody ?? '');
+                                      FFAppState().kit = getJsonField(
+                                        (_model.apiResult4dt?.jsonBody ?? ''),
+                                        r'''$..kit''',
+                                      );
+                                    });
+                                    if ((_model.apiResult4dt?.succeeded ??
+                                        true)) {
+                                      context.pushNamed(
+                                        'DetalheEquipamentoRetirar',
+                                        queryParams: {
+                                          'detalhesEquip': serializeParam(
+                                            (_model.apiResult4dt?.jsonBody ?? ''),
+                                            ParamType.JSON,
+                                          ),
+                                          'detailUser': serializeParam(
+                                            getJsonField(
+                                              widget.detailUser,
+                                              r'''$''',
+                                            ),
+                                            ParamType.JSON,
+                                          ),
+                                        }.withoutNulls,
+                                      );
+                                    } else {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            'Equipamento não encontrado!',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          duration: Duration(milliseconds: 4000),
+                                          backgroundColor:
+                                              FlutterFlowTheme.of(context)
+                                                  .alternate,
+                                        ),
+                                      );
+                                    }
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          'Falha ao scanear qrcode.',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        duration: Duration(milliseconds: 4000),
+                                        backgroundColor:
+                                            FlutterFlowTheme.of(context)
+                                                .alternate,
                                       ),
                                     );
-                                  },
-                                ).then((value) => setState(() {}));
-                              },
-                              text: 'Cancelar Reserva',
-                              options: FFButtonOptions(
-                                width: 250,
-                                height: 45,
-                                color: Colors.white,
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .subtitle2
-                                    .override(
-                                      fontFamily: 'Poppins',
-                                      color: Color(0xFF1D4F9A),
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                borderSide: BorderSide(
+                                  }
+                
+                                  setState(() {});
+                                },
+                                text: 'Retirar Equipamento',
+                                options: FFButtonOptions(
+                                  width: 250,
+                                  height: 45,
+                                  padding:
+                                      EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                  iconPadding:
+                                      EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                                   color: Colors.white,
-                                  width: 1,
+                                  textStyle: FlutterFlowTheme.of(context)
+                                      .subtitle2
+                                      .override(
+                                        fontFamily: 'Poppins',
+                                        color: Color(0xFF1D4F9A),
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                  borderSide: BorderSide(
+                                    color: Colors.white,
+                                    width: 1,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
-                                borderRadius: BorderRadius.circular(8),
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
-                            child: FFButtonWidget(
-                              onPressed: () {
-                                print('Button pressed ...');
-                              },
-                              text: 'Mais Opções',
-                              options: FFButtonOptions(
-                                width: 250,
-                                height: 45,
-                                color: Colors.white,
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .subtitle2
-                                    .override(
-                                      fontFamily: 'Poppins',
-                                      color: Color(0xFF1D4F9A),
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                borderSide: BorderSide(
+                            Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
+                              child: FFButtonWidget(
+                                onPressed: () async {
+                                  await showModalBottomSheet(
+                                    isScrollControlled: true,
+                                    backgroundColor: Colors.transparent,
+                                    enableDrag: false,
+                                    context: context,
+                                    builder: (context) {
+                                      return Padding(
+                                        padding:
+                                            MediaQuery.of(context).viewInsets,
+                                        child: Container(
+                                          height:
+                                              MediaQuery.of(context).size.height *
+                                                  0.7,
+                                          child: ReservaCanceladaWidget(),
+                                        ),
+                                      );
+                                    },
+                                  ).then((value) => setState(() {}));
+                                },
+                                text: 'Cancelar Reserva',
+                                options: FFButtonOptions(
+                                  width: 250,
+                                  height: 45,
+                                  padding:
+                                      EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                  iconPadding:
+                                      EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                                   color: Colors.white,
-                                  width: 1,
+                                  textStyle: FlutterFlowTheme.of(context)
+                                      .subtitle2
+                                      .override(
+                                        fontFamily: 'Poppins',
+                                        color: Color(0xFF1D4F9A),
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                  borderSide: BorderSide(
+                                    color: Colors.white,
+                                    width: 1,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
-                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
+                              child: FFButtonWidget(
+                                onPressed: () async {
+                                  setState(() {
+                                    FFAppState().maisOpcoes = true;
+                                  });
+                                },
+                                text: 'Mais Opções',
+                                options: FFButtonOptions(
+                                  width: 250,
+                                  height: 45,
+                                  padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                  iconPadding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                  color: Colors.white,
+                                  textStyle: FlutterFlowTheme.of(context).subtitle2.override(
+                                        fontFamily: 'Poppins',
+                                        color: Color(0xFF1D4F9A),
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                  borderSide: BorderSide(
+                                    color: Colors.white,
+                                    width: 1,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height * 0.07,
+                              decoration: BoxDecoration(
+                                color: Color(0xFF042D6A),
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        20, 0, 20, 0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsetsDirectional.fromSTEB(
+                                              0, 0, 10, 0),
+                                          child: SelectionArea(
+                                              child: Text(
+                                            'Sair',
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyText1
+                                                .override(
+                                                  fontFamily: 'Poppins',
+                                                  color: Colors.white,
+                                                  fontSize: 18,
+                                                ),
+                                          )),
+                                        ),
+                                        Icon(
+                                          Icons.exit_to_app,
+                                          color: Colors.white,
+                                          size: 40,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
                         ],
                       ),
-                    ),
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height * 0.07,
-                            decoration: BoxDecoration(
-                              color: Color(0xFF042D6A),
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      20, 0, 20, 0),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0, 0, 10, 0),
-                                        child: SelectionArea(
-                                            child: Text(
-                                          'Sair',
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyText1
-                                              .override(
-                                                fontFamily: 'Poppins',
-                                                color: Colors.white,
-                                                fontSize: 18,
-                                              ),
-                                        )),
-                                      ),
-                                      Icon(
-                                        Icons.exit_to_app,
-                                        color: Colors.white,
-                                        size: 40,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -415,12 +830,14 @@ class _MapaReservadoWidgetState extends State<MapaReservadoWidget> {
             mainAxisSize: MainAxisSize.max,
             children: [
               Expanded(
+                flex: 4,
                 child: Stack(
                   children: [
                     FlutterFlowGoogleMap(
-                      controller: googleMapsController,
-                      onCameraIdle: (latLng) => googleMapsCenter = latLng,
-                      initialLocation: googleMapsCenter ??=
+                      controller: _model.googleMapsController,
+                      onCameraIdle: (latLng) =>
+                          _model.googleMapsCenter = latLng,
+                      initialLocation: _model.googleMapsCenter ??=
                           LatLng(13.106061, -59.613158),
                       markerColor: GoogleMarkerColor.violet,
                       mapType: MapType.normal,
@@ -458,6 +875,11 @@ class _MapaReservadoWidgetState extends State<MapaReservadoWidget> {
                     ),
                   ],
                 ),
+              ),
+              wrapWithModel(
+                model: _model.bottomReservadoModel,
+                updateCallback: () => setState(() {}),
+                child: BottomReservadoWidget(),
               ),
             ],
           ),

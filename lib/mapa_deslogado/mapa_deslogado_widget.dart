@@ -1,3 +1,5 @@
+import '../backend/api_requests/api_calls.dart';
+import '../backend/api_requests/api_manager.dart';
 import '../components/botton_cadastrar_widget.dart';
 import '../flutter_flow/flutter_flow_google_map.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
@@ -7,6 +9,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:mob_livree/mapa/parceiro_panel.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:dio/dio.dart';
+
+FlutterFlowMarker? marker;
+List<FlutterFlowMarker> docLatAndLong = [];
 
 class MapaDeslogadoWidget extends StatefulWidget {
   const MapaDeslogadoWidget({Key? key}) : super(key: key);
@@ -16,17 +24,49 @@ class MapaDeslogadoWidget extends StatefulWidget {
 }
 
 class _MapaDeslogadoWidgetState extends State<MapaDeslogadoWidget> {
+
+   void setSelectedParceiro(dynamic parceiro) => setState(() => selectedParceiro = parceiro);
+  PanelController panelController = PanelController();
+  dynamic selectedParceiro;
+  List<dynamic> parceiros = [];
+
   LatLng? currentUserLocationValue;
   final _unfocusNode = FocusNode();
   final scaffoldKey = GlobalKey<ScaffoldState>();
   LatLng? googleMapsCenter;
   final googleMapsController = Completer<GoogleMapController>();
 
+  Future<List<FlutterFlowMarker>> getLatAndLong() async {
+    String url = "http://177.70.102.109:3005/parceiro-equipamento";
+
+    final response = await Dio().get(url);
+    final responseBody = response.data;
+
+    List<dynamic> parceirosToAdd = [];
+    for (final parceiro in responseBody) {
+      LatLng latLng = LatLng(parceiro['latitude'], parceiro['longitude']);
+      marker = FlutterFlowMarker(parceiro['documento_empresa'], latLng, () async {
+        setSelectedParceiro(parceiro);
+        panelController.open();
+      });
+      docLatAndLong.add(marker!);
+      parceirosToAdd.add(parceiro);
+    }
+
+    setState(() {
+      print(responseBody);
+      parceiros = parceirosToAdd;
+    });
+
+    return docLatAndLong;
+  }
+
   @override
   void initState() {
     super.initState();
     getCurrentUserLocation(defaultLocation: LatLng(0.0, 0.0), cached: true)
         .then((loc) => setState(() => currentUserLocationValue = loc));
+    getLatAndLong();
   }
 
   @override
@@ -219,51 +259,84 @@ class _MapaDeslogadoWidgetState extends State<MapaDeslogadoWidget> {
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
-              Expanded(
-                child: Stack(
-                  children: [
-                    FlutterFlowGoogleMap(
-                      controller: googleMapsController,
-                      onCameraIdle: (latLng) => googleMapsCenter = latLng,
-                      initialLocation: googleMapsCenter ??=
-                          currentUserLocationValue!,
-                      markerColor: GoogleMarkerColor.violet,
-                      mapType: MapType.normal,
-                      style: GoogleMapStyle.standard,
-                      initialZoom: 14,
-                      allowInteraction: true,
-                      allowZoom: true,
-                      showZoomControls: true,
-                      showLocation: true,
-                      showCompass: false,
-                      showMapToolbar: false,
-                      showTraffic: false,
-                      centerMapOnMarkerTap: true,
-                    ),
-                    Align(
-                      alignment: AlignmentDirectional(-0.88, -0.96),
-                      child: InkWell(
-                        onTap: () async {
-                          scaffoldKey.currentState!.openDrawer();
-                        },
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.1,
-                          height: MediaQuery.of(context).size.height * 0.05,
-                          decoration: BoxDecoration(
-                            color: Color(0xFF1D4F9A),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Icon(
-                            Icons.menu_sharp,
-                            color: Colors.white,
-                            size: 30,
+                Expanded(
+                  child: Stack(
+                    children: [
+                      Align(
+                        alignment: AlignmentDirectional(0, 0),
+                        child: FutureBuilder<ApiCallResponse>(
+                          future: ParceiroGroup.gETParceirosCall.call(),
+                          builder: (context, snapshot) {
+                            // Customize what your widget looks like when it's loading.
+                            if (!snapshot.hasData) {
+                              return Center(
+                                child: SizedBox(
+                                  width: 50,
+                                  height: 50,
+                                  child: CircularProgressIndicator(
+                                    color:
+                                        FlutterFlowTheme.of(context).primaryColor,
+                                  ),
+                                ),
+                              );
+                            }
+                            return GestureDetector(
+                              onTap: () => FocusScope.of(context).unfocus(),
+                              child: SlidingUpPanel(
+                                controller: panelController,
+                                backdropColor: Colors.black,
+                                backdropOpacity: 0.6,
+                                backdropEnabled: true,
+                                backdropTapClosesPanel: true,
+                                minHeight: 0,
+                                panel: ParceiroPanel(parceiro: selectedParceiro),
+                                body: FlutterFlowGoogleMap(
+                                  controller: googleMapsController,
+                                  onCameraIdle: (latLng) => googleMapsCenter = latLng,
+                                  initialLocation: googleMapsCenter ??= currentUserLocationValue,
+                                  markerColor: GoogleMarkerColor.violet,
+                                  markers: docLatAndLong,
+                                  mapType: MapType.normal,
+                                  style: GoogleMapStyle.standard,
+                                  initialZoom: 10,
+                                  allowInteraction: true,
+                                  allowZoom: true,
+                                  showZoomControls: true,
+                                  showLocation: true,
+                                  showCompass: false,
+                                  showMapToolbar: false,
+                                  showTraffic: false,
+                                  centerMapOnMarkerTap: true,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      Align(
+                        alignment: AlignmentDirectional(-0.88, -0.96),
+                        child: InkWell(
+                          onTap: () async {
+                            scaffoldKey.currentState!.openDrawer();
+                          },
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.1,
+                            height: MediaQuery.of(context).size.height * 0.05,
+                            decoration: BoxDecoration(
+                              color: Color(0xFF1D4F9A),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Icon(
+                              Icons.menu_sharp,
+                              color: Colors.white,
+                              size: 30,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
               BottonCadastrarWidget(),
             ],
           ),

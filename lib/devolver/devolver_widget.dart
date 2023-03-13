@@ -133,8 +133,8 @@ class _DevolverWidgetState extends State<DevolverWidget> {
                           children: [
                             Expanded(
                               child: Text(
-                                getJsonField(
-                                  widget.detalhesEquip,
+                                 getJsonField(
+                                  FFAppState().dadosEquipamento,
                                   r'''$..nome_equipamento''',
                                 ).toString(),
                                 textAlign: TextAlign.center,
@@ -158,16 +158,16 @@ class _DevolverWidgetState extends State<DevolverWidget> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                                if (getJsonField(
-                                    widget.detalhesEquip,
+                                    FFAppState().dadosEquipamento,
                                     r'''$..rebocado''',
                                   ).toString() != "null" && getJsonField(
-                                    widget.detalhesEquip,
+                                    FFAppState().dadosEquipamento,
                                     r'''$..rebocado''',
                                   ).toString() != null)
                               Text(
                                 valueOrDefault<String>(
                                   getJsonField(
-                                    widget.detalhesEquip,
+                                    FFAppState().dadosEquipamento,
                                     r'''$..rebocado''',
                                   ).toString(),
                                   'Rebocado',
@@ -203,7 +203,7 @@ class _DevolverWidgetState extends State<DevolverWidget> {
                               Expanded(
                                 child: Text(
                                   getJsonField(
-                                    widget.detalhesEquip,
+                                    FFAppState().dadosEquipamento,
                                     r'''$..kit''',
                                   ).toString(),
                                   textAlign: TextAlign.end,
@@ -238,7 +238,7 @@ class _DevolverWidgetState extends State<DevolverWidget> {
                               Expanded(
                                 child: Text(
                                   '${getJsonField(
-                                    widget.detalhesEquip,
+                                    FFAppState().dadosEquipamento,
                                     r'''$..carga''',
                                   ).toString()}%',
                                   textAlign: TextAlign.end,
@@ -305,7 +305,7 @@ class _DevolverWidgetState extends State<DevolverWidget> {
                               Expanded(
                                 child: Text(
                                   getJsonField(
-                                    widget.detalhesEquip,
+                                    FFAppState().dadosEquipamento,
                                     r'''$..razao_social''',
                                   ).toString(),
                                   textAlign: TextAlign.end,

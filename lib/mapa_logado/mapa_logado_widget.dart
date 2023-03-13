@@ -1,4 +1,5 @@
 import '../flutter_flow/flutter_flow_model.dart';
+import 'package:mob_livree/mapa/parceiro_panel.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_expanded_image_view.dart';
 import '/flutter_flow/flutter_flow_google_map.dart';
@@ -12,9 +13,15 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:dio/dio.dart';
 
 import 'mapa_logado_model.dart';
 export 'mapa_logado_model.dart';
+
+
+FlutterFlowMarker? marker;
+List<FlutterFlowMarker> docLatAndLong = [];
 
 class MapaLogadoWidget extends StatefulWidget {
   const MapaLogadoWidget({
@@ -31,15 +38,47 @@ class MapaLogadoWidget extends StatefulWidget {
 class _MapaLogadoWidgetState extends State<MapaLogadoWidget> {
   late MapaLogadoModel _model;
 
+  void setSelectedParceiro(dynamic parceiro) => setState(() => selectedParceiro = parceiro);
+  PanelController panelController = PanelController();
+  dynamic selectedParceiro;
+  List<dynamic> parceiros = [];
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
   LatLng? currentUserLocationValue;
+  LatLng? googleMapsCenter;
+  final googleMapsController = Completer<GoogleMapController>();
+
+  Future<List<FlutterFlowMarker>> getLatAndLong() async {
+    String url = "http://177.70.102.109:3005/parceiro-equipamento";
+
+    final response = await Dio().get(url);
+    final responseBody = response.data;
+
+    List<dynamic> parceirosToAdd = [];
+    for (final parceiro in responseBody) {
+      LatLng latLng = LatLng(parceiro['latitude'], parceiro['longitude']);
+      marker = FlutterFlowMarker(parceiro['documento_empresa'], latLng, () async {
+        setSelectedParceiro(parceiro);
+        panelController.open();
+      });
+      docLatAndLong.add(marker!);
+      parceirosToAdd.add(parceiro);
+    }
+
+    setState(() {
+      print(responseBody);
+      parceiros = parceirosToAdd;
+    });
+
+    return docLatAndLong;
+  }
 
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => MapaLogadoModel());
-
+    getLatAndLong();
     getCurrentUserLocation(defaultLocation: LatLng(0.0, 0.0), cached: true)
         .then((loc) => setState(() => currentUserLocationValue = loc));
   }
@@ -762,24 +801,35 @@ class _MapaLogadoWidgetState extends State<MapaLogadoWidget> {
                             );
                           }
                           final googleMapGETParceirosResponse = snapshot.data!;
-                          return FlutterFlowGoogleMap(
-                            controller: _model.googleMapsController,
-                            onCameraIdle: (latLng) =>
-                                _model.googleMapsCenter = latLng,
-                            initialLocation: _model.googleMapsCenter ??=
-                                currentUserLocationValue!,
-                            markerColor: GoogleMarkerColor.violet,
-                            mapType: MapType.normal,
-                            style: GoogleMapStyle.standard,
-                            initialZoom: 14,
-                            allowInteraction: true,
-                            allowZoom: true,
-                            showZoomControls: true,
-                            showLocation: true,
-                            showCompass: false,
-                            showMapToolbar: false,
-                            showTraffic: false,
-                            centerMapOnMarkerTap: true,
+                          return GestureDetector(
+                            onTap: () => FocusScope.of(context).unfocus(),
+                            child: SlidingUpPanel(
+                              controller: panelController,
+                              backdropColor: Colors.black,
+                              backdropOpacity: 0.6,
+                              backdropEnabled: true,
+                              backdropTapClosesPanel: true,
+                              minHeight: 0,
+                              panel: ParceiroPanel(parceiro: selectedParceiro),
+                              body: FlutterFlowGoogleMap(
+                                controller: googleMapsController,
+                                onCameraIdle: (latLng) => googleMapsCenter = latLng,
+                                initialLocation: googleMapsCenter ??= currentUserLocationValue,
+                                markerColor: GoogleMarkerColor.violet,
+                                markers: docLatAndLong,
+                                mapType: MapType.normal,
+                                style: GoogleMapStyle.standard,
+                                initialZoom: 10,
+                                allowInteraction: true,
+                                allowZoom: true,
+                                showZoomControls: true,
+                                showLocation: true,
+                                showCompass: false,
+                                showMapToolbar: false,
+                                showTraffic: false,
+                                centerMapOnMarkerTap: true,
+                              ),
+                            ),
                           );
                         },
                       ),

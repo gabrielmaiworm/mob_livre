@@ -1,4 +1,5 @@
 import 'package:mob_livree/detalhe_equipamento/detalhe_equipamento_widget.dart';
+import 'package:mob_livree/detalhe_equipamento_retirar/detalhe_equipamento_retirar_widget.dart';
 
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
@@ -454,7 +455,7 @@ String getPicture() {
                                         child: InkWell(
                                           onTap: () async {
                                             Navigator.of(context)
-                                            .push(MaterialPageRoute(builder: (context) => DetalheEquipamentoWidget(detalhesEquip: listaKitItem)));
+                                            .push(MaterialPageRoute(builder: (context) => DetalheEquipamentoWidget(detalhesEquip: listaKitItem, detalhesParceiro: widget.detalhesParceiro)));
                                           },
                                           child: Stack(
                                             children: [

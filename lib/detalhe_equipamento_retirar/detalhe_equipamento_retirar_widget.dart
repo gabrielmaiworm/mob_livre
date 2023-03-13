@@ -15,9 +15,11 @@ class DetalheEquipamentoRetirarWidget extends StatefulWidget {
     Key? key,
     this.detalhesEquip,
     this.detailUser,
+    this.detalhesParceiro,
   }) : super(key: key);
 
   final dynamic detalhesEquip;
+  final dynamic detalhesParceiro;
   final dynamic detailUser;
 
   @override
@@ -295,6 +297,30 @@ class _DetalheEquipamentoRetirarWidgetState
                                           .primaryColor,
                                     ),
                               ),
+                              if (getJsonField(
+                                    widget.detalhesEquip,
+                                    r'''$..razao_social''',
+                                  ).toString() == 'null')
+                              Expanded(
+                                child: Text(
+                                  getJsonField(
+                                    widget.detalhesParceiro,
+                                    r'''$..nome_fantasia''',
+                                  ).toString(),
+                                  textAlign: TextAlign.end,
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyText1
+                                      .override(
+                                        fontFamily: 'Poppins',
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryColor,
+                                      ),
+                                ),
+                              ),
+                              if (getJsonField(
+                                    widget.detalhesEquip,
+                                    r'''$..razao_social''',
+                                  ).toString() != 'null')
                               Expanded(
                                 child: Text(
                                   getJsonField(

@@ -59,7 +59,7 @@ class _LogarWidgetState extends State<LogarWidget> {
                             Expanded(
                               child: SelectionArea(
                                   child: Text(
-                                'Você precisa estar logado para poder efetuar o pagamento.',
+                                'Você precisa estar logado para poder reservar um equipamento.',
                                 textAlign: TextAlign.center,
                                 style: FlutterFlowTheme.of(context)
                                     .bodyText1

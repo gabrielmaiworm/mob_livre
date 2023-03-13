@@ -206,7 +206,7 @@ class CadastrarUsuarioCall {
   "senha": "${senha}",
   "telefone": "${telefone}",
   "sobrenome": "${sobrenome}",
-  "ativo": true,
+  "ativo": 1,
   "tipo_usuario": "USUÁRIO"
 }''';
     return ApiManager.instance.makeApiCall(
@@ -276,7 +276,7 @@ class EditarUsuarioCall {
   "senha": "${senha}",
   "telefone": "${telefone}",
   "sobrenome": "${sobrenome}",
-  "ativo": true
+  "ativo": 1
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'Editar Usuario',
