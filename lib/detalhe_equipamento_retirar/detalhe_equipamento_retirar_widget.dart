@@ -155,18 +155,12 @@ class _DetalheEquipamentoRetirarWidgetState
                               if (getJsonField(
                                     widget.detalhesEquip,
                                     r'''$..rebocado''',
-                                  ).toString() != "null" && getJsonField(
-                                    widget.detalhesEquip,
-                                    r'''$..rebocado''',
                                   ).toString() != null)
                               Text(
-                                valueOrDefault<String>(
                                   getJsonField(
                                     widget.detalhesEquip,
                                     r'''$..rebocado''',
-                                  ).toString(),
-                                  'Rebocado',
-                                    ),
+                                  ).toString(),     
                                 style: FlutterFlowTheme.of(context)
                                     .bodyText1
                                     .override(

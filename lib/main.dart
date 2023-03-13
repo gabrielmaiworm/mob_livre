@@ -14,9 +14,11 @@ import 'flutter_flow/flutter_flow_util.dart';
 import 'flutter_flow/internationalization.dart';
 import 'flutter_flow/nav/nav.dart';
 import 'index.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await initFirebase();
   await SupaFlow.initialize();
 

@@ -85,7 +85,7 @@ class _EmergenciaAlertaWidgetState extends State<EmergenciaAlertaWidget> {
               ),
               FFButtonWidget(
                 onPressed: () async {
-                  context.pushNamed('MapaAlugado');
+                  context.goNamed('MapaAlugado');
                 },
                 text: 'Continuar',
                 options: FFButtonOptions(

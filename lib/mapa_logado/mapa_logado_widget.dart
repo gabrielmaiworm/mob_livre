@@ -234,40 +234,39 @@ class _MapaLogadoWidgetState extends State<MapaLogadoWidget> {
                                           ),
                                           FFButtonWidget(
                                             onPressed: () async {
-                                              context.pushNamed(
-                                                'EditarPerfil',
-                                                queryParams: {
-                                                  'dadosUser': serializeParam(
-                                                    widget.dadosUser,
-                                                    ParamType.JSON,
-                                                  ),
-                                                }.withoutNulls,
+                                              await showDialog(
+                                                context: context,
+                                                builder: (alertDialogContext) {
+                                                  return AlertDialog(
+                                                    title: Text('Atenção'),
+                                                    content: Text('Funcionalidade em manutenção.'),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () => Navigator.pop(alertDialogContext),
+                                                        child: Text('Ok'),
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
                                               );
                                             },
                                             text: 'Editar Perfil',
                                             options: FFButtonOptions(
                                               width: 110,
                                               height: 25,
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0, 0, 0, 0),
-                                              iconPadding: EdgeInsetsDirectional
-                                                  .fromSTEB(0, 0, 0, 0),
+                                              padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                              iconPadding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                                               color: Colors.white,
-                                              textStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .subtitle2
-                                                      .override(
-                                                        fontFamily: 'Poppins',
-                                                        color:
-                                                            Color(0xFF1D4F9A),
-                                                        fontSize: 14,
-                                                      ),
+                                              textStyle: FlutterFlowTheme.of(context).subtitle2.override(
+                                                    fontFamily: 'Poppins',
+                                                    color: Color(0xFF1D4F9A),
+                                                    fontSize: 14,
+                                                  ),
                                               borderSide: BorderSide(
                                                 color: Color(0xFF1D4F9A),
                                                 width: 1,
                                               ),
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
+                                              borderRadius: BorderRadius.circular(8),
                                             ),
                                           ),
                                         ],
@@ -729,8 +728,10 @@ class _MapaLogadoWidgetState extends State<MapaLogadoWidget> {
                                             FFAppState().emailEsqueciSenha = '';
                                             FFAppState().emailLogado = '';
                                             FFAppState().nome = '';
-                                            FFAppState().emailPersist = '';
+                                            FFAppState().emailPersist = 'n/a';
                                             FFAppState().documento = '';
+                                            FFAppState().logado = false;
+                                            FFAppState().emergencia = false;
                                           });
 
                                           context.goNamed('MapaDeslogado');

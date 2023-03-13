@@ -48,7 +48,7 @@ class _BottonCadastrarWidgetState extends State<BottonCadastrarWidget> {
       children: [
         Container(
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height * 0.12,
+          height: MediaQuery.of(context).size.height * 0.15,
           decoration: BoxDecoration(
             color: Color(0xFF1D4F9A),
             borderRadius: BorderRadius.only(

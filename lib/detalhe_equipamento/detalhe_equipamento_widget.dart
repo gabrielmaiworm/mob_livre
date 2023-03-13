@@ -153,6 +153,13 @@ class _DetalheEquipamentoWidgetState extends State<DetalheEquipamentoWidget> {
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
+                             if (getJsonField(
+                                    widget.detalhesEquip,
+                                    r'''$..rebocado''',
+                                  ).toString() != "null" || getJsonField(
+                                    widget.detalhesEquip,
+                                    r'''$..rebocado''',
+                                  ).toString() != null)
                               Text(
                                 valueOrDefault<String>(
                                   getJsonField(
@@ -160,7 +167,7 @@ class _DetalheEquipamentoWidgetState extends State<DetalheEquipamentoWidget> {
                                     r'''$..rebocado''',
                                   ).toString(),
                                   'Rebocado',
-                                ),
+                                    ),
                                 style: FlutterFlowTheme.of(context)
                                     .bodyText1
                                     .override(
@@ -401,7 +408,7 @@ class _DetalheEquipamentoWidgetState extends State<DetalheEquipamentoWidget> {
                           return Padding(
                             padding: MediaQuery.of(context).viewInsets,
                             child: Container(
-                              height: 70,
+                              height: MediaQuery.of(context).size.height * 0.7,
                               child: LogarWidget(),
                             ),
                           );

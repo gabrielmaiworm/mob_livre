@@ -142,42 +142,43 @@ class _MapaReservadoWidgetState extends State<MapaReservadoWidget> {
                                             ),
                                       )),
                                     ),
-                                    FFButtonWidget(
-                                      onPressed: () async {
-                                        context.pushNamed(
-                                          'EditarPerfil',
-                                          queryParams: {
-                                            'dadosUser': serializeParam(
-                                              widget.detailUser,
-                                              ParamType.JSON,
+                                   FFButtonWidget(
+                                            onPressed: () async {
+                                              await showDialog(
+                                                context: context,
+                                                builder: (alertDialogContext) {
+                                                  return AlertDialog(
+                                                    title: Text('Atenção'),
+                                                    content: Text('Funcionalidade em manutenção.'),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () => Navigator.pop(alertDialogContext),
+                                                        child: Text('Ok'),
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              );
+                                            },
+                                            text: 'Editar Perfil',
+                                            options: FFButtonOptions(
+                                              width: 110,
+                                              height: 25,
+                                              padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                              iconPadding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                              color: Colors.white,
+                                              textStyle: FlutterFlowTheme.of(context).subtitle2.override(
+                                                    fontFamily: 'Poppins',
+                                                    color: Color(0xFF1D4F9A),
+                                                    fontSize: 14,
+                                                  ),
+                                              borderSide: BorderSide(
+                                                color: Color(0xFF1D4F9A),
+                                                width: 1,
+                                              ),
+                                              borderRadius: BorderRadius.circular(8),
                                             ),
-                                          }.withoutNulls,
-                                        );
-                                      },
-                                      text: 'Editar Perfil',
-                                      options: FFButtonOptions(
-                                        width: 110,
-                                        height: 25,
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0, 0, 0, 0),
-                                        iconPadding:
-                                            EdgeInsetsDirectional.fromSTEB(
-                                                0, 0, 0, 0),
-                                        color: Colors.white,
-                                        textStyle: FlutterFlowTheme.of(context)
-                                            .subtitle2
-                                            .override(
-                                              fontFamily: 'Poppins',
-                                              color: Color(0xFF1D4F9A),
-                                              fontSize: 14,
-                                            ),
-                                        borderSide: BorderSide(
-                                          color: Color(0xFF1D4F9A),
-                                          width: 1,
-                                        ),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
+                                          ),
                                   ],
                                 ),
                               ),
@@ -801,11 +802,45 @@ class _MapaReservadoWidgetState extends State<MapaReservadoWidget> {
                                                 ),
                                           )),
                                         ),
-                                        Icon(
+                                        InkWell(
+                                        onTap: () async {
+                                          FFAppState().update(() {
+                                            FFAppState().emailCadastro = '';
+                                            FFAppState().senhaCadastro = '';
+                                            FFAppState().receberEmail = false;
+                                            FFAppState().emailEsqueciSenha = '';
+                                            FFAppState().emailLogado = '';
+                                            FFAppState().nome = '';
+                                            FFAppState().emailPersist = 'n/a';
+                                            FFAppState().documento = '';
+                                            FFAppState().logado = false;
+                                            FFAppState().emergencia = false;
+                                          });
+
+                                          context.goNamed('MapaDeslogado');
+
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                'Você foi desconectado.',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              duration:
+                                                  Duration(milliseconds: 4000),
+                                              backgroundColor:
+                                                  Color(0xFF606060),
+                                            ),
+                                          );
+                                        },
+                                        child: Icon(
                                           Icons.exit_to_app,
                                           color: Colors.white,
                                           size: 40,
                                         ),
+                                      ),
                                       ],
                                     ),
                                   ),

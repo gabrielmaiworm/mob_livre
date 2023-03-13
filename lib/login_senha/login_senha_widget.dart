@@ -318,7 +318,7 @@ Padding(
               r'''$''',
             );
           });
-          context.pushNamed(
+          context.goNamed(
             'MapaAlugado',
             queryParams: {
               'detalhesEquip': serializeParam(
@@ -331,7 +331,7 @@ Padding(
             }.withoutNulls,
           );
         } else {
-          context.pushNamed(
+          context.goNamed(
             'MapaLogado',
             queryParams: {
               'dadosUser': serializeParam(

@@ -1,4 +1,5 @@
 import '../../flutter_flow/flutter_flow_model.dart';
+import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -7,11 +8,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
-import 'reserva_cancelada_model.dart';
-export 'reserva_cancelada_model.dart';
+import 'emergencia_cancelada_model.dart';
+export 'emergencia_cancelada_model.dart';
 
-class ReservaCanceladaWidget extends StatefulWidget {
-  const ReservaCanceladaWidget({
+class EmergenciaCanceladaWidget extends StatefulWidget {
+  const EmergenciaCanceladaWidget({
     Key? key,
     this.detailUser,
   }) : super(key: key);
@@ -19,11 +20,12 @@ class ReservaCanceladaWidget extends StatefulWidget {
   final dynamic detailUser;
 
   @override
-  _ReservaCanceladaWidgetState createState() => _ReservaCanceladaWidgetState();
+  _EmergenciaCanceladaWidgetState createState() =>
+      _EmergenciaCanceladaWidgetState();
 }
 
-class _ReservaCanceladaWidgetState extends State<ReservaCanceladaWidget> {
-  late ReservaCanceladaModel _model;
+class _EmergenciaCanceladaWidgetState extends State<EmergenciaCanceladaWidget> {
+  late EmergenciaCanceladaModel _model;
 
   @override
   void setState(VoidCallback callback) {
@@ -34,7 +36,7 @@ class _ReservaCanceladaWidgetState extends State<ReservaCanceladaWidget> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => ReservaCanceladaModel());
+    _model = createModel(context, () => EmergenciaCanceladaModel());
   }
 
   @override
@@ -75,7 +77,7 @@ class _ReservaCanceladaWidgetState extends State<ReservaCanceladaWidget> {
                           children: [
                             Expanded(
                               child: Text(
-                                'Deseja cancelar a reserva?',
+                                'Deseja cancelar a emergência?',
                                 textAlign: TextAlign.center,
                                 style: FlutterFlowTheme.of(context)
                                     .bodyText1
@@ -103,15 +105,46 @@ class _ReservaCanceladaWidgetState extends State<ReservaCanceladaWidget> {
                           children: [
                             FFButtonWidget(
                               onPressed: () async {
-                                context.goNamed(
-                                  'MapaLogado',
-                                  queryParams: {
-                                    'dadosUser': serializeParam(
-                                      widget.detailUser,
-                                      ParamType.JSON,
-                                    ),
-                                  }.withoutNulls,
+                                _model.apiResultmps = await EquipamentoGroup
+                                    .pUTResolveEmergenciaCall
+                                    .call(
+                                  kit: FFAppState().kit,
                                 );
+                                if ((_model.apiResultmps?.succeeded ?? true)) {
+                                  setState(() {
+                                    FFAppState().emergencia = false;
+                                  });
+                                  Navigator.pop(context);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Emergência cancelada!',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      duration: Duration(milliseconds: 4000),
+                                      backgroundColor: Color(0xFF70BB73),
+                                    ),
+                                  );
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Erro Inesperado.',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      duration: Duration(milliseconds: 4000),
+                                      backgroundColor:
+                                          FlutterFlowTheme.of(context)
+                                              .alternate,
+                                    ),
+                                  );
+                                }
+
+                                setState(() {});
                               },
                               text: 'Sim',
                               options: FFButtonOptions(

@@ -208,6 +208,7 @@ class _EmergenciaWidgetState extends State<EmergenciaWidget> {
                       );
                       if ((_model.apiResultmdy?.succeeded ?? true)) {
                         context.pushNamed('EmergenciaAlerta');
+                        setState(() {FFAppState().emergencia = true;});
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(

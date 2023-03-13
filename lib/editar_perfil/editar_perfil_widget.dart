@@ -1471,7 +1471,7 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                                 FFAppState().complemento =
                                     _model.complementoController!.text;
                               });
-                              if(FFAppState().dadosEquipamento == null) {
+                              if(FFAppState().dadosEquipamento == 'null') {
                               context.pushNamed(
                                 'MapaLogado',
                                 queryParams: {

@@ -89,7 +89,7 @@ class _DevolucaoConcluidaWidgetState extends State<DevolucaoConcluidaWidget> {
                           ],
                         ),
                         Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 20),
+                          padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 70),
                           child: Lottie.asset(
                             'assets/lottie_animations/success.json',
                             width: 150,
@@ -104,7 +104,7 @@ class _DevolucaoConcluidaWidgetState extends State<DevolucaoConcluidaWidget> {
                           children: [
                             FFButtonWidget(
                               onPressed: () async {
-                                context.pushNamed('MapaLogado');
+                                context.goNamed('MapaLogado');
                               },
                               text: 'Continuar',
                               options: FFButtonOptions(

@@ -232,7 +232,9 @@ class _PermissaoWidgetState extends State<PermissaoWidget> {
                                           );
                                         }
                                       } else {
+                                        
                                         context.pushNamed('MapaDeslogado');
+                                         setState(() {FFAppState().emailPersist = 'n/a';});
                                       }
                                       setState(() {});
                                     },

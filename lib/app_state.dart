@@ -92,7 +92,7 @@ class FFAppState extends ChangeNotifier {
     prefs.setString('ff_nome', _value);
   }
 
-  String _emailPersist = '';
+  String _emailPersist = 'nenhum';
   String get emailPersist => _emailPersist;
   set emailPersist(String _value) {
     _emailPersist = _value;
@@ -235,6 +235,12 @@ class FFAppState extends ChangeNotifier {
   bool get maisOpcoes => _maisOpcoes;
   set maisOpcoes(bool _value) {
     _maisOpcoes = _value;
+  }
+
+  bool _emergencia = false;
+  bool get emergencia => _emergencia;
+  set emergencia(bool _value) {
+    _emergencia = _value;
   }
 
   dynamic _dadosEquipamento;

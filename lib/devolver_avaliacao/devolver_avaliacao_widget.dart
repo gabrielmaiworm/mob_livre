@@ -111,7 +111,7 @@ class _DevolverAvaliacaoWidgetState extends State<DevolverAvaliacaoWidget> {
                           style:
                               FlutterFlowTheme.of(context).bodyText1.override(
                                     fontFamily: 'Poppins',
-                                    color: Color(0xD8000000),
+                                    color: FlutterFlowTheme.of(context).primaryColor,
                                     fontSize: 18,
                                   ),
                         ),

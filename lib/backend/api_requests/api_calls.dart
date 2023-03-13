@@ -428,6 +428,7 @@ class EquipamentoGroup {
   static POSTSolicitacaoCall pOSTSolicitacaoCall = POSTSolicitacaoCall();
   static PUTDevolucaoCall pUTDevolucaoCall = PUTDevolucaoCall();
   static PUTEmergenciaCall pUTEmergenciaCall = PUTEmergenciaCall();
+  static PUTResolveEmergenciaCall pUTResolveEmergenciaCall = PUTResolveEmergenciaCall();
 }
 
 class GETDetalhesEquipamentoCall {
@@ -531,6 +532,32 @@ class PUTEmergenciaCall {
     return ApiManager.instance.makeApiCall(
       callName: 'PUT Emergencia',
       apiUrl: '${EquipamentoGroup.baseUrl}estoque-emergencia',
+      callType: ApiCallType.PUT,
+      headers: {
+        ...EquipamentoGroup.headers,
+      },
+      params: {},
+      body: body,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
+class PUTResolveEmergenciaCall {
+  Future<ApiCallResponse> call({
+    int? kit,
+  }) {
+    final body = '''
+{
+  "kit": ${kit}
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'PUT Resolve Emergencia',
+      apiUrl: '${EquipamentoGroup.baseUrl}estoque-resolver-emergencia',
       callType: ApiCallType.PUT,
       headers: {
         ...EquipamentoGroup.headers,

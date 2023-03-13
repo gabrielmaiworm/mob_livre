@@ -1,5 +1,8 @@
+import 'package:mob_livree/components/emergencia_cancelada/emergencia_cancelada_widget.dart';
+
 import '../backend/api_requests/api_calls.dart';
 import '../backend/api_requests/api_manager.dart';
+import '../components/reserva_cancelada/reserva_cancelada_widger.dart';
 import '../flutter_flow/flutter_flow_model.dart';
 import 'package:mob_livree/mapa/parceiro_panel.dart';
 import '/components/email_enviado_copy_widget.dart';
@@ -200,37 +203,43 @@ class _MapaAlugadoWidgetState extends State<MapaAlugadoWidget> {
                                             ),
                                       )),
                                     ),
-                                    FFButtonWidget(
-                                      onPressed: () async {
-                                        context.pushNamed(
-                                          'EditarPerfil',
-                                          queryParams: {
-                                            'dadosUser': serializeParam(
-                                              widget.detailUser,
-                                              ParamType.JSON,
+                                     FFButtonWidget(
+                                            onPressed: () async {
+                                              await showDialog(
+                                                context: context,
+                                                builder: (alertDialogContext) {
+                                                  return AlertDialog(
+                                                    title: Text('Atenção'),
+                                                    content: Text('Funcionalidade em manutenção.'),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () => Navigator.pop(alertDialogContext),
+                                                        child: Text('Ok'),
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              );
+                                            },
+                                            text: 'Editar Perfil',
+                                            options: FFButtonOptions(
+                                              width: 110,
+                                              height: 25,
+                                              padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                              iconPadding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                              color: Colors.white,
+                                              textStyle: FlutterFlowTheme.of(context).subtitle2.override(
+                                                    fontFamily: 'Poppins',
+                                                    color: Color(0xFF1D4F9A),
+                                                    fontSize: 14,
+                                                  ),
+                                              borderSide: BorderSide(
+                                                color: Color(0xFF1D4F9A),
+                                                width: 1,
+                                              ),
+                                              borderRadius: BorderRadius.circular(8),
                                             ),
-                                          }.withoutNulls,
-                                        );
-                                      },
-                                      text: 'Editar Perfil',
-                                      options: FFButtonOptions(
-                                        width: 110,
-                                        height: 25,
-                                        padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                                        iconPadding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                                        color: Colors.white,
-                                        textStyle: FlutterFlowTheme.of(context).subtitle2.override(
-                                              fontFamily: 'Poppins',
-                                              color: Color(0xFF1D4F9A),
-                                              fontSize: 14,
-                                            ),
-                                        borderSide: BorderSide(
-                                          color: Color(0xFF1D4F9A),
-                                          width: 1,
-                                        ),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
+                                          ),
                                   ],
                                 ),
                               ),
@@ -841,6 +850,7 @@ class _MapaAlugadoWidgetState extends State<MapaAlugadoWidget> {
                                 ),
                               ),
                             ),
+                            if (!FFAppState().emergencia)
                             Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
                               child: FFButtonWidget(
@@ -874,6 +884,47 @@ class _MapaAlugadoWidgetState extends State<MapaAlugadoWidget> {
                                   borderSide: BorderSide(
                                     color: Colors.white,
                                     width: 1,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                            ),
+                            if (FFAppState().emergencia)
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
+                              child: FFButtonWidget(
+                                onPressed: () async {
+                                  await showModalBottomSheet(
+                                    isScrollControlled: true,
+                                    backgroundColor: Colors.transparent,
+                                    enableDrag: false,
+                                    context: context,
+                                    builder: (context) {
+                                      return Padding(
+                                        padding: MediaQuery.of(context).viewInsets,
+                                        child: Container(
+                                          height: MediaQuery.of(context).size.height * 0.7,
+                                          child: EmergenciaCanceladaWidget(),
+                                        ),
+                                      );
+                                    },
+                                  ).then((value) => setState(() {}));
+                                },
+                                text: 'Cancelar Emergência',
+                                options: FFButtonOptions(
+                                  width: 250,
+                                  height: 45,
+                                  padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                  iconPadding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                  color: FlutterFlowTheme.of(context).alternate,
+                                  textStyle: FlutterFlowTheme.of(context).subtitle2.override(
+                                        fontFamily: 'Poppins',
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                  borderSide: BorderSide(
+                                    color: Color(0x00FFFFFF),
                                   ),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
@@ -955,16 +1006,17 @@ class _MapaAlugadoWidgetState extends State<MapaAlugadoWidget> {
                                       ),
                                      InkWell(
                                       onTap: () async {
-                                        context.pushNamed('MapaDeslogado');
+                                        context.goNamed('MapaDeslogado');
                                         FFAppState().update(() {
                                           FFAppState().senhaCadastro = '';
                                           FFAppState().receberEmail = false;
                                           FFAppState().emailEsqueciSenha = '';
                                           FFAppState().emailLogado = '';
                                           FFAppState().nome = '';
-                                          FFAppState().emailPersist = '';
+                                          FFAppState().emailPersist = 'n/a';
                                           FFAppState().documento = '';
                                           FFAppState().logado = false;
+                                          FFAppState().emergencia = false;
                                         });
                                         
                                         ScaffoldMessenger.of(context).showSnackBar(
