@@ -44,7 +44,6 @@ class ParceiroPanel extends StatelessWidget {
                 Expanded(
                   child: Column(
                     children: [
-                      _Kits(kits: parceiro['kits']),
                       Spacer(),
                       
                       Row(
@@ -57,7 +56,7 @@ class ParceiroPanel extends StatelessWidget {
                                           .push(MaterialPageRoute(builder: (context) => ParceiroWidget(kits: parceiro['kits'],detalhesParceiro: parceiro)));
                                        },
                               child: Text(
-                                "Lista de Equipamentos",
+                                "Lista de Conjuntos",
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -216,13 +215,13 @@ class _Kits extends StatelessWidget {
     int emUso = kits.where((kit) => kit['emprestado'] == true).length;
     int emManutencao = kits.where((kit) => kit['equipamento_status'] != "EM FUNCIONAMENTO" || kit['bateria_status'] != "EM FUNCIONAMENTO").length;
 
-    return "${total - emUso - emManutencao} de $total Equipamentos Livres.";
+    return "${total - emUso - emManutencao} de $total Conjuntos Livre(s).";
   }
 
   String semEquipamentosLivres() {
     int emFuncionamento = kits.where((kit) => kit['equipamento_status'] == "EM FUNCIONAMENTO" || kit['bateria_status'] == "EM FUNCIONAMENTO").length;
 
-    return "${emFuncionamento} Equipamentos Disponíveis.";
+    return "${emFuncionamento} Conjuntos Disponíveis.";
   }
 
   bool verificaEquipamentosLivres() {

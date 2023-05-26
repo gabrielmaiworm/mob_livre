@@ -178,7 +178,7 @@ class _PermissaoWidgetState extends State<PermissaoWidget> {
                             alignment: AlignmentDirectional(0, 0.85),
                             child: Padding(
                               padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 0, 0, 30),
+                                  EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -199,10 +199,8 @@ class _PermissaoWidgetState extends State<PermissaoWidget> {
                                               (_model.apiResult7vn?.jsonBody ?? ''),
                                               r'''$..kit''',
                                             );
-                                            FFAppState().dadosEquipamento = getJsonField(
-                                              (_model.apiResult7vn?.jsonBody ?? ''),
-                                              r'''$''',
-                                            );
+                                            FFAppState().dadosEquipamento =
+                                                (_model.apiResult7vn?.jsonBody ?? '');
                                             FFAppState().emailPersist = getJsonField(
                                               (_model.apiResultipv?.jsonBody ?? ''),
                                               r'''$..email''',
@@ -221,20 +219,22 @@ class _PermissaoWidgetState extends State<PermissaoWidget> {
                                             }.withoutNulls,
                                           );
                                         } else {
-                                          context.pushNamed(
-                                            'MapaLogado',
-                                            queryParams: {
-                                              'dadosUser': serializeParam(
-                                                (_model.apiResultipv?.jsonBody ?? ''),
-                                                ParamType.JSON,
-                                              ),
-                                            }.withoutNulls,
-                                          );
+                                          if (FFAppState().reservado == true) {
+                                            context.pushNamed('MapaReservado');
+                                          } else {
+                                            context.pushNamed(
+                                              'MapaLogado',
+                                              queryParams: {
+                                                'dadosUser': serializeParam(
+                                                  (_model.apiResultipv?.jsonBody ?? ''),
+                                                  ParamType.JSON,
+                                                ),
+                                              }.withoutNulls,
+                                            );
+                                          }
                                         }
                                       } else {
-                                        
                                         context.pushNamed('MapaDeslogado');
-                                         setState(() {FFAppState().emailPersist = 'n/a';});
                                       }
                                       setState(() {});
                                     },

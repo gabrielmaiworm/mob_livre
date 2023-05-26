@@ -1,6 +1,7 @@
 import 'package:mob_livree/detalhe_equipamento/detalhe_equipamento_widget.dart';
 import 'package:mob_livree/detalhe_equipamento_retirar/detalhe_equipamento_retirar_widget.dart';
 
+import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
@@ -91,21 +92,21 @@ String getPicture() {
       key: scaffoldKey,
       backgroundColor: Colors.white,
           appBar: AppBar(
-      backgroundColor: Colors.white,
-      automaticallyImplyLeading: true,
-      title: SelectionArea(
-          child: Text(
-        'Parceiro',
-        style: FlutterFlowTheme.of(context).bodyText1.override(
-              fontFamily: 'Poppins',
-              color: Color(0xFF1D4F9A),
-              fontSize: 20,
-            ),
-      )),
-      actions: [],
-      centerTitle: true,
-      elevation: 3,
-    ), 
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: true,
+        title: SelectionArea(
+            child: Text(
+          'Parceiro',
+          style: FlutterFlowTheme.of(context).bodyText1.override(
+                fontFamily: 'Poppins',
+                color: Color(0xFF1D4F9A),
+                fontSize: 20,
+              ),
+        )),
+        actions: [],
+        centerTitle: true,
+        elevation: 3,
+      ),
       body: SafeArea(
         child: GestureDetector(
           onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
@@ -400,155 +401,166 @@ String getPicture() {
                   decoration: BoxDecoration(
                     color: FlutterFlowTheme.of(context).secondaryBackground,
                   ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SelectionArea(
-                              child: Text(
-                            'Equipamentos disponíveis\n para locação',
-                            textAlign: TextAlign.center,
-                            style:
-                                FlutterFlowTheme.of(context).bodyText1.override(
-                                      fontFamily: 'Poppins',
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                          )),
-                        ],
-                      ),
-                      // Generated code for this ListView Widget...
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 0),
-                        child: Builder(
-                          builder: (context) {
-                            final listaKit = getJsonField(
-                              widget.detalhesParceiro,
-                              r'''$..kits''',
-                            ).toList();
-                            return ListView.builder(
-                              padding: EdgeInsets.zero,
-                              shrinkWrap: true,
-                              scrollDirection: Axis.vertical,
-                              itemCount: listaKit.length,
-                              itemBuilder: (context, listaKitIndex) {
-                                final listaKitItem = listaKit[listaKitIndex];
-                                return Visibility(
-                                visible: getJsonField(
-                                listaKitItem!,
-                                r'''$..equipamento_status''',
-                              ) ==
-                              "EM FUNCIONAMENTO" && getJsonField(
-                                listaKitItem!,
-                                r'''$..equipamento_status''',
-                              ) == "EM FUNCIONAMENTO" && getJsonField(
-                                listaKitItem!,
-                                r'''$..usuario''',
-                              ) == null,
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Expanded(
-                                        child: InkWell(
-                                          onTap: () async {
-                                            Navigator.of(context)
-                                            .push(MaterialPageRoute(builder: (context) => DetalheEquipamentoWidget(detalhesEquip: listaKitItem, detalhesParceiro: widget.detalhesParceiro)));
-                                          },
-                                          child: Stack(
-                                            children: [
-                                              Align(
-                                                alignment: AlignmentDirectional(1.01, -0.26),
-                                                child: Container(
-                                                  width: MediaQuery.of(context).size.width * 0.8,
-                                                  height: MediaQuery.of(context).size.height * 0.12,
-                                                  decoration: BoxDecoration(
-                                                    color: Color(0x7496BBFF),
-                                                    borderRadius: BorderRadius.circular(8),
-                                                  ),
-                                                  child: Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional.fromSTEB(60, 0, 0, 0),
-                                                    child: Row(
-                                                      mainAxisSize: MainAxisSize.max,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment.spaceBetween,
-                                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                                      children: [
-                                                        Expanded(
-                                                          child: Padding(
-                                                            padding: EdgeInsetsDirectional.fromSTEB(
-                                                                0, 0, 10, 0),
-                                                            child: SelectionArea(
-                                                                child: Text(
-                                                              getJsonField(
-                                                                listaKitItem,
-                                                                r'''$..nome_equipamento''',
-                                                              ).toString(),
-                                                              style: FlutterFlowTheme.of(context)
-                                                                  .bodyText1
-                                                                  .override(
-                                                                    fontFamily: 'Poppins',
-                                                                    fontSize: 18,
-                                                                    fontWeight: FontWeight.bold,
-                                                                  ),
-                                                            )),
-                                                          ),
-                                                        ),
-                                                        Row(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SelectionArea(
+                                child: Text(
+                              'Conjuntos disponíveis\n para locação',
+                              textAlign: TextAlign.center,
+                              style:
+                                  FlutterFlowTheme.of(context).bodyText1.override(
+                                        fontFamily: 'Poppins',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                            )),
+                          ],
+                        ),
+                        // Generated code for this ListView Widget...
+                        Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 0),
+                          child: Builder(
+                            builder: (context) {
+                              final listaKit = getJsonField(
+                                widget.detalhesParceiro,
+                                r'''$..kits''',
+                              ).toList();
+                              return ListView.builder(
+                                padding: EdgeInsets.zero,
+                                shrinkWrap: true,
+                                primary: true,
+                                scrollDirection: Axis.vertical,
+                                itemCount: listaKit.length,
+                                itemBuilder: (context, listaKitIndex) {
+                                  final listaKitItem = listaKit[listaKitIndex];
+                                  return Visibility(
+                                  visible: getJsonField(
+                                  listaKitItem!,
+                                  r'''$..equipamento_status''',
+                                ) ==
+                                "EM FUNCIONAMENTO" && getJsonField(
+                                  listaKitItem!,
+                                  r'''$..equipamento_status''',
+                                ) == "EM FUNCIONAMENTO" && getJsonField(
+                                  listaKitItem!,
+                                  r'''$..usuario''',
+                                ) == null,
+                                    child: Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Expanded(
+                                            child: InkWell(
+                                              onTap: () async {
+                                                
+                                                setState(() {
+                                                  FFAppState().dadosEquipamento = listaKitItem;
+                                                });
+                                                Navigator.of(context)
+                                                .push(MaterialPageRoute(builder: (context) => DetalheEquipamentoWidget(detalhesEquip: listaKitItem, detalhesParceiro: widget.detalhesParceiro)));
+                                                 
+                                              },
+                                              child: Stack(
+                                                children: [
+                                                  Align(
+                                                    alignment: AlignmentDirectional(1.01, -0.26),
+                                                    child: Container(
+                                                      width: MediaQuery.of(context).size.width * 0.8,
+                                                      height: MediaQuery.of(context).size.height * 0.12,
+                                                      decoration: BoxDecoration(
+                                                        color: Color(0x7496BBFF),
+                                                        borderRadius: BorderRadius.circular(8),
+                                                      ),
+                                                      child: Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional.fromSTEB(60, 0, 0, 0),
+                                                        child: Row(
                                                           mainAxisSize: MainAxisSize.max,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment.spaceBetween,
+                                                          crossAxisAlignment: CrossAxisAlignment.center,
                                                           children: [
-                                                            Text(
-                                                              'Ver',
-                                                              style: FlutterFlowTheme.of(context)
-                                                                  .bodyText1
-                                                                  .override(
-                                                                    fontFamily: 'Poppins',
-                                                                    fontSize: 16,
-                                                                  ),
+                                                            Expanded(
+                                                              child: Padding(
+                                                                padding: EdgeInsetsDirectional.fromSTEB(
+                                                                    0, 0, 10, 0),
+                                                                child: SelectionArea(
+                                                                    child: Text(
+                                                                  getJsonField(
+                                                                    listaKitItem,
+                                                                    r'''$..nome_equipamento''',
+                                                                  ).toString(),
+                                                                  style: FlutterFlowTheme.of(context)
+                                                                      .bodyText1
+                                                                      .override(
+                                                                        fontFamily: 'Poppins',
+                                                                        fontSize: 18,
+                                                                        fontWeight: FontWeight.bold,
+                                                                      ),
+                                                                )),
+                                                              ),
                                                             ),
-                                                            Icon(
-                                                              Icons.chevron_right_rounded,
-                                                              color: Colors.black,
-                                                              size: 35,
+                                                            Row(
+                                                              mainAxisSize: MainAxisSize.max,
+                                                              children: [
+                                                                Text(
+                                                                  'Ver',
+                                                                  style: FlutterFlowTheme.of(context)
+                                                                      .bodyText1
+                                                                      .override(
+                                                                        fontFamily: 'Poppins',
+                                                                        fontSize: 16,
+                                                                      ),
+                                                                ),
+                                                                Icon(
+                                                                  Icons.chevron_right_rounded,
+                                                                  color: Colors.black,
+                                                                  size: 35,
+                                                                ),
+                                                              ],
                                                             ),
                                                           ],
                                                         ),
-                                                      ],
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                              ),
-                                              Align(
-                                                alignment: AlignmentDirectional(-1.04, 0),
-                                                child: Container(
-                                                  width: 100,
-                                                  height: 100,
-                                                  clipBehavior: Clip.antiAlias,
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
+                                                  Align(
+                                                    alignment: AlignmentDirectional(-1.04, 0),
+                                                    child: Container(
+                                                      width: 100,
+                                                      height: 100,
+                                                      clipBehavior: Clip.antiAlias,
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      child: Image.network(
+                                                        'https://imgs.casasbahia.com.br/1501531919/1xg.jpg?imwidth=500',
+                                                        fit: BoxFit.fill,
+                                                      ),
+                                                    ),
                                                   ),
-                                                  child: Image.network(
-                                                    'https://imgs.casasbahia.com.br/1501531919/1xg.jpg?imwidth=500',
-                                                    fit: BoxFit.fill,
-                                                  ),
-                                                ),
+                                                ],
                                               ),
-                                            ],
+                                            ),
                                           ),
-                                        ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                        ),
-                      ), 
-                    ],
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        ), 
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -557,9 +569,6 @@ String getPicture() {
         ),
       ),
     );
-
-    
   }
-  
 }
 

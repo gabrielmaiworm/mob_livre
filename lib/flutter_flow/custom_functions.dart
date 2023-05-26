@@ -85,6 +85,22 @@ String formatDateTime(String date) {
   return formatedDate;
 }
 
+String formatHour(String date) {
+  DateTime parseDate = DateTime.parse(date);
+  DateFormat format = DateFormat('hh:mm');
+  String formatedDate = format.format(parseDate);
+  return formatedDate;
+}
+
+String formatDuration(String startDate, String endDate) {
+   DateTime parseDev = DateTime.parse(startDate);
+  DateTime parseSol = DateTime.parse(endDate);
+  Duration duration = parseSol.difference(parseDev);
+  int hours = duration.inHours;
+  int minutes = (duration.inMinutes - (hours * 60)).abs();
+  return DateFormat('HH:mm').format(DateTime(0, 0, 0, hours, minutes));
+}
+
 List<LatLng>? parseLatLng(
   List<dynamic> latitude,
   List<dynamic> longitude,
@@ -117,4 +133,28 @@ double? returnDistanceBetweenTwoPoints(
   // double finalResult = result.roundToDouble();
   // if you uncommented the line above, you have to replace result in the line below with finalResult
   return result;
+}
+
+String formatDateTimeCompleto(String date) {
+  DateTime parseDate = DateTime.parse(date);
+  DateFormat format = DateFormat('dd MMM yyyy, HH:MM');
+  String formatedDate = format.format(parseDate);
+  return formatedDate;
+}
+
+
+String formatMsToHour(int ms) {
+  Duration duration = Duration(milliseconds: ms);
+  int hours = duration.inHours;
+  int minutes = (duration.inMinutes - (hours * 60)).abs();
+  return DateFormat('HH:mm').format(DateTime(0, 0, 0, hours, minutes));
+}
+
+String formatTempoUso(String solicitacao, String devolucao) {
+  DateTime parseDev = DateTime.parse(devolucao);
+  DateTime parseSol = DateTime.parse(solicitacao);
+  Duration duration = parseSol.difference(parseDev);
+  int hours = duration.inHours;
+  int minutes = (duration.inMinutes - (hours * 60)).abs();
+  return DateFormat('HH:mm').format(DateTime(0, 0, 0, hours, minutes));
 }

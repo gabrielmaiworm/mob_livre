@@ -1,18 +1,16 @@
-import '../../backend/api_requests/api_calls.dart';
 import '../../flutter_flow/flutter_flow_model.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
-import 'reserva_cancelada_model.dart';
-export 'reserva_cancelada_model.dart';
+import 'sair_model.dart';
+export 'sair_model.dart';
 
-class ReservaCanceladaWidget extends StatefulWidget {
-  const ReservaCanceladaWidget({
+class SairWidget extends StatefulWidget {
+  const SairWidget({
     Key? key,
     this.detailUser,
   }) : super(key: key);
@@ -20,11 +18,11 @@ class ReservaCanceladaWidget extends StatefulWidget {
   final dynamic detailUser;
 
   @override
-  _ReservaCanceladaWidgetState createState() => _ReservaCanceladaWidgetState();
+  _SairWidgetState createState() => _SairWidgetState();
 }
 
-class _ReservaCanceladaWidgetState extends State<ReservaCanceladaWidget> {
-  late ReservaCanceladaModel _model;
+class _SairWidgetState extends State<SairWidget> {
+  late SairModel _model;
 
   @override
   void setState(VoidCallback callback) {
@@ -35,7 +33,7 @@ class _ReservaCanceladaWidgetState extends State<ReservaCanceladaWidget> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => ReservaCanceladaModel());
+    _model = createModel(context, () => SairModel());
   }
 
   @override
@@ -68,7 +66,7 @@ class _ReservaCanceladaWidgetState extends State<ReservaCanceladaWidget> {
                     padding: EdgeInsetsDirectional.fromSTEB(15, 15, 15, 35),
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Row(
                           mainAxisSize: MainAxisSize.max,
@@ -76,7 +74,7 @@ class _ReservaCanceladaWidgetState extends State<ReservaCanceladaWidget> {
                           children: [
                             Expanded(
                               child: Text(
-                                'Deseja cancelar a reserva?',
+                                'Deseja realmente sair?',
                                 textAlign: TextAlign.center,
                                 style: FlutterFlowTheme.of(context)
                                     .bodyText1
@@ -89,13 +87,18 @@ class _ReservaCanceladaWidgetState extends State<ReservaCanceladaWidget> {
                           ],
                         ),
                         Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 100),
-                          child: Lottie.asset(
-                            'assets/lottie_animations/38993-ocl-canceled.json',
-                            width: 150,
-                            height: 100,
-                            fit: BoxFit.cover,
-                            animate: true,
+                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.error,
+                                color:
+                                    FlutterFlowTheme.of(context).primaryColor,
+                                size: 40,
+                              ),
+                            ],
                           ),
                         ),
                         Row(
@@ -104,47 +107,72 @@ class _ReservaCanceladaWidgetState extends State<ReservaCanceladaWidget> {
                           children: [
                             FFButtonWidget(
                               onPressed: () async {
-                                _model.apiResultxu1 = await EquipamentoGroup.pUTCancelarReservaCall.call(
-                                  documento: FFAppState().documento,
-                                  kit: FFAppState().kit.toString(),
-                                );
-                                if ((_model.apiResultxu1?.succeeded ?? true)) {
-                                    setState(() {
-                                    FFAppState().reservado = false;
-                                  });
-                                  context.goNamed(
-                                    'MapaLogado',
-                                    queryParams: {
-                                      'dadosUser': serializeParam(
-                                        widget.detailUser,
-                                        ParamType.JSON,
+                              
+                                FFAppState().update(() {
+                                  FFAppState().reservado = false;
+                                  FFAppState().reservando = false;
+                                  FFAppState().emailCadastro = 'null';
+                                  FFAppState().senhaCadastro = '';
+                                  FFAppState().receberEmail = false;
+                                  FFAppState().emailEsqueciSenha = 'null';
+                                  FFAppState().emailLogado = 'null';
+                                  FFAppState().nome = '';
+                                  FFAppState().emailPersist = 'null';
+                                  FFAppState().documento = '';
+                                  FFAppState().sobrenome = '';
+                                  FFAppState().nascimento = '';
+                                  FFAppState().celular = '';
+                                  FFAppState().tipoLesao = '';
+                                  FFAppState().situacaoLesao = '';
+                                  FFAppState().detalhesLesao = ''; 
+                                  FFAppState().fotoPerfil = '';
+                                  FFAppState().fotoDocumento = '';
+                                  FFAppState().estado = '';
+                                  FFAppState().cidade = '';
+                                  FFAppState().bairro = '';
+                                  FFAppState().cep = '';
+                                  FFAppState().logradouro = '';
+                                  FFAppState().numero = '';
+                                  FFAppState().complemento = '';
+                                  FFAppState().kit = 0;
+                                  FFAppState().kitS = '';
+                                  FFAppState().horaMs = 0;
+                                  FFAppState().maisOpcoes = false;
+                                  FFAppState().numeroEquipamento = '';
+                                  FFAppState().emergencia = false;
+                                  FFAppState().dadosEquipamento = 'null';
+                                  FFAppState().logado = false;
+                                  FFAppState().cep = '';
+                                  
+                                });
+
+                                context.goNamed('MapaDeslogado');
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Você foi desconectado.',
+                                      style: TextStyle(
+                                        color: Colors.white,
                                       ),
-                                    }.withoutNulls,
-                                  );
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        'Erro inexperado.',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      duration: Duration(milliseconds: 4000),
-                                      backgroundColor: FlutterFlowTheme.of(context).alternate,
                                     ),
-                                  );
-                                }
-                                setState(() {});
+                                    duration: Duration(milliseconds: 4000),
+                                    backgroundColor: Color(0xFF606060),
+                                  ),
+                                );
                               },
                               text: 'Sim',
                               options: FFButtonOptions(
                                 width: 150,
                                 height: 40,
-                                padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                                iconPadding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                padding:
+                                    EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                iconPadding:
+                                    EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                                 color: Color(0xFF1D4F9A),
-                                textStyle: FlutterFlowTheme.of(context).subtitle2.override(
+                                textStyle: FlutterFlowTheme.of(context)
+                                    .subtitle2
+                                    .override(
                                       fontFamily: 'Poppins',
                                       color: Colors.white,
                                     ),

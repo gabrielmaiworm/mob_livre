@@ -36,7 +36,10 @@ class FFAppState extends ChangeNotifier {
     _numero = prefs.getString('ff_numero') ?? _numero;
     _complemento = prefs.getString('ff_complemento') ?? _complemento;
     _logado = prefs.getBool('ff_logado') ?? _logado;
+    _reservado = prefs.getBool('ff_reservado') ?? _reservado;
     _kit = prefs.getInt('ff_kit') ?? _kit;
+    _kitS = prefs.getString('ff_kitS') ?? _kitS;
+    _horaMs = prefs.getInt('ff_horaMs') ?? _horaMs;
     if (prefs.containsKey('ff_dadosEquipamento')) {
       try {
         _dadosEquipamento =
@@ -224,6 +227,20 @@ class FFAppState extends ChangeNotifier {
     prefs.setInt('ff_kit', _value);
   }
 
+  String _kitS = '';
+  String get kitS  => _kitS ;
+  set kitS (String _value) {
+    _kitS = _value;
+    prefs.setString('ff_kitS', _value);
+  }
+
+  int _horaMs = 0;
+  int get horaMs => _horaMs;
+  set horaMs(int _value) {
+    _horaMs = _value;
+    prefs.setInt('ff_horaMs', _value);
+  }
+
   bool _logado = false;
   bool get logado => _logado;
   set logado(bool _value) {
@@ -231,10 +248,29 @@ class FFAppState extends ChangeNotifier {
     prefs.setBool('ff_logado', _value);
   }
 
+  bool _reservado = false;
+  bool get reservado => _reservado;
+  set reservado(bool _value) {
+    _reservado = _value;
+    prefs.setBool('ff_reservado', _value);
+  }
+
   bool _maisOpcoes = false;
   bool get maisOpcoes => _maisOpcoes;
   set maisOpcoes(bool _value) {
     _maisOpcoes = _value;
+  }
+
+  bool _reservando = false;
+  bool get reservando => _reservando;
+  set reservando(bool _value) {
+    _reservando = _value;
+  }
+
+  String _numeroEquipamento = '';
+  String get numeroEquipamento => _numeroEquipamento;
+  set numeroEquipamento(String _value) {
+    _numeroEquipamento = _value;
   }
 
   bool _emergencia = false;

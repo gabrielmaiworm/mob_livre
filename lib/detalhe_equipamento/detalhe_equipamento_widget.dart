@@ -39,6 +39,12 @@ class _DetalheEquipamentoWidgetState extends State<DetalheEquipamentoWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => DetalheEquipamentoModel());
+    if(FFAppState().kit == 0) {
+      FFAppState().kit = getJsonField(
+      widget.detalhesEquip,
+      r'''$..kit''',
+      );
+    }
   }
 
   @override
@@ -61,7 +67,7 @@ class _DetalheEquipamentoWidgetState extends State<DetalheEquipamentoWidget> {
         automaticallyImplyLeading: true,
         title: SelectionArea(
             child: Text(
-          'Equipamento',
+          'Conjunto',
           style: FlutterFlowTheme.of(context).bodyText1.override(
                 fontFamily: 'Poppins',
                 color: Color(0xFF1D4F9A),
@@ -129,10 +135,10 @@ class _DetalheEquipamentoWidgetState extends State<DetalheEquipamentoWidget> {
                           children: [
                             Expanded(
                               child: Text(
-                                getJsonField(
-                                  widget.detalhesEquip,
-                                  r'''$..nome_equipamento''',
-                                ).toString(),
+                                 (() {
+                                    final nomeEquipamento = getJsonField(widget.detalhesEquip, r'''$..nome_equipamento''');
+                                    return nomeEquipamento != null ? nomeEquipamento.toString() : getJsonField(FFAppState().dadosEquipamento, r'''$..nome_equipamento''').toString();
+                                  })(),
                                 textAlign: TextAlign.center,
                                 style: FlutterFlowTheme.of(context)
                                     .bodyText1
@@ -153,19 +159,12 @@ class _DetalheEquipamentoWidgetState extends State<DetalheEquipamentoWidget> {
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                             if (getJsonField(
-                                    widget.detalhesEquip,
-                                    r'''$..rebocado''',
-                                  ).toString() != "null" || getJsonField(
-                                    widget.detalhesEquip,
-                                    r'''$..rebocado''',
-                                  ).toString() != null)
                               Text(
                                 valueOrDefault<String>(
-                                  getJsonField(
-                                    widget.detalhesEquip,
-                                    r'''$..rebocado''',
-                                  ).toString(),
+                                   (() {
+                                    final rebocado = getJsonField(widget.detalhesEquip, r'''$..rebocado''');
+                                    return rebocado != null ? rebocado.toString() : getJsonField(FFAppState().dadosEquipamento, r'''$..rebocado''').toString();
+                                  })(),
                                   'Rebocado',
                                     ),
                                 style: FlutterFlowTheme.of(context)
@@ -198,18 +197,15 @@ class _DetalheEquipamentoWidgetState extends State<DetalheEquipamentoWidget> {
                               ),
                               Expanded(
                                 child: Text(
-                                  getJsonField(
-                                    widget.detalhesEquip,
-                                    r'''$..kit''',
-                                  ).toString(),
+                                  (() {
+                                    final kit = getJsonField(widget.detalhesEquip, r'''$..kit''');
+                                    return kit != null ? kit.toString() : getJsonField(FFAppState().dadosEquipamento, r'''$..kit''').toString();
+                                  })(),
                                   textAlign: TextAlign.end,
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyText1
-                                      .override(
-                                        fontFamily: 'Poppins',
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryColor,
-                                      ),
+                                  style: FlutterFlowTheme.of(context).bodyText1.override(
+                                    fontFamily: 'Poppins',
+                                    color: FlutterFlowTheme.of(context).primaryColor,
+                                  ),
                                 ),
                               ),
                             ],
@@ -233,10 +229,10 @@ class _DetalheEquipamentoWidgetState extends State<DetalheEquipamentoWidget> {
                               ),
                               Expanded(
                                 child: Text(
-                                  '${getJsonField(
-                                    widget.detalhesEquip,
-                                    r'''$..carga''',
-                                  ).toString()}%',
+                                  '${ (() {
+                                    final carga = getJsonField(widget.detalhesEquip, r'''$..carga''');
+                                    return carga != null ? carga.toString() : getJsonField(FFAppState().dadosEquipamento, r'''$..carga''').toString();
+                                  })()}%',
                                   textAlign: TextAlign.end,
                                   style: FlutterFlowTheme.of(context)
                                       .bodyText1
@@ -282,88 +278,60 @@ class _DetalheEquipamentoWidgetState extends State<DetalheEquipamentoWidget> {
                             ],
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(5, 10, 5, 0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Parceiro',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyText1
-                                    .override(
-                                      fontFamily: 'Poppins',
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryColor,
-                                    ),
-                              ),
-                              if (getJsonField(
-                                    widget.detalhesEquip,
-                                    r'''$..razao_social''',
-                                  ).toString() == 'null')
-                              Expanded(
-                                child: Text(
-                                  getJsonField(
-                                    widget.detalhesParceiro,
-                                    r'''$..nome_fantasia''',
-                                  ).toString(),
-                                  textAlign: TextAlign.end,
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyText1
-                                      .override(
-                                        fontFamily: 'Poppins',
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryColor,
-                                      ),
-                                ),
-                              ),
-                              if (getJsonField(
-                                    widget.detalhesEquip,
-                                    r'''$..razao_social''',
-                                  ).toString() != 'null')
-                              Expanded(
-                                child: Text(
-                                  getJsonField(
-                                    widget.detalhesEquip,
-                                    r'''$..razao_social''',
-                                  ).toString(),
-                                  textAlign: TextAlign.end,
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyText1
-                                      .override(
-                                        fontFamily: 'Poppins',
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryColor,
-                                      ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        // Padding(
+                        //   padding: EdgeInsetsDirectional.fromSTEB(5, 10, 5, 0),
+                        //   child: Row(
+                        //     mainAxisSize: MainAxisSize.max,
+                        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //     children: [
+                        //       Text(
+                        //         'Parceiro',
+                        //         style: FlutterFlowTheme.of(context)
+                        //             .bodyText1
+                        //             .override(
+                        //               fontFamily: 'Poppins',
+                        //               color: FlutterFlowTheme.of(context)
+                        //                   .primaryColor,
+                        //             ),
+                        //       ),
+                        //       Expanded(
+                        //         child: Text(
+                        //            (() {
+                        //             final nomeFantasia = getJsonField(widget.detalhesEquip, r'''$..nome_fantasia''');
+                        //             return nomeFantasia != null ? nomeFantasia.toString() : getJsonField(FFAppState().dadosEquipamento, r'''$..nome_fantasia''').toString();
+                        //           })(),
+                        //           textAlign: TextAlign.end,
+                        //           style: FlutterFlowTheme.of(context)
+                        //               .bodyText1
+                        //               .override(
+                        //                 fontFamily: 'Poppins',
+                        //                 color: FlutterFlowTheme.of(context)
+                        //                     .primaryColor,
+                        //               ),
+                        //         ),
+                        //       ),
+                        //       Expanded(
+                        //         child: Text(
+                        //            (() {
+                        //             final razaoSocial = getJsonField(widget.detalhesEquip, r'''$..razao_social''');
+                        //             return razaoSocial != null ? razaoSocial.toString() : getJsonField(FFAppState().dadosEquipamento, r'''$..razao_social''').toString();
+                        //           })(),
+                        //           textAlign: TextAlign.end,
+                        //           style: FlutterFlowTheme.of(context)
+                        //               .bodyText1
+                        //               .override(
+                        //                 fontFamily: 'Poppins',
+                        //                 color: FlutterFlowTheme.of(context)
+                        //                     .primaryColor,
+                        //               ),
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(35, 30, 35, 0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        'Clique no botão abaixo e selecione o horário da reserva.',
-                        textAlign: TextAlign.center,
-                        style: FlutterFlowTheme.of(context).bodyText1.override(
-                              fontFamily: 'Poppins',
-                              color: Color(0xFF1D4F9A),
-                              fontSize: 15,
-                            ),
-                      ),
-                    ),
-                  ],
                 ),
               ),
               Padding(
@@ -398,6 +366,10 @@ class _DetalheEquipamentoWidgetState extends State<DetalheEquipamentoWidget> {
                           );
                         },
                       ).then((value) => setState(() {}));
+                      FFAppState().kit = getJsonField(
+                                    widget.detalhesEquip,
+                                    r'''$..kit''',
+                                  );
                     } else {
                       await showModalBottomSheet(
                         isScrollControlled: true,
@@ -415,7 +387,14 @@ class _DetalheEquipamentoWidgetState extends State<DetalheEquipamentoWidget> {
                         },
                       ).then((value) => setState(() {}));
                     }
-                    setState(() {});
+                    setState(() {                
+                      FFAppState().horaMs = DateTime.now().millisecondsSinceEpoch;
+                      FFAppState().numeroEquipamento = getJsonField(
+                                    widget.detalhesEquip,
+                                    r'''$..kit''',
+                                  );
+                     
+                    });
                   },
                   text: 'Reservar conjunto',
                   options: FFButtonOptions(

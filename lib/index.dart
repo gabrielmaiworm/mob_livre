@@ -27,3 +27,6 @@ export 'emergencia/emergencia_widget.dart' show EmergenciaWidget;
 export 'devolver/devolver_widget.dart' show DevolverWidget;
 export 'devolver_avaliacao/devolver_avaliacao_widget.dart' show DevolverAvalicaoWidget;
 export 'emergencia_alerta/emergencia_alerta_widget.dart' show EmergenciaAlertaWidget;
+export 'components/scan_manual/scan_manual_widget.dart' show ScanManualWidget;
+export 'meu_perfil/meu_perfil_widget.dart' show MeuPerfilWidget;
+export 'viagens_detalhes/viagens_detalhes_widget.dart' show ViagensDetalhesWidget;

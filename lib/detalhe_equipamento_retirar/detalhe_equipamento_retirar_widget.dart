@@ -60,7 +60,7 @@ class _DetalheEquipamentoRetirarWidgetState
         automaticallyImplyLeading: true,
         title: SelectionArea(
             child: Text(
-          'Equipamento',
+          'Conjunto',
           style: FlutterFlowTheme.of(context).bodyText1.override(
                 fontFamily: 'Poppins',
                 color: Color(0xFF1D4F9A),
@@ -372,6 +372,8 @@ class _DetalheEquipamentoRetirarWidgetState
                       ).toString(),
                     );
                     if ((_model.apiResultnsu?.succeeded ?? true)) {
+                      FFAppState().reservado = false;
+                      FFAppState().horaReserva = DateTime.now(); 
                       context.goNamed(
                         'MapaAlugado',
                         queryParams: {

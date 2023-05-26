@@ -76,6 +76,9 @@ class _LogarWidgetState extends State<LogarWidget> {
                           padding: EdgeInsetsDirectional.fromSTEB(0, 45, 0, 0),
                           child: FFButtonWidget(
                             onPressed: () async {
+                              setState(() {
+                                FFAppState().reservando = true;
+                              });
                               context.pushNamed('CadastroPrimeiro');
                             },
                             text: 'Continuar',

@@ -1,11 +1,11 @@
 import '../flutter_flow/flutter_flow_model.dart';
+import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-
+import 'package:intl/intl.dart';
 import 'definir_horario_model.dart';
 export 'definir_horario_model.dart';
 
@@ -58,7 +58,7 @@ class _DefinirHorarioWidgetState extends State<DefinirHorarioWidget> {
                 padding: EdgeInsetsDirectional.fromSTEB(20, 0, 20, 50),
                 child: Container(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.6,
+                  height: MediaQuery.of(context).size.height * 0.40,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
@@ -68,6 +68,7 @@ class _DefinirHorarioWidgetState extends State<DefinirHorarioWidget> {
                     child: SingleChildScrollView(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
                             padding:
@@ -79,7 +80,7 @@ class _DefinirHorarioWidgetState extends State<DefinirHorarioWidget> {
                                 Expanded(
                                   child: SelectionArea(
                                       child: Text(
-                                    'Selecionar uma data e um horário',
+                                    'Tempo de reserva',
                                     style: FlutterFlowTheme.of(context)
                                         .bodyText1
                                         .override(
@@ -93,82 +94,44 @@ class _DefinirHorarioWidgetState extends State<DefinirHorarioWidget> {
                               ],
                             ),
                           ),
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.7,
-                            height: 85,
-                            decoration: BoxDecoration(
-                              color: FlutterFlowTheme.of(context).lineColor,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  child: SelectionArea(
-                                      child: Text(
-                                    valueOrDefault<String>(
-                                      dateTimeFormat(
-                                          'd/M H:mm', _model.datePicked),
-                                      '00 : 00',
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Text(
+                                      'Você terá seu equipamento reservado até: ',
+                                      textAlign: TextAlign.center,
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyText1
+                                          .override(
+                                            fontFamily: 'Poppins',
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                     ),
-                                    textAlign: TextAlign.center,
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyText1
-                                        .override(
-                                          fontFamily: 'Poppins',
-                                          color: Color(0xFF1D4F9A),
-                                          fontSize: 34,
-                                        ),
-                                  )),
+                                    
+                                    Text(
+                                       "${dateTimeFormat('Hm', DateTime.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch + 1800000))} ",
+                                      textAlign: TextAlign.center,
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyText1
+                                          .override(
+                                            fontFamily: 'Poppins',
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
-                            child: InkWell(
-                              onTap: () async {
-                                final _datePickedDate = await showDatePicker(
-                                  context: context,
-                                  initialDate: getCurrentTimestamp,
-                                  firstDate: getCurrentTimestamp,
-                                  lastDate: DateTime(2050),
-                                );
-
-                                TimeOfDay? _datePickedTime;
-                                if (_datePickedDate != null) {
-                                  _datePickedTime = await showTimePicker(
-                                    context: context,
-                                    initialTime: TimeOfDay.fromDateTime(
-                                        getCurrentTimestamp),
-                                  );
-                                }
-
-                                if (_datePickedDate != null &&
-                                    _datePickedTime != null) {
-                                  setState(() {
-                                    _model.datePicked = DateTime(
-                                      _datePickedDate.year,
-                                      _datePickedDate.month,
-                                      _datePickedDate.day,
-                                      _datePickedTime!.hour,
-                                      _datePickedTime.minute,
-                                    );
-                                  });
-                                }
-                              },
-                              child: Icon(
-                                Icons.watch_later_outlined,
-                                color: Color(0xFF1D4F9A),
-                                size: 150,
                               ),
-                            ),
+                            ],
                           ),
                           Padding(
                             padding:
-                                EdgeInsetsDirectional.fromSTEB(0, 10, 0, 20),
+                                EdgeInsetsDirectional.fromSTEB(0, 50, 0, 20),
                             child: Row(
                               mainAxisSize: MainAxisSize.max,
                               mainAxisAlignment: MainAxisAlignment.end,
@@ -178,9 +141,14 @@ class _DefinirHorarioWidgetState extends State<DefinirHorarioWidget> {
                                       0, 0, 15, 0),
                                   child: InkWell(
                                     onTap: () async {
+                                      await EquipamentoGroup.pOSTReservaCall
+                                          .call(
+                                        kit: FFAppState().kit,
+                                        documento: FFAppState().documento,
+                                      );
                                       FFAppState().update(() {
-                                        FFAppState().horaReserva =
-                                            _model.datePicked;
+                                        FFAppState().reservado = true;
+                                        FFAppState().horaMs = DateTime.now().millisecondsSinceEpoch;
                                       });
 
                                       context.goNamed('MapaReservado');

@@ -198,6 +198,11 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               builder: (context, params) => EmergenciaWidget(),
             ),
             FFRoute(
+              name: 'MeuPerfil',
+              path: 'meuPerfil',
+              builder: (context, params) => MeuPerfilWidget(),
+            ),
+            FFRoute(
               name: 'Devolver',
               path: 'devolver',
               builder: (context, params) => DevolverWidget(
@@ -211,6 +216,13 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               builder: (context, params) => DevolverAvaliacaoWidget(
                 detalhesEquip: params.getParam('detalhesEquip', ParamType.JSON),
                 detailUser: params.getParam('detailUser', ParamType.JSON),
+              ),
+            ),
+            FFRoute(
+              name: 'ViagensDetalhes',
+              path: 'viagensDetalhes',
+              builder: (context, params) => ViagensDetalhesWidget(
+                detalhesViagem: params.getParam('detalhesViagem', ParamType.JSON),
               ),
             ),
             FFRoute(

@@ -226,160 +226,325 @@ class _LoginSenhaWidgetState extends State<LoginSenhaWidget> {
                   ),
                 ),
                 // Generated code for this Button Widget...
-Padding(
-  padding: EdgeInsetsDirectional.fromSTEB(0, 60, 0, 0),
-  child: FFButtonWidget(
-    onPressed: () async {
-      _model.apiResultw03 = await UsuarioGroup.loginCall.call(
-        email: FFAppState().emailCadastro,
-        senha: _model.senhaController!.text,
-      );
-      if ((_model.apiResultw03?.succeeded ?? true)) {
-        FFAppState().update(() {
-          FFAppState().emailLogado = FFAppState().emailCadastro;
-          FFAppState().emailPersist = FFAppState().emailCadastro;
-          FFAppState().sobrenome = getJsonField(
-            (_model.apiResultw03?.jsonBody ?? ''),
-            r'''$..sobrenome''',
-          ).toString();
-          FFAppState().nome = getJsonField(
-            (_model.apiResultw03?.jsonBody ?? ''),
-            r'''$['nome']''',
-          ).toString();
-          FFAppState().documento = getJsonField(
-            (_model.apiResultw03?.jsonBody ?? ''),
-            r'''$['documento']''',
-          ).toString();
-          FFAppState().nascimento = functions.formatDateTime(getJsonField(
-            (_model.apiResultw03?.jsonBody ?? ''),
-            r'''$..data_de_nascicmento''',
-          ).toString());
-          FFAppState().celular = getJsonField(
-            (_model.apiResultw03?.jsonBody ?? ''),
-            r'''$..telefone''',
-          ).toString();
-          FFAppState().tipoLesao = getJsonField(
-            (_model.apiResultw03?.jsonBody ?? ''),
-            r'''$..nivel_lesao''',
-          ).toString();
-          FFAppState().situacaoLesao = getJsonField(
-            (_model.apiResultw03?.jsonBody ?? ''),
-            r'''$..situacao_lesao''',
-          ).toString();
-          FFAppState().detalhesLesao = getJsonField(
-            (_model.apiResultw03?.jsonBody ?? ''),
-            r'''$..detalhe_lesao''',
-          ).toString();
-          FFAppState().estado = getJsonField(
-            (_model.apiResultw03?.jsonBody ?? ''),
-            r'''$..estado''',
-          ).toString();
-          FFAppState().cidade = getJsonField(
-            (_model.apiResultw03?.jsonBody ?? ''),
-            r'''$..cidade''',
-          ).toString();
-          FFAppState().bairro = getJsonField(
-            (_model.apiResultw03?.jsonBody ?? ''),
-            r'''$..bairro''',
-          ).toString();
-          FFAppState().cep = getJsonField(
-            (_model.apiResultw03?.jsonBody ?? ''),
-            r'''$..cep''',
-          ).toString();
-          FFAppState().logradouro = getJsonField(
-            (_model.apiResultw03?.jsonBody ?? ''),
-            r'''$..logradouro''',
-          ).toString();
-          FFAppState().numero = getJsonField(
-            (_model.apiResultw03?.jsonBody ?? ''),
-            r'''$..numero''',
-          ).toString();
-          FFAppState().complemento = getJsonField(
-            (_model.apiResultw03?.jsonBody ?? ''),
-            r'''$..complemento''',
-          ).toString();
-          FFAppState().logado = true;
-          FFAppState().senhaCadastro = _model.senhaController!.text;
-          FFAppState().kit = valueOrDefault<int>(
-            getJsonField(
-              (_model.apiResultw03?.jsonBody ?? ''),
-              r'''$..kit''',
-            ),
-            0,
-          );
-        });
-        _model.apiResult7vn = await UsuarioGroup.usuarioSolicitacaoCall.call(
-          documento: FFAppState().documento,
-        );
-        if ((_model.apiResult7vn?.succeeded ?? true)) {
-          setState(() {
-            FFAppState().dadosEquipamento = getJsonField(
-              (_model.apiResult7vn?.jsonBody ?? ''),
-              r'''$''',
-            );
-          });
-          context.goNamed(
-            'MapaAlugado',
-            queryParams: {
-              'detalhesEquip': serializeParam(
-                getJsonField(
-                  (_model.apiResult7vn?.jsonBody ?? ''),
-                  r'''$''',
+                // Padding(
+                //   padding: EdgeInsetsDirectional.fromSTEB(0, 60, 0, 0),
+                //   child: FFButtonWidget(
+                //     onPressed: () async {
+                //       _model.apiResultw03 = await UsuarioGroup.loginCall.call(
+                //         email: FFAppState().emailCadastro,
+                //         senha: _model.senhaController!.text,
+                //       );
+                //       if ((_model.apiResultw03?.succeeded ?? true)) {
+                //         FFAppState().update(() {
+                //           FFAppState().emailLogado = FFAppState().emailCadastro;
+                //           FFAppState().emailPersist = FFAppState().emailCadastro;
+                //           FFAppState().sobrenome = getJsonField(
+                //             (_model.apiResultw03?.jsonBody ?? ''),
+                //             r'''$..sobrenome''',
+                //           ).toString();
+                //           FFAppState().nome = getJsonField(
+                //             (_model.apiResultw03?.jsonBody ?? ''),
+                //             r'''$['nome']''',
+                //           ).toString();
+                //           FFAppState().documento = getJsonField(
+                //             (_model.apiResultw03?.jsonBody ?? ''),
+                //             r'''$['documento']''',
+                //           ).toString();
+                //           FFAppState().nascimento = functions.formatDateTime(getJsonField(
+                //             (_model.apiResultw03?.jsonBody ?? ''),
+                //             r'''$..data_de_nascicmento''',
+                //           ).toString());
+                //           FFAppState().celular = getJsonField(
+                //             (_model.apiResultw03?.jsonBody ?? ''),
+                //             r'''$..telefone''',
+                //           ).toString();
+                //           FFAppState().tipoLesao = getJsonField(
+                //             (_model.apiResultw03?.jsonBody ?? ''),
+                //             r'''$..nivel_lesao''',
+                //           ).toString();
+                //           FFAppState().situacaoLesao = getJsonField(
+                //             (_model.apiResultw03?.jsonBody ?? ''),
+                //             r'''$..situacao_lesao''',
+                //           ).toString();
+                //           FFAppState().detalhesLesao = getJsonField(
+                //             (_model.apiResultw03?.jsonBody ?? ''),
+                //             r'''$..detalhe_lesao''',
+                //           ).toString();
+                //           FFAppState().estado = getJsonField(
+                //             (_model.apiResultw03?.jsonBody ?? ''),
+                //             r'''$..estado''',
+                //           ).toString();
+                //           FFAppState().cidade = getJsonField(
+                //             (_model.apiResultw03?.jsonBody ?? ''),
+                //             r'''$..cidade''',
+                //           ).toString();
+                //           FFAppState().bairro = getJsonField(
+                //             (_model.apiResultw03?.jsonBody ?? ''),
+                //             r'''$..bairro''',
+                //           ).toString();
+                //           FFAppState().cep = getJsonField(
+                //             (_model.apiResultw03?.jsonBody ?? ''),
+                //             r'''$..cep''',
+                //           ).toString();
+                //           FFAppState().logradouro = getJsonField(
+                //             (_model.apiResultw03?.jsonBody ?? ''),
+                //             r'''$..logradouro''',
+                //           ).toString();
+                //           FFAppState().numero = getJsonField(
+                //             (_model.apiResultw03?.jsonBody ?? ''),
+                //             r'''$..numero''',
+                //           ).toString();
+                //           FFAppState().complemento = getJsonField(
+                //             (_model.apiResultw03?.jsonBody ?? ''),
+                //             r'''$..complemento''',
+                //           ).toString();
+                //           FFAppState().logado = true;
+                //           FFAppState().senhaCadastro = _model.senhaController!.text;
+                //         });
+                //         _model.apiResult7vn = await UsuarioGroup.usuarioSolicitacaoCall.call(
+                //           documento: FFAppState().documento,
+                //         );
+                //         if ((_model.apiResult7vn?.succeeded ?? true)) {
+                //           setState(() {
+                //             FFAppState().dadosEquipamento = getJsonField(
+                //               (_model.apiResult7vn?.jsonBody ?? ''),
+                //               r'''$''',
+                //             );
+                //           });
+                //           context.pushNamed(
+                //             'MapaAlugado',
+                //             queryParams: {
+                //               'detalhesEquip': serializeParam(
+                //                 getJsonField(
+                //                   (_model.apiResult7vn?.jsonBody ?? ''),
+                //                   r'''$''',
+                //                 ),
+                //                 ParamType.JSON,
+                //               ),
+                //             }.withoutNulls,
+                //           );
+                //         } else {
+                //           if (getJsonField(
+                //                 (_model.apiResultw03?.jsonBody ?? ''),
+                //                 r'''$..message''',
+                //               ) !=
+                //               'Usuário não tem equipamento alugado ou reservado') {
+                //             context.pushNamed('MapaReservado');
+                //           } else {
+                //             context.pushNamed(
+                //               'MapaLogado',
+                //               queryParams: {
+                //                 'dadosUser': serializeParam(
+                //                   (_model.apiResultw03?.jsonBody ?? ''),
+                //                   ParamType.JSON,
+                //                 ),
+                //               }.withoutNulls,
+                //             );
+                //           }
+                //         }
+                //       } else {
+                //         ScaffoldMessenger.of(context).showSnackBar(
+                //           SnackBar(
+                //             content: Text(
+                //               getJsonField(
+                //                 (_model.apiResultw03?.jsonBody ?? ''),
+                //                 r'''$..error''',
+                //               ).toString(),
+                //               style: TextStyle(
+                //                 color: Colors.white,
+                //               ),
+                //             ),
+                //             duration: Duration(milliseconds: 4000),
+                //             backgroundColor: Color(0xFFC15C5C),
+                //           ),
+                //         );
+                //       }
+                //       setState(() {});
+                //     },
+                //     text: 'Continuar',
+                //     options: FFButtonOptions(
+                //       width: 210,
+                //       height: 40,
+                //       padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                //       iconPadding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                //       color: Color(0xFF1D4F9A),
+                //       textStyle: FlutterFlowTheme.of(context).subtitle2.override(
+                //             fontFamily: 'Poppins',
+                //             color: Colors.white,
+                //           ),
+                //       borderSide: BorderSide(
+                //         color: Colors.white,
+                //         width: 1,
+                //       ),
+                //       borderRadius: BorderRadius.circular(8),
+                //     ),
+                //   ),
+                // ),
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0, 60, 0, 0),
+                  child: FFButtonWidget(
+                    onPressed: () async {
+                      _model.apiResultw03 = await UsuarioGroup.loginCall.call(
+                        email: FFAppState().emailCadastro,
+                        senha: _model.senhaController!.text,
+                      );
+                      if ((_model.apiResultw03?.succeeded ?? true)) {
+                        FFAppState().update(() {
+                          FFAppState().emailLogado = FFAppState().emailCadastro;
+                          FFAppState().emailPersist = FFAppState().emailCadastro;
+                          FFAppState().sobrenome = getJsonField(
+                            (_model.apiResultw03?.jsonBody ?? ''),
+                            r'''$..sobrenome''',
+                          ).toString();
+                          FFAppState().nome = getJsonField(
+                            (_model.apiResultw03?.jsonBody ?? ''),
+                            r'''$['nome']''',
+                          ).toString();
+                          FFAppState().documento = getJsonField(
+                            (_model.apiResultw03?.jsonBody ?? ''),
+                            r'''$['documento']''',
+                          ).toString();
+                          FFAppState().nascimento = functions.formatDateTime(getJsonField(
+                            (_model.apiResultw03?.jsonBody ?? ''),
+                            r'''$..data_de_nascicmento''',
+                          ).toString());
+                          FFAppState().celular = getJsonField(
+                            (_model.apiResultw03?.jsonBody ?? ''),
+                            r'''$..telefone''',
+                          ).toString();
+                          FFAppState().tipoLesao = getJsonField(
+                            (_model.apiResultw03?.jsonBody ?? ''),
+                            r'''$..nivel_lesao''',
+                          ).toString();
+                          FFAppState().situacaoLesao = getJsonField(
+                            (_model.apiResultw03?.jsonBody ?? ''),
+                            r'''$..situacao_lesao''',
+                          ).toString();
+                          FFAppState().detalhesLesao = getJsonField(
+                            (_model.apiResultw03?.jsonBody ?? ''),
+                            r'''$..detalhe_lesao''',
+                          ).toString();
+                          FFAppState().estado = getJsonField(
+                            (_model.apiResultw03?.jsonBody ?? ''),
+                            r'''$..estado''',
+                          ).toString();
+                          FFAppState().cidade = getJsonField(
+                            (_model.apiResultw03?.jsonBody ?? ''),
+                            r'''$..cidade''',
+                          ).toString();
+                          FFAppState().bairro = getJsonField(
+                            (_model.apiResultw03?.jsonBody ?? ''),
+                            r'''$..bairro''',
+                          ).toString();
+                          FFAppState().cep = getJsonField(
+                            (_model.apiResultw03?.jsonBody ?? ''),
+                            r'''$..cep''',
+                          ).toString();
+                          FFAppState().logradouro = getJsonField(
+                            (_model.apiResultw03?.jsonBody ?? ''),
+                            r'''$..logradouro''',
+                          ).toString();
+                          FFAppState().numero = getJsonField(
+                            (_model.apiResultw03?.jsonBody ?? ''),
+                            r'''$..numero''',
+                          ).toString();
+                          final jsonBody = _model.apiResultw03?.jsonBody;
+                          final kit = jsonBody != null ? getJsonField(jsonBody, r'''$..kit''') : null;
+                          if (kit != null) {
+                            FFAppState().kit = kit;
+                            }
+                          FFAppState().complemento = getJsonField(
+                            (_model.apiResultw03?.jsonBody ?? ''),
+                            r'''$..complemento''',
+                          ).toString();
+                          FFAppState().logado = true;
+                          FFAppState().senhaCadastro = _model.senhaController!.text;
+                        });
+                        if (FFAppState().reservando == true) {
+                          context.pushNamed('DetalheEquipamento');
+                        } else {
+                          _model.apiResult7vn =
+                              await UsuarioGroup.usuarioSolicitacaoCall.call(
+                            documento: FFAppState().documento,
+                          );
+                          if ((_model.apiResult7vn?.succeeded ?? true)) {
+                            setState(() {
+                              FFAppState().dadosEquipamento = getJsonField(
+                                (_model.apiResult7vn?.jsonBody ?? ''),
+                                r'''$''',
+                              );
+                            });
+                            context.pushNamed(
+                              'MapaAlugado',
+                              queryParams: {
+                                'detalhesEquip': serializeParam(
+                                  getJsonField(
+                                    (_model.apiResult7vn?.jsonBody ?? ''),
+                                    r'''$''',
+                                  ),
+                                  ParamType.JSON,
+                                ),
+                              }.withoutNulls,
+                            );
+                          } else {
+                            if (getJsonField(
+                                  (_model.apiResultw03?.jsonBody ?? ''),
+                                  r'''$..reservas''',
+                                ) !=
+                                null) {
+                              context.pushNamed('MapaReservado');
+                            } else {
+                              context.pushNamed(
+                                'MapaLogado',
+                                queryParams: {
+                                  'dadosUser': serializeParam(
+                                    (_model.apiResultw03?.jsonBody ?? ''),
+                                    ParamType.JSON,
+                                  ),
+                                }.withoutNulls,
+                              );
+                            }
+                          }
+                        }
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              getJsonField(
+                                (_model.apiResultw03?.jsonBody ?? ''),
+                                r'''$..error''',
+                              ).toString(),
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            duration: Duration(milliseconds: 4000),
+                            backgroundColor: Color(0xFFC15C5C),
+                          ),
+                        );
+                      }
+                      setState(() {});
+                    },
+                    text: 'Continuar',
+                    options: FFButtonOptions(
+                      width: 210,
+                      height: 40,
+                      padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                      iconPadding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                      color: Color(0xFF1D4F9A),
+                      textStyle: FlutterFlowTheme.of(context).title2.override(
+                            fontFamily: 'Poppins',
+                            color: Colors.white,
+                          ),
+                      elevation: 2,
+                      borderSide: BorderSide(
+                        color: Colors.white,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
                 ),
-                ParamType.JSON,
-              ),
-            }.withoutNulls,
-          );
-        } else {
-          context.goNamed(
-            'MapaLogado',
-            queryParams: {
-              'dadosUser': serializeParam(
-                (_model.apiResultw03?.jsonBody ?? ''),
-                ParamType.JSON,
-              ),
-            }.withoutNulls,
-          );
-        }
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              getJsonField(
-                (_model.apiResultw03?.jsonBody ?? ''),
-                r'''$..error''',
-              ).toString(),
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-            duration: Duration(milliseconds: 4000),
-            backgroundColor: Color(0xFFC15C5C),
-          ),
-        );
-      }
-      setState(() {});
-    },
-    text: 'Continuar',
-    options: FFButtonOptions(
-      width: 210,
-      height: 40,
-      padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-      iconPadding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-      color: Color(0xFF1D4F9A),
-      textStyle: FlutterFlowTheme.of(context).subtitle2.override(
-            fontFamily: 'Poppins',
-            color: Colors.white,
-          ),
-      borderSide: BorderSide(
-        color: Colors.white,
-        width: 1,
-      ),
-      borderRadius: BorderRadius.circular(8),
-    ),
-  ),
-)
-,
               ],
             ),
           ),

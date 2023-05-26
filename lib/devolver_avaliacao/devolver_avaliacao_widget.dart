@@ -228,7 +228,7 @@ class _DevolverAvaliacaoWidgetState extends State<DevolverAvaliacaoWidget> {
                       color: Color(0xFFDCA928),
                     ),
                     direction: Axis.horizontal,
-                    initialRating: _model.ratingBarValue ??= 3,
+                    initialRating: _model.ratingBarValue ??= 5,
                     unratedColor: Color(0xFF9E9E9E),
                     itemCount: 5,
                     itemSize: 55,

@@ -1,42 +1,34 @@
 {
   "project_info": {
-    "project_number": "389718582340",
-    "firebase_url": "https://moblivre-4e5b2-default-rtdb.firebaseio.com",
-    "project_id": "moblivre-4e5b2",
-    "storage_bucket": "moblivre-4e5b2.appspot.com"
+    "project_number": "840178781936",
+    "project_id": "moblivre-c5a20",
+    "storage_bucket": "moblivre-c5a20.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:389718582340:android:d3578afd08fd0083400811",
+        "mobilesdk_app_id": "1:840178781936:android:ec6c37eaa13a28a071bc35",
         "android_client_info": {
           "package_name": "com.biomob.moblivre"
         }
       },
       "oauth_client": [
         {
-          "client_id": "389718582340-15acaq4fc639ltb6vdehbigt5g1j21es.apps.googleusercontent.com",
+          "client_id": "840178781936-4l82mi1en52i57510vorjq0j9ojhv2fl.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAWFRhtxnRmjdG6aqU7IB23TIwPpTzB5nc"
+          "current_key": "AIzaSyAStAop430jEtWco2yuIxajZsoaZhp0cgo"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "389718582340-15acaq4fc639ltb6vdehbigt5g1j21es.apps.googleusercontent.com",
+              "client_id": "840178781936-4l82mi1en52i57510vorjq0j9ojhv2fl.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "389718582340-6tg7ng8tri9agfj609fi2p4sbk4vl5u5.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.biomob.moblivre"
-              }
             }
           ]
         }

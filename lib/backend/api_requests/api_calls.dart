@@ -28,7 +28,10 @@ class UsuarioGroup {
   static BuscaCpfCall buscaCpfCall = BuscaCpfCall();
   static UsuarioSolicitacaoCall usuarioSolicitacaoCall =
       UsuarioSolicitacaoCall();
-      
+      static HistoricoViagemCall historicoViagemCall =
+      HistoricoViagemCall();
+  static PUTFotoUsuarioCall pUTFotoUsuarioCall = PUTFotoUsuarioCall();
+  static  PUTSenhaCall pUTSenhaCall = PUTSenhaCall();
 }
 
 class RedefinirSenhaCall {
@@ -134,6 +137,62 @@ class BuscaUsuarioPorCpfCall {
   }
 }
 
+class PUTFotoUsuarioCall {
+  Future<ApiCallResponse> call({
+    String? documento = '',
+    String? fotoDocumento64 = ''
+  }) {
+    final body = '''
+{
+  "foto_documento64": "${fotoDocumento64}",
+  "documento": "${documento}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'PUT Foto Usuario',
+      apiUrl: '${UsuarioGroup.baseUrl}usuario-foto',
+      callType: ApiCallType.PUT,
+      headers: {
+        ...EquipamentoGroup.headers,
+      },
+      params: {},
+      body: body,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
+class PUTSenhaCall {
+  Future<ApiCallResponse> call({
+    String? documento = '',
+    String? senha = ''
+  }) {
+    final body = '''
+{
+  "senha": "${senha}",
+  "documento": "${documento}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'PUT Foto Usuario',
+      apiUrl: '${UsuarioGroup.baseUrl}usuario-senha',
+      callType: ApiCallType.PUT,
+      headers: {
+        ...UsuarioGroup.headers,
+      },
+      params: {},
+      body: body,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
 class DetalhesDoUsuarioCall {
   Future<ApiCallResponse> call({
     String? email = '',
@@ -229,28 +288,27 @@ class CadastrarUsuarioCall {
 
 class EditarUsuarioCall {
   Future<ApiCallResponse> call({
-    String? nome = '',
-    String? email = '',
-    String? sobrenome = '',
-    String? dataDeNascicmento = '',
-    String? documento = '',
-    String? telefoneFixo = '',
-    String? telefoneCelular = '',
-    String? cep = '',
-    String? logradouro = '',
-    String? numero = '',
-    String? complemento = '',
-    String? bairro = '',
-    String? cidade = '',
-    String? estado = '',
-    String? situacaoLesao = '',
-    String? nivelLesao = '',
-    String? detalheLesao = '',
-    String? fotoDocumento64 = '',
-    String? fotoComDocumento64 = '',
+    String? nome,
+    String? email,
+    String? sobrenome,
+    String? dataDeNascicmento,
+    String? documento,
+    String? telefoneFixo,
+    String? telefoneCelular,
+    String? cep,
+    String? logradouro,
+    String? numero,
+    String? complemento,
+    String? bairro,
+    String? cidade,
+    String? estado,
+    String? situacaoLesao,
+    String? nivelLesao,
+    String? detalheLesao,
+    String? fotoDocumento64,
+    String? fotoComDocumento64,
     int? nivel,
-    String? senha = '',
-    String? telefone = '',
+    String? telefone,
   }) {
     final body = '''
 {
@@ -273,7 +331,6 @@ class EditarUsuarioCall {
   "foto_documento64": "${fotoDocumento64}",
   "foto_com_documento64": "${fotoComDocumento64}",
   "nivel": 1,
-  "senha": "${senha}",
   "telefone": "${telefone}",
   "sobrenome": "${sobrenome}",
   "ativo": 1
@@ -313,6 +370,33 @@ class HistoricoSolicitacoesCall {
     );
   }
 }
+
+class HistoricoViagemCall {
+  Future<ApiCallResponse> call({
+    String? documento = '',
+  }) {
+    final body = '''
+{
+  "documento": "${documento}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'Historico viagem',
+      apiUrl: '${UsuarioGroup.baseUrl}solicitacao-historico',
+      callType: ApiCallType.POST,
+      headers: {
+        ...UsuarioGroup.headers,
+      },
+      params: {},
+      body: body,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
 
 class BuscaCpfCall {
   Future<ApiCallResponse> call({
@@ -429,6 +513,8 @@ class EquipamentoGroup {
   static PUTDevolucaoCall pUTDevolucaoCall = PUTDevolucaoCall();
   static PUTEmergenciaCall pUTEmergenciaCall = PUTEmergenciaCall();
   static PUTResolveEmergenciaCall pUTResolveEmergenciaCall = PUTResolveEmergenciaCall();
+    static POSTReservaCall pOSTReservaCall = POSTReservaCall();
+    static PUTCancelarReservaCall pUTCancelarReservaCall = PUTCancelarReservaCall();
 }
 
 class GETDetalhesEquipamentoCall {
@@ -481,6 +567,34 @@ class POSTSolicitacaoCall {
   }
 }
 
+class POSTReservaCall {
+  Future<ApiCallResponse> call({
+    int? kit = 0,
+    String? documento = '',
+  }) {
+    final body = '''
+{
+  "kit": "${kit}",
+  "documento": "${documento}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'POST Reserva',
+      apiUrl: '${EquipamentoGroup.baseUrl}estoque-reservado',
+      callType: ApiCallType.POST,
+      headers: {
+        ...EquipamentoGroup.headers,
+      },
+      params: {},
+      body: body,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
 class PUTDevolucaoCall {
   Future<ApiCallResponse> call({
     String? dataDevolucao = '',
@@ -504,6 +618,35 @@ class PUTDevolucaoCall {
     return ApiManager.instance.makeApiCall(
       callName: 'PUT Devolucao',
       apiUrl: '${EquipamentoGroup.baseUrl}solicitacao',
+      callType: ApiCallType.PUT,
+      headers: {
+        ...EquipamentoGroup.headers,
+      },
+      params: {},
+      body: body,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
+
+class PUTCancelarReservaCall {
+  Future<ApiCallResponse> call({
+    String? documento = '',
+    String? kit = '',
+  }) {
+    final body = '''
+{
+  "documento": "${documento}",
+  "kit": "${kit}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'PUT Cancelar Reserva',
+      apiUrl: '${EquipamentoGroup.baseUrl}estoque-reservado',
       callType: ApiCallType.PUT,
       headers: {
         ...EquipamentoGroup.headers,

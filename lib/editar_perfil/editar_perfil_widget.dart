@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import '../backend/api_requests/api_calls.dart';
 import '../backend/supabase/supabase.dart';
 import '../flutter_flow/flutter_flow_drop_down.dart';
@@ -10,11 +12,14 @@ import '../flutter_flow/upload_media.dart';
 import '../custom_code/actions/index.dart' as actions;
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/scheduler.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 import '../flutter_flow/uploaded_file.dart';
 import 'editar_perfil_model.dart';
@@ -37,6 +42,13 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
+
+  TextEditingController? campoCepController;
+  String? resultadoLogradouro;
+  String? resultadoBairro;
+  String? resultadoCidade;
+  String? resultadoComplemento;
+  String? resultadoEstado;
 
   @override
   void initState() {
@@ -77,6 +89,34 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
     _unfocusNode.dispose();
     super.dispose();
   }
+
+    _consultaCep() async {
+    // Pegando o cep digitado no campo de texto
+    String cep = campoCepController!.text;
+
+    // Configurando a url
+    String url = "http://viacep.com.br/ws/${cep}/json/";
+
+    http.Response response;
+
+    response = await http.get(Uri.parse(url));
+
+    Map<String, dynamic> retorno = json.decode(response.body);
+    setState(() {
+      String logradouro = retorno["logradouro"];
+      String bairro = retorno["bairro"];
+      String cidade = retorno["localidade"];
+      String complemento = retorno["complemento"];
+      String estado = retorno["uf"];
+
+      resultadoLogradouro = "${logradouro}";
+      resultadoBairro = "${bairro}";
+      resultadoCidade = "${cidade}";
+      resultadoComplemento = "${complemento}";
+      resultadoEstado = "${estado}";
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -131,12 +171,13 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                           Expanded(
                             child: SelectionArea(
                                 child: Text(
-                              'Altere seus dados abaixo.',
+                              'Informações pessoais',
                               style: FlutterFlowTheme.of(context)
                                   .bodyText1
                                   .override(
                                     fontFamily: 'Poppins',
-                                    fontSize: 16,
+                                    color: Color(0xFF1D4F9A),
+                                    fontSize: 20,
                                   ),
                             )),
                           ),
@@ -296,6 +337,7 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                                       },
                                     ),
                                     obscureText: false,
+                                    readOnly: true,
                                     decoration: InputDecoration(
                                       labelText: 'CPF',
                                       hintStyle: FlutterFlowTheme.of(context)
@@ -509,7 +551,30 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+                      padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
+                            child: SelectionArea(
+                                child: Text(
+                              'Dados da Lesão',
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyText1
+                                  .override(
+                                    fontFamily: 'Poppins',
+                                    color: Color(0xFF1D4F9A),
+                                    fontSize: 20,
+                                  ),
+                            )),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [
@@ -521,10 +586,13 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                                 initialOption: _model.dropDownLesaoValue ??=
                                     FFAppState().tipoLesao,
                                 options: [
+                                  'Paraplegia',
+                                  'Tetraplegia',
                                   'Amputado',
                                   'Mobilidade Reduzida',
-                                  'Intelectual/Mental',
-                                  'Sem Lesão'
+                                  'Lesão Temporária',
+                                  'Sem Lesão',
+                                  'Outro'
                                 ],
                                 onChanged: (val) => setState(
                                     () => _model.dropDownLesaoValue = val),
@@ -557,50 +625,30 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
+                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 10),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
-                            child: SelectionArea(
-                                child: Text(
-                              'Situação',
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyText1
-                                  .override(
-                                    fontFamily: 'Poppins',
-                                    color: Color(0xFF1D4F9A),
-                                    fontSize: 20,
-                                  ),
-                            )),
+                          FlutterFlowRadioButton(
+                            options: ['Temporária', 'Permanente'].toList(),
+                            onChanged: (val) => setState(
+                                () => _model.radioButtonSituacaoValue = val),
+                            optionHeight: 25,
+                            textStyle:
+                                FlutterFlowTheme.of(context).bodyText1.override(
+                                      fontFamily: 'Poppins',
+                                      color: Color(0xFF1D4F9A),
+                                    ),
+                            buttonPosition: RadioButtonPosition.left,
+                            direction: Axis.vertical,
+                            radioButtonColor: Color(0xFF1D4F9A),
+                            inactiveRadioButtonColor: Color(0x8A000000),
+                            toggleable: false,
+                            horizontalAlignment: WrapAlignment.start,
+                            verticalAlignment: WrapCrossAlignment.start,
                           ),
                         ],
                       ),
-                    ),
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        FlutterFlowRadioButton(
-                          options: ['Temporária', 'Permanente'].toList(),
-                          onChanged: (val) => setState(
-                              () => _model.radioButtonSituacaoValue = val),
-                          optionHeight: 25,
-                          textStyle:
-                              FlutterFlowTheme.of(context).bodyText1.override(
-                                    fontFamily: 'Poppins',
-                                    color: Colors.black,
-                                  ),
-                          buttonPosition: RadioButtonPosition.left,
-                          direction: Axis.vertical,
-                          radioButtonColor: Color(0xFF1D4F9A),
-                          inactiveRadioButtonColor: Color(0x8A000000),
-                          toggleable: false,
-                          horizontalAlignment: WrapAlignment.start,
-                          verticalAlignment: WrapCrossAlignment.start,
-                        ),
-                      ],
                     ),
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
@@ -671,220 +719,6 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(10, 20, 0, 0),
-                      child: InkWell(
-                        onTap: () async {
-                          final selectedMedia = await selectMediaWithSourceBottomSheet(
-                            context: context,
-                            storageFolderPath: 'documento',
-                            allowPhoto: true,
-                            backgroundColor: FlutterFlowTheme.of(context).primaryColor,
-                            textColor: Colors.white,
-                          );
-                          if (selectedMedia != null &&
-                              selectedMedia
-                                  .every((m) => validateFileFormat(m.storagePath, context))) {
-                            setState(() => _model.isMediaUploading1 = true);
-                            var selectedUploadedFiles = <FFUploadedFile>[];
-                            var downloadUrls = <String>[];
-                            try {
-                              showUploadMessage(
-                                context,
-                                'Uploading file...',
-                                showLoading: true,
-                              );
-                              selectedUploadedFiles = selectedMedia
-                                  .map((m) => FFUploadedFile(
-                                        name: m.storagePath.split('/').last,
-                                        bytes: m.bytes,
-                                        height: m.dimensions?.height,
-                                        width: m.dimensions?.width,
-                                      ))
-                                  .toList();
-                              downloadUrls = await uploadSupabaseStorageFiles(
-                                bucketName: 'moblivre',
-                                selectedMedia: selectedMedia,
-                              );
-                            } finally {
-                              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                              _model.isMediaUploading1 = false;
-                            }
-                            if (selectedUploadedFiles.length == selectedMedia.length &&
-                                downloadUrls.length == selectedMedia.length) {
-                              setState(() {
-                                _model.uploadedLocalFile1 = selectedUploadedFiles.first;
-                                _model.uploadedFileUrl1 = downloadUrls.first;
-                              });
-                              showUploadMessage(context, 'Success!');
-                            } else {
-                              setState(() {});
-                              showUploadMessage(context, 'Failed to upload media');
-                              return;
-                            }
-                          }
-                          setState(() {
-                            FFAppState().fotoPerfil = _model.uploadedFileUrl1;
-                          });
-                        },
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Stack(
-                              children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(12),
-                                    child: Image.network(
-                                      valueOrDefault<String>(
-                                        FFAppState().fotoPerfil,
-                                        'https://inforpress.cv/wp-content/uploads/2020/05/empty.jpg',
-                                      ),
-                                      width: 100,
-                                      height: 100,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                              ],
-                            ),
-                            Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Anexar imagem de perfil',
-                                    style: FlutterFlowTheme.of(context).bodyText1.override(
-                                          fontFamily: 'Poppins',
-                                          color: Color(0xFF989898),
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                  ),
-                                  Text(
-                                    'Clique aqui',
-                                    style: FlutterFlowTheme.of(context).bodyText1.override(
-                                          fontFamily: 'Poppins',
-                                          color: Color(0xFF989898),
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(10, 20, 0, 0),
-                      child: InkWell(
-                        onTap: () async {
-                          final selectedMedia = await selectMediaWithSourceBottomSheet(
-                            context: context,
-                            storageFolderPath: 'comDocumento',
-                            allowPhoto: true,
-                            backgroundColor: FlutterFlowTheme.of(context).primaryColor,
-                            textColor: Colors.white,
-                          );
-                          if (selectedMedia != null &&
-                              selectedMedia
-                                  .every((m) => validateFileFormat(m.storagePath, context))) {
-                            setState(() => _model.isMediaUploading2 = true);
-                            var selectedUploadedFiles = <FFUploadedFile>[];
-                            var downloadUrls = <String>[];
-                            try {
-                              showUploadMessage(
-                                context,
-                                'Uploading file...',
-                                showLoading: true,
-                              );
-                              selectedUploadedFiles = selectedMedia
-                                  .map((m) => FFUploadedFile(
-                                        name: m.storagePath.split('/').last,
-                                        bytes: m.bytes,
-                                        height: m.dimensions?.height,
-                                        width: m.dimensions?.width,
-                                      ))
-                                  .toList();
-                              downloadUrls = await uploadSupabaseStorageFiles(
-                                bucketName: 'moblivre',
-                                selectedMedia: selectedMedia,
-                              );
-                            } finally {
-                              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                              _model.isMediaUploading2 = false;
-                            }
-                            if (selectedUploadedFiles.length == selectedMedia.length &&
-                                downloadUrls.length == selectedMedia.length) {
-                              setState(() {
-                                _model.uploadedLocalFile2 = selectedUploadedFiles.first;
-                                _model.uploadedFileUrl2 = downloadUrls.first;
-                              });
-                              showUploadMessage(context, 'Success!');
-                            } else {
-                              setState(() {});
-                              showUploadMessage(context, 'Failed to upload media');
-                              return;
-                            }
-                          }
-                          setState(() {
-                            FFAppState().fotoDocumento = _model.uploadedFileUrl2;
-                          });
-                        },
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Stack(
-                              children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(12),
-                                    child: Image.network(
-                                      valueOrDefault<String>(
-                                        FFAppState().fotoDocumento,
-                                        'https://inforpress.cv/wp-content/uploads/2020/05/empty.jpg',
-                                      ),
-                                      width: 100,
-                                      height: 100,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                              ],
-                            ),
-                            Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Anexar imagem do documento',
-                                    style: FlutterFlowTheme.of(context).bodyText1.override(
-                                          fontFamily: 'Poppins',
-                                          color: Color(0xFF989898),
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                  ),
-                                  Text(
-                                    'Clique aqui',
-                                    style: FlutterFlowTheme.of(context).bodyText1.override(
-                                          fontFamily: 'Poppins',
-                                          color: Color(0xFF989898),
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
@@ -903,6 +737,75 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                                     fontSize: 20,
                                   ),
                             )),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
+                              child: TextFormField(
+                                controller: _model.cepController,
+                                obscureText: false,
+                                onEditingComplete: () {
+                                  _consultaCep();
+                                },
+                                decoration: InputDecoration(
+                                  labelText: 'CEP',
+                                  hintStyle: FlutterFlowTheme.of(context)
+                                      .bodyText2
+                                      .override(
+                                        fontFamily: 'Poppins',
+                                        color: Color(0xFF1D4F9A),
+                                      ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Color(0xFF1D4F9A),
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Color(0xFF1D4F9A),
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Color(0xFFF00000),
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  focusedErrorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Color(0xFFF00000),
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  contentPadding:
+                                      EdgeInsetsDirectional.fromSTEB(
+                                          10, 0, 0, 0),
+                                ),
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyText1
+                                    .override(
+                                      fontFamily: 'Poppins',
+                                      color: Color(0xFF1D4F9A),
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                maxLines: null,
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -1053,72 +956,6 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                                 obscureText: false,
                                 decoration: InputDecoration(
                                   labelText: 'Bairro',
-                                  hintStyle: FlutterFlowTheme.of(context)
-                                      .bodyText2
-                                      .override(
-                                        fontFamily: 'Poppins',
-                                        color: Color(0xFF1D4F9A),
-                                      ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0xFF1D4F9A),
-                                      width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0xFF1D4F9A),
-                                      width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  errorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0xFFF00000),
-                                      width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  focusedErrorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0xFFF00000),
-                                      width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  contentPadding:
-                                      EdgeInsetsDirectional.fromSTEB(
-                                          10, 0, 0, 0),
-                                ),
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyText1
-                                    .override(
-                                      fontFamily: 'Poppins',
-                                      color: Color(0xFF1D4F9A),
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                maxLines: null,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Expanded(
-                            child: Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
-                              child: TextFormField(
-                                controller: _model.cepController,
-                                obscureText: false,
-                                decoration: InputDecoration(
-                                  labelText: 'CEP',
                                   hintStyle: FlutterFlowTheme.of(context)
                                       .bodyText2
                                       .override(
@@ -1402,6 +1239,7 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                             }
                             if (_model.radioButtonSituacaoValue == null) {
                               return;
+                            
                             }
                             _model.apiCallOutput =
                                 await UsuarioGroup.editarUsuarioCall.call(
@@ -1529,7 +1367,7 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                       ),
                     if (!_model.switchValue!)
                       Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 60, 0, 0),
+                        padding: EdgeInsetsDirectional.fromSTEB(0, 60, 0, 20),
                         child: FFButtonWidget(
                           onPressed: () {
                             print('Button pressed ...');
