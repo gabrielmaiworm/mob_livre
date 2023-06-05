@@ -68,6 +68,11 @@ class FFAppState extends ChangeNotifier {
   set senhaCadastro(String _value) {
     _senhaCadastro = _value;
   }
+   String _urlPagamento = '';
+  String get urlPagamento => _urlPagamento;
+  set urlPagamento(String _value) {
+    _urlPagamento = _value;
+  }
 
   bool _receberEmail = false;
   bool get receberEmail => _receberEmail;
@@ -271,6 +276,18 @@ class FFAppState extends ChangeNotifier {
   String get numeroEquipamento => _numeroEquipamento;
   set numeroEquipamento(String _value) {
     _numeroEquipamento = _value;
+  }
+
+  double _saldo = 0.0;
+  double get saldo => _saldo;
+  set saldo(double _value) {
+    _saldo = _value;
+  }
+
+  String _idPix = '';
+  String get idPix => _idPix;
+  set idPix(String _value) {
+    _idPix = _value;
   }
 
   bool _emergencia = false;

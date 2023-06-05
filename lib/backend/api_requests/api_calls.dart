@@ -32,6 +32,7 @@ class UsuarioGroup {
       HistoricoViagemCall();
   static PUTFotoUsuarioCall pUTFotoUsuarioCall = PUTFotoUsuarioCall();
   static  PUTSenhaCall pUTSenhaCall = PUTSenhaCall();
+  static  CriarPixCall criarPixCall = CriarPixCall();
 }
 
 class RedefinirSenhaCall {
@@ -409,6 +410,36 @@ class BuscaCpfCall {
     return ApiManager.instance.makeApiCall(
       callName: 'Busca cpf',
       apiUrl: '${UsuarioGroup.baseUrl}usuario-cpf',
+      callType: ApiCallType.POST,
+      headers: {
+        ...UsuarioGroup.headers,
+      },
+      params: {},
+      body: body,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
+class CriarPixCall {
+  Future<ApiCallResponse> call({
+    String? description = '',
+    String? email  = '',
+    double? transactionAmount = 0.0,
+  }) {
+    final body = '''
+{
+  "description": "Aluguel KIT LIVRE",
+  "email": "${email}",
+  "transaction_amount": ${transactionAmount}
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'Criar pix',
+      apiUrl: '${UsuarioGroup.baseUrl}criar-pagamento-pix',
       callType: ApiCallType.POST,
       headers: {
         ...UsuarioGroup.headers,

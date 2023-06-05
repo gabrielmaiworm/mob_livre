@@ -1,9 +1,13 @@
-import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
-import '../flutter_flow/flutter_flow_widgets.dart';
+import '../flutter_flow/flutter_flow_model.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+
+import 'pagamento_model.dart';
+export 'pagamento_model.dart';
 
 class PagamentoWidget extends StatefulWidget {
   const PagamentoWidget({Key? key}) : super(key: key);
@@ -13,30 +17,27 @@ class PagamentoWidget extends StatefulWidget {
 }
 
 class _PagamentoWidgetState extends State<PagamentoWidget> {
-  TextEditingController? emailController1;
-  TextEditingController? emailController2;
-  TextEditingController? emailController3;
-  TextEditingController? emailController4;
-  bool? checkboxValue;
-  final _unfocusNode = FocusNode();
+  late PagamentoModel _model;
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  final _unfocusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    emailController1 = TextEditingController();
-    emailController2 = TextEditingController();
-    emailController3 = TextEditingController();
-    emailController4 = TextEditingController();
+    _model = createModel(context, () => PagamentoModel());
+
+    _model.numeroCartaoController ??= TextEditingController();
+    _model.validadeController ??= TextEditingController();
+    _model.codSegurancaController ??= TextEditingController();
+    _model.paisController ??= TextEditingController();
   }
 
   @override
   void dispose() {
+    _model.dispose();
+
     _unfocusNode.dispose();
-    emailController1?.dispose();
-    emailController2?.dispose();
-    emailController3?.dispose();
-    emailController4?.dispose();
     super.dispose();
   }
 
@@ -44,38 +45,43 @@ class _PagamentoWidgetState extends State<PagamentoWidget> {
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
 
-    return Scaffold(
-      key: scaffoldKey,
-      backgroundColor: Colors.white,
-      appBar: AppBar(
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
+      child: Scaffold(
+        key: scaffoldKey,
         backgroundColor: Colors.white,
-        automaticallyImplyLeading: true,
-        leading: InkWell(
-          onTap: () async {
-            context.pop();
-          },
-          child: Icon(
-            Icons.arrow_back,
-            color: Color(0xFF1D4F9A),
-            size: 30,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          automaticallyImplyLeading: true,
+          leading: InkWell(
+            splashColor: Colors.transparent,
+            focusColor: Colors.transparent,
+            hoverColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            onTap: () async {
+              context.pop();
+            },
+            child: Icon(
+              Icons.arrow_back,
+              color: Color(0xFF1D4F9A),
+              size: 30,
+            ),
           ),
+          title: SelectionArea(
+              child: Text(
+            'Pagamento',
+            style: FlutterFlowTheme.of(context).bodyText2.override(
+                  fontFamily: 'Poppins',
+                  color: Color(0xFF1D4F9A),
+                  fontSize: 20,
+                ),
+          )),
+          actions: [],
+          centerTitle: false,
+          elevation: 3,
         ),
-        title: SelectionArea(
-            child: Text(
-          'Pagamento',
-          style: FlutterFlowTheme.of(context).bodyText1.override(
-                fontFamily: 'Poppins',
-                color: Color(0xFF1D4F9A),
-                fontSize: 20,
-              ),
-        )),
-        actions: [],
-        centerTitle: false,
-        elevation: 3,
-      ),
-      body: SafeArea(
-        child: GestureDetector(
-          onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
+        body: SafeArea(
+          top: true,
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.max,
@@ -95,7 +101,7 @@ class _PagamentoWidgetState extends State<PagamentoWidget> {
                       SelectionArea(
                           child: Text(
                         'Não se esqueça',
-                        style: FlutterFlowTheme.of(context).bodyText1.override(
+                        style: FlutterFlowTheme.of(context).bodyText2.override(
                               fontFamily: 'Poppins',
                               color: Color(0xFF1D4F9A),
                               fontSize: 22,
@@ -117,7 +123,7 @@ class _PagamentoWidgetState extends State<PagamentoWidget> {
                           'Sua viagem pode ter custos adicionais caso você exceda o tempo de viagem previsto em seu plano.',
                           textAlign: TextAlign.center,
                           style:
-                              FlutterFlowTheme.of(context).bodyText1.override(
+                              FlutterFlowTheme.of(context).bodyText2.override(
                                     fontFamily: 'Poppins',
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
@@ -141,12 +147,16 @@ class _PagamentoWidgetState extends State<PagamentoWidget> {
                         options: FFButtonOptions(
                           width: 160,
                           height: 40,
+                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                          iconPadding:
+                              EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                           color: Color(0xFF1D4F9A),
                           textStyle:
-                              FlutterFlowTheme.of(context).subtitle2.override(
+                              FlutterFlowTheme.of(context).title3.override(
                                     fontFamily: 'Poppins',
                                     color: Colors.white,
                                   ),
+                          elevation: 2,
                           borderSide: BorderSide(
                             color: Colors.white,
                             width: 1,
@@ -162,12 +172,16 @@ class _PagamentoWidgetState extends State<PagamentoWidget> {
                         options: FFButtonOptions(
                           width: 160,
                           height: 40,
+                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                          iconPadding:
+                              EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                           color: Color(0xFF1D4F9A),
                           textStyle:
-                              FlutterFlowTheme.of(context).subtitle2.override(
+                              FlutterFlowTheme.of(context).title3.override(
                                     fontFamily: 'Poppins',
                                     color: Colors.white,
                                   ),
+                          elevation: 2,
                           borderSide: BorderSide(
                             color: Colors.white,
                             width: 1,
@@ -193,7 +207,7 @@ class _PagamentoWidgetState extends State<PagamentoWidget> {
                       SelectionArea(
                           child: Text(
                         'Adicione seus dados',
-                        style: FlutterFlowTheme.of(context).bodyText1.override(
+                        style: FlutterFlowTheme.of(context).bodyText2.override(
                               fontFamily: 'Poppins',
                               color: Color(0xFF1D4F9A),
                               fontSize: 22,
@@ -213,7 +227,7 @@ class _PagamentoWidgetState extends State<PagamentoWidget> {
                           child: Text(
                         'Dados do cartão',
                         textAlign: TextAlign.center,
-                        style: FlutterFlowTheme.of(context).bodyText1.override(
+                        style: FlutterFlowTheme.of(context).bodyText2.override(
                               fontFamily: 'Poppins',
                               fontSize: 17,
                               fontWeight: FontWeight.w500,
@@ -225,7 +239,7 @@ class _PagamentoWidgetState extends State<PagamentoWidget> {
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
                   child: TextFormField(
-                    controller: emailController1,
+                    controller: _model.numeroCartaoController,
                     obscureText: false,
                     decoration: InputDecoration(
                       labelText: 'Número do cartão',
@@ -238,7 +252,7 @@ class _PagamentoWidgetState extends State<PagamentoWidget> {
                       contentPadding:
                           EdgeInsetsDirectional.fromSTEB(10, 5, 0, 0),
                     ),
-                    style: FlutterFlowTheme.of(context).bodyText1.override(
+                    style: FlutterFlowTheme.of(context).bodyText2.override(
                           fontFamily: 'Poppins',
                           color: FlutterFlowTheme.of(context).secondaryText,
                           fontWeight: FontWeight.w600,
@@ -255,7 +269,7 @@ class _PagamentoWidgetState extends State<PagamentoWidget> {
                         child: Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
                           child: TextFormField(
-                            controller: emailController2,
+                            controller: _model.validadeController,
                             obscureText: false,
                             decoration: InputDecoration(
                               labelText: 'MM/AA',
@@ -268,13 +282,14 @@ class _PagamentoWidgetState extends State<PagamentoWidget> {
                               contentPadding:
                                   EdgeInsetsDirectional.fromSTEB(10, 5, 0, 0),
                             ),
-                            style:
-                                FlutterFlowTheme.of(context).bodyText1.override(
-                                      fontFamily: 'Poppins',
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryText,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                            style: FlutterFlowTheme.of(context)
+                                .bodyText2
+                                .override(
+                                  fontFamily: 'Poppins',
+                                  color: FlutterFlowTheme.of(context)
+                                      .secondaryText,
+                                  fontWeight: FontWeight.w600,
+                                ),
                             keyboardType: TextInputType.emailAddress,
                           ),
                         ),
@@ -283,7 +298,7 @@ class _PagamentoWidgetState extends State<PagamentoWidget> {
                         child: Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
                           child: TextFormField(
-                            controller: emailController3,
+                            controller: _model.codSegurancaController,
                             obscureText: false,
                             decoration: InputDecoration(
                               labelText: 'CVV',
@@ -296,13 +311,14 @@ class _PagamentoWidgetState extends State<PagamentoWidget> {
                               contentPadding:
                                   EdgeInsetsDirectional.fromSTEB(10, 5, 0, 0),
                             ),
-                            style:
-                                FlutterFlowTheme.of(context).bodyText1.override(
-                                      fontFamily: 'Poppins',
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryText,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                            style: FlutterFlowTheme.of(context)
+                                .bodyText2
+                                .override(
+                                  fontFamily: 'Poppins',
+                                  color: FlutterFlowTheme.of(context)
+                                      .secondaryText,
+                                  fontWeight: FontWeight.w600,
+                                ),
                             keyboardType: TextInputType.emailAddress,
                           ),
                         ),
@@ -320,7 +336,7 @@ class _PagamentoWidgetState extends State<PagamentoWidget> {
                           child: Text(
                         'Endereço de Cobrança',
                         textAlign: TextAlign.center,
-                        style: FlutterFlowTheme.of(context).bodyText1.override(
+                        style: FlutterFlowTheme.of(context).bodyText2.override(
                               fontFamily: 'Poppins',
                               fontSize: 17,
                               fontWeight: FontWeight.w500,
@@ -332,7 +348,7 @@ class _PagamentoWidgetState extends State<PagamentoWidget> {
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
                   child: TextFormField(
-                    controller: emailController4,
+                    controller: _model.paisController,
                     obscureText: false,
                     decoration: InputDecoration(
                       labelText: 'País ou região',
@@ -346,7 +362,7 @@ class _PagamentoWidgetState extends State<PagamentoWidget> {
                       contentPadding:
                           EdgeInsetsDirectional.fromSTEB(10, 5, 0, 0),
                     ),
-                    style: FlutterFlowTheme.of(context).bodyText1.override(
+                    style: FlutterFlowTheme.of(context).bodyText2.override(
                           fontFamily: 'Poppins',
                           color: FlutterFlowTheme.of(context).secondaryText,
                           fontWeight: FontWeight.w600,
@@ -369,21 +385,20 @@ class _PagamentoWidgetState extends State<PagamentoWidget> {
                             unselectedWidgetColor: Color(0xFF1D4F9A),
                           ),
                           child: Checkbox(
-                            value: checkboxValue ??= false,
+                            value: _model.checkboxValue ??= false,
                             onChanged: (newValue) async {
-                              setState(() => checkboxValue = newValue!);
+                              setState(() => _model.checkboxValue = newValue!);
                             },
-                            activeColor:
-                                FlutterFlowTheme.of(context).primaryColor,
+                            activeColor: FlutterFlowTheme.of(context).primaryColor,
                           ),
                         ),
                       ),
                       Expanded(
                         child: SelectionArea(
                             child: Text(
-                          'Aceito cobrança automativa neste cartão, caso exceda o tempo de viagem previsto.',
+                          'Aceito cobrança automatica neste cartão, caso exceda o tempo de viagem previsto.',
                           style:
-                              FlutterFlowTheme.of(context).bodyText1.override(
+                              FlutterFlowTheme.of(context).bodyText2.override(
                                     fontFamily: 'Poppins',
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -403,7 +418,7 @@ class _PagamentoWidgetState extends State<PagamentoWidget> {
                           'Você só será notificado quando o tempo de viagem estiver acabando. ',
                           textAlign: TextAlign.start,
                           style:
-                              FlutterFlowTheme.of(context).bodyText1.override(
+                              FlutterFlowTheme.of(context).bodyText2.override(
                                     fontFamily: 'Poppins',
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -423,7 +438,7 @@ class _PagamentoWidgetState extends State<PagamentoWidget> {
                           'Se você nao aceitar cobrança automática e o tempo acabar vc precisa inserir novamente seus dados.',
                           textAlign: TextAlign.start,
                           style:
-                              FlutterFlowTheme.of(context).bodyText1.override(
+                              FlutterFlowTheme.of(context).bodyText2.override(
                                     fontFamily: 'Poppins',
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -442,12 +457,15 @@ class _PagamentoWidgetState extends State<PagamentoWidget> {
                     options: FFButtonOptions(
                       width: 200,
                       height: 40,
+                      padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                      iconPadding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                       color: Color(0xFF1D4F9A),
                       textStyle:
-                          FlutterFlowTheme.of(context).subtitle2.override(
+                          FlutterFlowTheme.of(context).title3.override(
                                 fontFamily: 'Poppins',
                                 color: Colors.white,
                               ),
+                      elevation: 2,
                       borderSide: BorderSide(
                         color: Colors.white,
                         width: 1,

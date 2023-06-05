@@ -1,5 +1,6 @@
 import 'package:mob_livree/flutter_flow/upload_media.dart';
 
+import '../components/adicionar_saldo/adicionar_saldo_widget.dart';
 import '../components/sair/sair_widget.dart';
 import '../flutter_flow/flutter_flow_model.dart';
 import '../flutter_flow/uploaded_file.dart';
@@ -97,165 +98,240 @@ class _MeuPerfilWidgetState extends State<MeuPerfilWidget> {
               Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  Padding(
+                  // Generated code for this Row Widget...
+Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(0, 50, 0, 0),
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Stack(
-                          alignment: AlignmentDirectional(1, 1),
+                        Column(
+                          mainAxisSize: MainAxisSize.max,
                           children: [
-                            Material(
-                              color: Colors.transparent,
-                              elevation: 3,
-                              shape: const CircleBorder(),
-                              child: ClipOval(
-                                child: Container(
-                                  width: 135,
-                                  height: 135,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        width: 130,
-                                        height: 130,
-                                        clipBehavior: Clip.antiAlias,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: Image.network(
-                                          valueOrDefault<String>(
-                                            FFAppState().fotoPerfil,
-                                            'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__480.png',
-                                          ),
-                                          fit: BoxFit.cover,
-                                        ),
+                            Stack(
+                              alignment: AlignmentDirectional(1, 1),
+                              children: [
+                                Material(
+                                  color: Colors.transparent,
+                                  elevation: 3,
+                                  shape: const CircleBorder(),
+                                  child: ClipOval(
+                                    child: Container(
+                                      width: 135,
+                                      height: 135,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        shape: BoxShape.circle,
                                       ),
-                                    ],
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            width: 130,
+                                            height: 130,
+                                            clipBehavior: Clip.antiAlias,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: Image.network(
+                                              valueOrDefault<String>(
+                                                FFAppState().fotoPerfil,
+                                                'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__480.png',
+                                              ),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
                                 ),
+                                FlutterFlowIconButton(
+                                  borderColor: Colors.transparent,
+                                  borderRadius: 30,
+                                  borderWidth: 1,
+                                  buttonSize: 60,
+                                  fillColor: Color(0xC9FFFFFF),
+                                  icon: Icon(
+                                    Icons.flip_camera_ios,
+                                    color: FlutterFlowTheme.of(context).primaryColor,
+                                    size: 30,
+                                  ),
+                                  onPressed: () async {
+                                    final selectedMedia =
+                                        await selectMediaWithSourceBottomSheet(
+                                      context: context,
+                                      allowPhoto: true,
+                                      backgroundColor: Color(0xFF383838),
+                                      textColor: Colors.white,
+                                    );
+                                    if (selectedMedia != null &&
+                                        selectedMedia.every((m) =>
+                                            validateFileFormat(
+                                                m.storagePath, context))) {
+                                      setState(
+                                          () => _model.isDataUploading = true);
+                                      var selectedUploadedFiles =
+                                          <FFUploadedFile>[];
+                                      var downloadUrls = <String>[];
+                                      try {
+                                        showUploadMessage(
+                                          context,
+                                          'Uploading file...',
+                                          showLoading: true,
+                                        );
+                                        selectedUploadedFiles = selectedMedia
+                                            .map((m) => FFUploadedFile(
+                                                  name: m.storagePath
+                                                      .split('/')
+                                                      .last,
+                                                  bytes: m.bytes,
+                                                  height: m.dimensions?.height,
+                                                  width: m.dimensions?.width,
+                                                ))
+                                            .toList();
+
+                                        downloadUrls = (await Future.wait(
+                                          selectedMedia.map(
+                                            (m) async => await uploadData(
+                                                m.storagePath, m.bytes),
+                                          ),
+                                        ))
+                                            .where((u) => u != null)
+                                            .map((u) => u!)
+                                            .toList();
+                                      } finally {
+                                        ScaffoldMessenger.of(context)
+                                            .hideCurrentSnackBar();
+                                        _model.isDataUploading = false;
+                                      }
+                                      if (selectedUploadedFiles.length ==
+                                              selectedMedia.length &&
+                                          downloadUrls.length ==
+                                              selectedMedia.length) {
+                                        setState(() {
+                                          _model.uploadedLocalFile =
+                                              selectedUploadedFiles.first;
+                                          _model.uploadedFileUrl =
+                                              downloadUrls.first;
+                                        });
+                                        showUploadMessage(context, 'Success!');
+                                      } else {
+                                        setState(() {});
+                                        showUploadMessage(
+                                            context, 'Failed to upload data');
+                                        return;
+                                      }
+                                    }
+
+                                    _model.apiResult0ql = await UsuarioGroup
+                                        .pUTFotoUsuarioCall
+                                        .call(
+                                      documento: FFAppState().documento,
+                                      fotoDocumento64: _model.uploadedFileUrl,
+                                    );
+                                    if ((_model.apiResult0ql?.succeeded ??
+                                        true)) {
+                                      setState(() {
+                                        FFAppState().fotoPerfil =
+                                            _model.uploadedFileUrl;
+                                      });
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            'Foto atualizada.',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          duration:
+                                              Duration(milliseconds: 4000),
+                                          backgroundColor: Color(0xFF70BB73),
+                                        ),
+                                      );
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            'Falha ao enviar foto.',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          duration:
+                                              Duration(milliseconds: 4000),
+                                          backgroundColor: Color(0xFFD23C3C),
+                                        ),
+                                      );
+                                    }
+
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                            Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
+                              child: Text(
+                                'Meus créditos',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyText2
+                                    .override(
+                                      fontFamily: 'Poppins',
+                                      color:
+                                          FlutterFlowTheme.of(context).primaryColor,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                               ),
                             ),
-                            FlutterFlowIconButton(
-                              borderColor: Colors.transparent,
-                              borderRadius: 30,
-                              borderWidth: 1,
-                              buttonSize: 60,
-                              fillColor: Color(0xC9FFFFFF),
-                              icon: Icon(
-                                Icons.flip_camera_ios,
-                                color: FlutterFlowTheme.of(context).primaryColor,
-                                size: 30,
+                            Text(
+                              'R\$ 00,00',
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyText2
+                                  .override(
+                                    fontFamily: 'Poppins',
+                                    color: FlutterFlowTheme.of(context).primaryColor,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                            ),
+                            Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+                              child: FFButtonWidget(
+                                onPressed: () async {
+                                  context.pushNamed('SelecionarValor');
+                                },
+                                text: 'Adicionar mais',
+                                options: FFButtonOptions(
+                                  height: 25,
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      24, 0, 24, 0),
+                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                      0, 0, 0, 0),
+                                  color: FlutterFlowTheme.of(context).primaryColor,
+                                  textStyle: FlutterFlowTheme.of(context)
+                                      .title2
+                                      .override(
+                                        fontFamily: 'Poppins',
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                  elevation: 3,
+                                  borderSide: BorderSide(
+                                    color: Colors.transparent,
+                                    width: 1,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
                               ),
-                              onPressed: () async {
-                                final selectedMedia =
-                                    await selectMediaWithSourceBottomSheet(
-                                  context: context,
-                                  allowPhoto: true,
-                                  backgroundColor: Color(0xFF383838),
-                                  textColor: Colors.white,
-                                );
-                                if (selectedMedia != null &&
-                                    selectedMedia.every((m) =>
-                                        validateFileFormat(
-                                            m.storagePath, context))) {
-                                  setState(() => _model.isDataUploading = true);
-                                  var selectedUploadedFiles =
-                                      <FFUploadedFile>[];
-                                  var downloadUrls = <String>[];
-                                  try {
-                                    showUploadMessage(
-                                      context,
-                                      'Uploading file...',
-                                      showLoading: true,
-                                    );
-                                    selectedUploadedFiles = selectedMedia
-                                        .map((m) => FFUploadedFile(
-                                              name:
-                                                  m.storagePath.split('/').last,
-                                              bytes: m.bytes,
-                                              height: m.dimensions?.height,
-                                              width: m.dimensions?.width,
-                                            ))
-                                        .toList();
-
-                                    downloadUrls = (await Future.wait(
-                                      selectedMedia.map(
-                                        (m) async => await uploadData(
-                                            m.storagePath, m.bytes),
-                                      ),
-                                    ))
-                                        .where((u) => u != null)
-                                        .map((u) => u!)
-                                        .toList();
-                                  } finally {
-                                    ScaffoldMessenger.of(context)
-                                        .hideCurrentSnackBar();
-                                    _model.isDataUploading = false;
-                                  }
-                                  if (selectedUploadedFiles.length ==
-                                          selectedMedia.length &&
-                                      downloadUrls.length ==
-                                          selectedMedia.length) {
-                                    setState(() {
-                                      _model.uploadedLocalFile =
-                                          selectedUploadedFiles.first;
-                                      _model.uploadedFileUrl =
-                                          downloadUrls.first;
-                                    });
-                                    showUploadMessage(context, 'Success!');
-                                  } else {
-                                    setState(() {});
-                                    showUploadMessage(
-                                        context, 'Failed to upload data');
-                                    return;
-                                  }
-                                }
-
-                                _model.apiResult0ql =
-                                    await UsuarioGroup.pUTFotoUsuarioCall.call(
-                                  documento: FFAppState().documento,
-                                  fotoDocumento64: _model.uploadedFileUrl,
-                                );
-                                if ((_model.apiResult0ql?.succeeded ?? true)) {
-                                  setState(() {
-                                    FFAppState().fotoPerfil = _model.uploadedFileUrl;
-                                  });
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        'Foto atualizada.',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      duration: Duration(milliseconds: 4000),
-                                      backgroundColor: Color(0xFF70BB73),
-                                    ),
-                                  );
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        'Falha ao enviar foto.',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      duration: Duration(milliseconds: 4000),
-                                      backgroundColor: Color(0xFFD23C3C),
-                                    ),
-                                  );
-                                }
-
-                                setState(() {});
-                              },
                             ),
                           ],
                         ),

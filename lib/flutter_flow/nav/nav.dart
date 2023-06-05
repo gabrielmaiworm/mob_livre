@@ -193,6 +193,16 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               builder: (context, params) => EmergenciaAlertaWidget(),
             ),
             FFRoute(
+              name: 'SelecionarValor',
+              path: 'selecionarValor',
+              builder: (context, params) => SelecionarValorWidget(),
+            ),
+            FFRoute(
+              name: 'MercadoPago',
+              path: 'mercadoPago',
+              builder: (context, params) => MercadoPagoWidget(),
+            ),
+            FFRoute(
               name: 'Emergencia',
               path: 'emergencia',
               builder: (context, params) => EmergenciaWidget(),
