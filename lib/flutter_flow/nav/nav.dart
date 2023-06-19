@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:page_transition/page_transition.dart';
+import '../../blue_slider/blue_slider.dart';
 import '../../devolver_avaliacao/devolver_avaliacao_widget.dart';
 import '../flutter_flow_theme.dart';
 
@@ -142,6 +143,11 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               builder: (context, params) => LoginSenhaWidget(),
             ),
             FFRoute(
+              name: 'BlueSlider',
+              path: 'blueSlider',
+              builder: (context, params) => BlueSlider(kit: 0),
+            ),
+            FFRoute(
               name: 'MapaLogado',
               path: 'mapaLogado',
               builder: (context, params) => MapaLogadoWidget(),
@@ -196,6 +202,11 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               name: 'SelecionarValor',
               path: 'selecionarValor',
               builder: (context, params) => SelecionarValorWidget(),
+            ),
+            FFRoute(
+              name: 'SelecionarPlano',
+              path: 'selecionarPlano',
+              builder: (context, params) => SelecionarPlanoWidget(detalhesEquip: params.getParam('detalhesEquip', ParamType.JSON),),
             ),
             FFRoute(
               name: 'MercadoPago',

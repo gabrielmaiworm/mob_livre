@@ -448,7 +448,12 @@ class _LoginSenhaWidgetState extends State<LoginSenhaWidget> {
                             (_model.apiResultw03?.jsonBody ?? ''),
                             r'''$..numero''',
                           ).toString();
+
                           final jsonBody = _model.apiResultw03?.jsonBody;
+                          final credito = jsonBody != null ? getJsonField(jsonBody, r'''$..credito''') : null;
+                          if (credito != null) {
+                            FFAppState().credito = credito.toDouble();
+                            }
                           final kit = jsonBody != null ? getJsonField(jsonBody, r'''$..kit''') : null;
                           if (kit != null) {
                             FFAppState().kit = kit;

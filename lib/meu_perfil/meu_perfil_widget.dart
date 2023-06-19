@@ -1,3 +1,4 @@
+import 'package:flutter/scheduler.dart';
 import 'package:mob_livree/flutter_flow/upload_media.dart';
 
 import '../components/adicionar_saldo/adicionar_saldo_widget.dart';
@@ -40,6 +41,46 @@ class _MeuPerfilWidgetState extends State<MeuPerfilWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => MeuPerfilModel());
+
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      _model.apiResultki5 =
+          await UsuarioGroup.pOSTSaldoUserCall.call(
+        documento: FFAppState().documento,
+      );
+      if ((_model.apiResultki5?.succeeded ?? true)) {
+        setState(() {
+          FFAppState().credito = double.parse(getJsonField(
+                              (_model.apiResultki5?.jsonBody ?? ''),
+                              r'''$..saldo''',
+          ));
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Saldo atualizado.',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            duration: Duration(milliseconds: 4000),
+            backgroundColor: Color(0xFF5DEA5C),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Falha ao carregar taxas.',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            duration: Duration(milliseconds: 4000),
+            backgroundColor: FlutterFlowTheme.of(context).alternate,
+          ),
+        );
+      }
+    });
   }
 
   @override
@@ -291,7 +332,7 @@ Padding(
                               ),
                             ),
                             Text(
-                              'R\$ 00,00',
+                              'R\$ ${FFAppState().credito}',
                               style: FlutterFlowTheme.of(context)
                                   .bodyText2
                                   .override(

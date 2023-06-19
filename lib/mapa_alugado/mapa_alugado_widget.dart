@@ -785,7 +785,8 @@ class _MapaAlugadoWidgetState extends State<MapaAlugadoWidget> {
                                                     ),
                                               ),
                                               Center(
-                                                child: Text("${dateTimeFormat('Hm', DateTime.fromMillisecondsSinceEpoch(FFAppState().horaReserva!.millisecondsSinceEpoch))} ",
+                                                child: Text("${dateTimeFormat('Hm', DateTime.fromMillisecondsSinceEpoch(dateTime.now
+                                                ))} ",
                                                     style: FlutterFlowTheme.of(
                                                             context)
                                                         .bodyText1

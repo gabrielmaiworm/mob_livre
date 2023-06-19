@@ -30,4 +30,6 @@ export 'components/scan_manual/scan_manual_widget.dart' show ScanManualWidget;
 export 'meu_perfil/meu_perfil_widget.dart' show MeuPerfilWidget;
 export 'viagens_detalhes/viagens_detalhes_widget.dart' show ViagensDetalhesWidget;
 export 'selecionar_valor/selecionar_valor_widget.dart' show SelecionarValorWidget;
+export 'selecionar_plano/selecionar_plano_widget.dart' show SelecionarPlanoWidget;
 export 'mercado_pago/mercado_pago_widget.dart' show MercadoPagoWidget;
+export 'blue_slider/blue_slider.dart' show BlueSlider;

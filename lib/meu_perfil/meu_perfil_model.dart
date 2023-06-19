@@ -22,6 +22,8 @@ class MeuPerfilModel extends FlutterFlowModel {
   // Stores action output result for [Backend Call - API (PUT Foto Usuario)] action in IconButton widget.
   ApiCallResponse? apiResult0ql;
 
+    ApiCallResponse? apiResultki5;
+
   /// Initialization and disposal methods.
 
   void initState(BuildContext context) {}

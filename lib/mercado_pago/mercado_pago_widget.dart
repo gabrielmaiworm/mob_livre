@@ -1,3 +1,4 @@
+import '../components/pagamento_efetuado_widget.dart';
 import '../flutter_flow/flutter_flow_model.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -61,6 +62,24 @@ class _MercadoPagoWidgetState extends State<MercadoPagoWidget> {
             ),
             onPressed: () async {
               context.pop();
+              await showModalBottomSheet(
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                enableDrag: false,
+                context: context,
+                builder: (context) {
+                  return GestureDetector(
+                    onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
+                    child: Padding(
+                      padding: MediaQuery.of(context).viewInsets,
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * 0.35,
+                        child: PagamentoEfetuadoWidget(),
+                      ),
+                    ),
+                  );
+                },
+              ).then((value) => setState(() {}));
             },
           ),
           title: SelectionArea(

@@ -1,44 +1,79 @@
-import 'package:mob_livree/selecionar_valor/selecinar_valor_model.dart';
+import 'package:mob_livree/selecionar_plano/selecinar_plano_model.dart';
 
 import '../flutter_flow/flutter_flow_model.dart';
 import '/backend/api_requests/api_calls.dart';
-import '/components/adicionar_saldo/adicionar_saldo_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-class SelecionarValorWidget extends StatefulWidget {
-  const SelecionarValorWidget({
+class SelecionarPlanoWidget extends StatefulWidget {
+  const SelecionarPlanoWidget({
     Key? key,
     this.detalhesUser,
+    required this.detalhesEquip,
   }) : super(key: key);
 
   final dynamic detalhesUser;
+  final dynamic detalhesEquip;
 
   @override
-  _SelecionarValorWidgetState createState() => _SelecionarValorWidgetState();
+  _SelecionarPlanoWidgetState createState() => _SelecionarPlanoWidgetState();
 }
 
-class _SelecionarValorWidgetState extends State<SelecionarValorWidget> {
-  late SelecionarValorModel _model;
+class _SelecionarPlanoWidgetState extends State<SelecionarPlanoWidget> {
+  late SelecionarPlanoModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final _unfocusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => SelecionarValorModel());
+    _model = createModel(context, () => SelecionarPlanoModel());
+
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      _model.apiResultki5 =
+          await EquipamentoGroup.gETTaxaEquipamentoCall.call(
+        numeroSerieEquipamento: FFAppState().kit.toString(),
+      );
+      if ((_model.apiResultki5?.succeeded ?? true)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Taxas carregadas com sucesso.',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            duration: Duration(milliseconds: 4000),
+            backgroundColor: Color(0xFF5DEA5C),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Falha ao carregar taxas.',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            duration: Duration(milliseconds: 4000),
+            backgroundColor: FlutterFlowTheme.of(context).alternate,
+          ),
+        );
+      }
+    });
   }
 
   @override
   void dispose() {
     _model.dispose();
 
-    _unfocusNode.dispose();
     super.dispose();
   }
 
@@ -47,7 +82,7 @@ class _SelecionarValorWidgetState extends State<SelecionarValorWidget> {
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
+      onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: Colors.white,
@@ -70,7 +105,7 @@ class _SelecionarValorWidgetState extends State<SelecionarValorWidget> {
           ),
           title: SelectionArea(
               child: Text(
-            'Selecionar valor',
+            'Selecionar plano',
             style: FlutterFlowTheme.of(context).bodyText1.override(
                   fontFamily: 'Poppins',
                   color: Color(0xFF1D4F9A),
@@ -103,39 +138,49 @@ class _SelecionarValorWidgetState extends State<SelecionarValorWidget> {
                   highlightColor: Colors.transparent,
                   onTap: () async {
                     setState(() {
-                      FFAppState().saldo = 10.0;
+                      FFAppState().plano = 10.0;
                     });
-                    _model.apiResult7v5 = await UsuarioGroup.criarPixCall.call(
-                      email: FFAppState().emailPersist,
-                      transactionAmount: FFAppState().saldo,
+                    _model.apiResultnsu =
+                        await EquipamentoGroup.pOSTSolicitacaoCall.call(
                       documento: FFAppState().documento,
-                      nome: FFAppState().nome,
-                      sobrenome: FFAppState().sobrenome,
+                      numeroSerieEquipamento: FFAppState().numeroSEquip,
+                      valor: FFAppState().plano,
                     );
-                    if ((_model.apiResult7v5?.succeeded ?? true)) {
-                      setState(() {
-                        FFAppState().idPix = getJsonField(
-                          (_model.apiResult7v5?.jsonBody ?? ''),
-                          r'''$..id''',
-                        ).toString();
-                        FFAppState().urlPagamento = getJsonField(
-                          (_model.apiResult7v5?.jsonBody ?? ''),
-                          r'''$..ticket_url''',
-                        ).toString();
-                      });
-
-                      context.pushNamed('MercadoPago');
+                    if ((_model.apiResultnsu?.succeeded ?? true)) {
+                      context.goNamed(
+                        'MapaAlugado',
+                        queryParams: {
+                          'detalhesEquip': serializeParam(
+                            getJsonField(
+                              widget.detalhesEquip,
+                              r'''$''',
+                            ),
+                            ParamType.JSON,
+                          ),
+                          'detailUser': serializeParam(
+                            getJsonField(
+                              widget.detalhesUser,
+                              r'''$''',
+                            ),
+                            ParamType.JSON,
+                          ),
+                        }.withoutNulls,
+                      );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            'Erro inexperado.',
+                            getJsonField(
+                              (_model.apiResultnsu?.jsonBody ?? ''),
+                              r'''$..error''',
+                            ).toString(),
                             style: TextStyle(
                               color: Colors.white,
                             ),
                           ),
                           duration: Duration(milliseconds: 4000),
-                          backgroundColor: Color(0xFFFD6C72),
+                          backgroundColor:
+                              FlutterFlowTheme.of(context).alternate,
                         ),
                       );
                     }
@@ -159,7 +204,7 @@ class _SelecionarValorWidgetState extends State<SelecionarValorWidget> {
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             Text(
-                              '+10',
+                              '10',
                               style: FlutterFlowTheme.of(context)
                                   .bodyText1
                                   .override(
@@ -170,6 +215,17 @@ class _SelecionarValorWidgetState extends State<SelecionarValorWidget> {
                             ),
                             Text(
                               'Créditos',
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyText1
+                                  .override(
+                                    fontFamily: 'Poppins',
+                                    color: FlutterFlowTheme.of(context).primaryColor,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                            Text(
+                              '${(10 * 10).toString()} min',
                               style: FlutterFlowTheme.of(context)
                                   .bodyText1
                                   .override(
@@ -192,39 +248,49 @@ class _SelecionarValorWidgetState extends State<SelecionarValorWidget> {
                   highlightColor: Colors.transparent,
                   onTap: () async {
                     setState(() {
-                      FFAppState().saldo = 15.0;
+                      FFAppState().plano = 15.0;
                     });
-                    _model.apiResult7v9 = await UsuarioGroup.criarPixCall.call(
-                      email: FFAppState().emailPersist,
-                      transactionAmount: FFAppState().saldo,
+                    _model.apiResultnsu2 =
+                        await EquipamentoGroup.pOSTSolicitacaoCall.call(
                       documento: FFAppState().documento,
-                      nome: FFAppState().nome,
-                      sobrenome: FFAppState().sobrenome,
+                      numeroSerieEquipamento: FFAppState().numeroSEquip,
+                      valor: FFAppState().plano,
                     );
-                    if ((_model.apiResult7v9?.succeeded ?? true)) {
-                      setState(() {
-                        FFAppState().idPix = getJsonField(
-                          (_model.apiResult7v9?.jsonBody ?? ''),
-                          r'''$..id''',
-                        ).toString();
-                        FFAppState().urlPagamento = getJsonField(
-                          (_model.apiResult7v9?.jsonBody ?? ''),
-                          r'''$..ticket_url''',
-                        ).toString();
-                      });
-
-                      context.pushNamed('MercadoPago');
+                    if ((_model.apiResultnsu?.succeeded ?? true)) {
+                      context.goNamed(
+                        'MapaAlugado',
+                        queryParams: {
+                          'detalhesEquip': serializeParam(
+                            getJsonField(
+                              widget.detalhesEquip,
+                              r'''$''',
+                            ),
+                            ParamType.JSON,
+                          ),
+                          'detailUser': serializeParam(
+                            getJsonField(
+                              widget.detalhesUser,
+                              r'''$''',
+                            ),
+                            ParamType.JSON,
+                          ),
+                        }.withoutNulls,
+                      );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            'Erro inexperado.',
+                            getJsonField(
+                              (_model.apiResultnsu?.jsonBody ?? ''),
+                              r'''$..error''',
+                            ).toString(),
                             style: TextStyle(
                               color: Colors.white,
                             ),
                           ),
                           duration: Duration(milliseconds: 4000),
-                          backgroundColor: Color(0xFFFD6C72),
+                          backgroundColor:
+                              FlutterFlowTheme.of(context).alternate,
                         ),
                       );
                     }
@@ -248,7 +314,7 @@ class _SelecionarValorWidgetState extends State<SelecionarValorWidget> {
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             Text(
-                              '+15',
+                              '15',
                               style: FlutterFlowTheme.of(context)
                                   .bodyText1
                                   .override(
@@ -259,6 +325,17 @@ class _SelecionarValorWidgetState extends State<SelecionarValorWidget> {
                             ),
                             Text(
                               'Créditos',
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyText1
+                                  .override(
+                                    fontFamily: 'Poppins',
+                                    color: FlutterFlowTheme.of(context).primaryColor,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                            Text(
+                              '${(10 * 15).toString()} min',
                               style: FlutterFlowTheme.of(context)
                                   .bodyText1
                                   .override(
@@ -281,39 +358,49 @@ class _SelecionarValorWidgetState extends State<SelecionarValorWidget> {
                   highlightColor: Colors.transparent,
                   onTap: () async {
                     setState(() {
-                      FFAppState().saldo = 20.0;
+                      FFAppState().plano = 20.0;
                     });
-                    _model.apiResult7v7 = await UsuarioGroup.criarPixCall.call(
-                      email: FFAppState().emailPersist,
-                      transactionAmount: FFAppState().saldo,
+                    _model.apiResultnsu3 =
+                        await EquipamentoGroup.pOSTSolicitacaoCall.call(
                       documento: FFAppState().documento,
-                      nome: FFAppState().nome,
-                      sobrenome: FFAppState().sobrenome,
+                      numeroSerieEquipamento: FFAppState().numeroSEquip,
+                      valor: FFAppState().plano,
                     );
-                    if ((_model.apiResult7v7?.succeeded ?? true)) {
-                      setState(() {
-                        FFAppState().idPix = getJsonField(
-                          (_model.apiResult7v7?.jsonBody ?? ''),
-                          r'''$.id''',
-                        ).toString();
-                        FFAppState().urlPagamento = getJsonField(
-                          (_model.apiResult7v7?.jsonBody ?? ''),
-                          r'''$..ticket_url''',
-                        ).toString();
-                      });
-
-                      context.pushNamed('MercadoPago');
+                    if ((_model.apiResultnsu?.succeeded ?? true)) {
+                      context.goNamed(
+                        'MapaAlugado',
+                        queryParams: {
+                          'detalhesEquip': serializeParam(
+                            getJsonField(
+                              widget.detalhesEquip,
+                              r'''$''',
+                            ),
+                            ParamType.JSON,
+                          ),
+                          'detailUser': serializeParam(
+                            getJsonField(
+                              widget.detalhesUser,
+                              r'''$''',
+                            ),
+                            ParamType.JSON,
+                          ),
+                        }.withoutNulls,
+                      );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            'Erro inexperado.',
+                            getJsonField(
+                              (_model.apiResultnsu?.jsonBody ?? ''),
+                              r'''$..error''',
+                            ).toString(),
                             style: TextStyle(
                               color: Colors.white,
                             ),
                           ),
                           duration: Duration(milliseconds: 4000),
-                          backgroundColor: Color(0xFFFD6C72),
+                          backgroundColor:
+                              FlutterFlowTheme.of(context).alternate,
                         ),
                       );
                     }
@@ -337,7 +424,7 @@ class _SelecionarValorWidgetState extends State<SelecionarValorWidget> {
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             Text(
-                              '+20',
+                              '20',
                               style: FlutterFlowTheme.of(context)
                                   .bodyText1
                                   .override(
@@ -348,6 +435,17 @@ class _SelecionarValorWidgetState extends State<SelecionarValorWidget> {
                             ),
                             Text(
                               'Créditos',
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyText1
+                                  .override(
+                                    fontFamily: 'Poppins',
+                                    color: FlutterFlowTheme.of(context).primaryColor,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                            Text(
+                             '${(10 * 15).toString()} min',
                               style: FlutterFlowTheme.of(context)
                                   .bodyText1
                                   .override(
@@ -370,39 +468,49 @@ class _SelecionarValorWidgetState extends State<SelecionarValorWidget> {
                   highlightColor: Colors.transparent,
                   onTap: () async {
                     setState(() {
-                      FFAppState().saldo = 50.0;
+                      FFAppState().plano = 50.0;
                     });
-                    _model.apiResult7v8 = await UsuarioGroup.criarPixCall.call(
-                      email: FFAppState().emailPersist,
-                      transactionAmount: FFAppState().saldo,
+                    _model.apiResultnsu =
+                        await EquipamentoGroup.pOSTSolicitacaoCall.call(
                       documento: FFAppState().documento,
-                      nome: FFAppState().nome,
-                      sobrenome: FFAppState().sobrenome,
+                      numeroSerieEquipamento: FFAppState().numeroSEquip,
+                      valor: FFAppState().plano,
                     );
-                    if ((_model.apiResult7v8?.succeeded ?? true)) {
-                      setState(() {
-                        FFAppState().idPix = getJsonField(
-                          (_model.apiResult7v8?.jsonBody ?? ''),
-                          r'''$..id''',
-                        ).toString();
-                        FFAppState().urlPagamento = getJsonField(
-                          (_model.apiResult7v8?.jsonBody ?? ''),
-                          r'''$..ticket_url''',
-                        ).toString();
-                      });
-
-                      context.pushNamed('MercadoPago');
+                    if ((_model.apiResultnsu4?.succeeded ?? true)) {
+                      context.goNamed(
+                        'MapaAlugado',
+                        queryParams: {
+                          'detalhesEquip': serializeParam(
+                            getJsonField(
+                              widget.detalhesEquip,
+                              r'''$''',
+                            ),
+                            ParamType.JSON,
+                          ),
+                          'detailUser': serializeParam(
+                            getJsonField(
+                              widget.detalhesUser,
+                              r'''$''',
+                            ),
+                            ParamType.JSON,
+                          ),
+                        }.withoutNulls,
+                      );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            'Erro inexperado.',
+                            getJsonField(
+                              (_model.apiResultnsu?.jsonBody ?? ''),
+                              r'''$..error''',
+                            ).toString(),
                             style: TextStyle(
                               color: Colors.white,
                             ),
                           ),
                           duration: Duration(milliseconds: 4000),
-                          backgroundColor: Color(0xFFFD6C72),
+                          backgroundColor:
+                              FlutterFlowTheme.of(context).alternate,
                         ),
                       );
                     }
@@ -426,7 +534,7 @@ class _SelecionarValorWidgetState extends State<SelecionarValorWidget> {
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             Text(
-                              '+50',
+                              '50',
                               style: FlutterFlowTheme.of(context)
                                   .bodyText1
                                   .override(
@@ -446,86 +554,8 @@ class _SelecionarValorWidgetState extends State<SelecionarValorWidget> {
                                     fontWeight: FontWeight.bold,
                                   ),
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                InkWell(
-                  splashColor: Colors.transparent,
-                  focusColor: Colors.transparent,
-                  hoverColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  onTap: () async {
-                    setState(() {
-                      FFAppState().saldo = 100.0;
-                    });
-                    _model.apiResult7v6 = await UsuarioGroup.criarPixCall.call(
-                      email: FFAppState().emailPersist,
-                      transactionAmount: FFAppState().saldo,
-                      documento: FFAppState().documento,
-                      nome: FFAppState().nome,
-                      sobrenome: FFAppState().sobrenome,
-                    );
-                    if ((_model.apiResult7v6?.succeeded ?? true)) {
-                      setState(() {
-                        FFAppState().idPix = getJsonField(
-                          (_model.apiResult7v6?.jsonBody ?? ''),
-                          r'''$..id''',
-                        ).toString();
-                        FFAppState().urlPagamento = getJsonField(
-                          (_model.apiResult7v6?.jsonBody ?? ''),
-                          r'''$..ticket_url''',
-                        ).toString();
-                      });
-
-                      context.pushNamed('MercadoPago');
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            'Erro inexperado.',
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                          duration: Duration(milliseconds: 4000),
-                          backgroundColor: Color(0xFFFD6C72),
-                        ),
-                      );
-                    }
-
-                    setState(() {});
-                  },
-                  child: Container(
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: FlutterFlowTheme.of(context).primaryColor,
-                      ),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Column(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
                             Text(
-                              '+100',
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyText2
-                                  .override(
-                                    fontFamily: 'Poppins',
-                                    color: FlutterFlowTheme.of(context).primaryColor,
-                                    fontSize: 52,
-                                  ),
-                            ),
-                            Text(
-                              'Créditos',
+                              '${(10 * 15).toString()} min',
                               style: FlutterFlowTheme.of(context)
                                   .bodyText1
                                   .override(
@@ -533,66 +563,6 @@ class _SelecionarValorWidgetState extends State<SelecionarValorWidget> {
                                     color: FlutterFlowTheme.of(context).primaryColor,
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
-                                  ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                InkWell(
-                  splashColor: Colors.transparent,
-                  focusColor: Colors.transparent,
-                  hoverColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  onTap: () async {
-                    await showModalBottomSheet(
-                      isScrollControlled: true,
-                      backgroundColor: Colors.transparent,
-                      enableDrag: false,
-                      context: context,
-                      builder: (bottomSheetContext) {
-                        return GestureDetector(
-                          onTap: () =>
-                              FocusScope.of(context).requestFocus(_unfocusNode),
-                          child: Padding(
-                            padding:
-                                MediaQuery.of(bottomSheetContext).viewInsets,
-                            child: Container(
-                              height: MediaQuery.of(context).size.height * 0.35,
-                              child: AdicionarSaldoWidget(),
-                            ),
-                          ),
-                        );
-                      },
-                    ).then((value) => setState(() {}));
-                  },
-                  child: Container(
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: FlutterFlowTheme.of(context).primaryColor,
-                      ),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Column(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Text(
-                              'Outros valores',
-                              textAlign: TextAlign.center,
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyText1
-                                  .override(
-                                    fontFamily: 'Poppins',
-                                    color: FlutterFlowTheme.of(context).primaryColor,
-                                    fontSize: 32,
                                   ),
                             ),
                           ],

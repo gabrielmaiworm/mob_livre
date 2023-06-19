@@ -163,6 +163,9 @@ class _AdicionarSaldoWidgetState extends State<AdicionarSaldoWidget> {
                           await UsuarioGroup.criarPixCall.call(
                         email: FFAppState().emailPersist,
                         transactionAmount: FFAppState().saldo,
+                        documento: FFAppState().documento,
+                        nome: FFAppState().nome,
+                        sobrenome: FFAppState().sobrenome,
                       );
                       if ((_model.apiResult7v10?.succeeded ?? true)) {
                         setState(() {

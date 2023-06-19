@@ -40,6 +40,7 @@ class FFAppState extends ChangeNotifier {
     _kit = prefs.getInt('ff_kit') ?? _kit;
     _kitS = prefs.getString('ff_kitS') ?? _kitS;
     _horaMs = prefs.getInt('ff_horaMs') ?? _horaMs;
+    _credito = prefs.getDouble('ff_credito') ?? _credito;
     if (prefs.containsKey('ff_dadosEquipamento')) {
       try {
         _dadosEquipamento =
@@ -155,6 +156,13 @@ class FFAppState extends ChangeNotifier {
     prefs.setString('ff_situacaoLesao', _value);
   }
 
+  double _credito = 0;
+  double get credito => _credito;
+  set credito(double _value) {
+    _credito = _value;
+    prefs.setDouble('ff_credito', _value);
+  }
+
   String _detalhesLesao = '';
   String get detalhesLesao => _detalhesLesao;
   set detalhesLesao(String _value) {
@@ -232,6 +240,13 @@ class FFAppState extends ChangeNotifier {
     prefs.setInt('ff_kit', _value);
   }
 
+  String _numeroSEquip = '';
+  String get numeroSEquip => _numeroSEquip;
+  set numeroSEquip(String _value) {
+    _numeroSEquip = _value;
+    prefs.setString('ff_numeroSEquip', _value);
+  }
+
   String _kitS = '';
   String get kitS  => _kitS ;
   set kitS (String _value) {
@@ -282,6 +297,12 @@ class FFAppState extends ChangeNotifier {
   double get saldo => _saldo;
   set saldo(double _value) {
     _saldo = _value;
+  }
+
+  double _plano = 0.0;
+  double get plano => _plano;
+  set plano(double _value) {
+    _plano = _value;
   }
 
   String _idPix = '';

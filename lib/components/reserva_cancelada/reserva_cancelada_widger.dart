@@ -59,7 +59,7 @@ class _ReservaCanceladaWidgetState extends State<ReservaCanceladaWidget> {
                 padding: EdgeInsetsDirectional.fromSTEB(20, 0, 20, 50),
                 child: Container(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.42,
+                  height: MediaQuery.of(context).size.height * 0.5,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),

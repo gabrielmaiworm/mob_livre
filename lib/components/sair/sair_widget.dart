@@ -107,7 +107,6 @@ class _SairWidgetState extends State<SairWidget> {
                           children: [
                             FFButtonWidget(
                               onPressed: () async {
-                              
                                 FFAppState().update(() {
                                   FFAppState().reservado = false;
                                   FFAppState().reservando = false;
@@ -143,11 +142,9 @@ class _SairWidgetState extends State<SairWidget> {
                                   FFAppState().dadosEquipamento = 'null';
                                   FFAppState().logado = false;
                                   FFAppState().cep = '';
-                                  
+                                  FFAppState().credito = 0;
                                 });
-
                                 context.goNamed('MapaDeslogado');
-
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(

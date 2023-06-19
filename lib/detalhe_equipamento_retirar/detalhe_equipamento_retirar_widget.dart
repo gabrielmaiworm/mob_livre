@@ -50,6 +50,12 @@ class _DetalheEquipamentoRetirarWidgetState
 
   @override
   Widget build(BuildContext context) {
+    setState(() {
+      FFAppState().numeroSEquip = getJsonField(
+                              widget.detalhesEquip,
+                              r'''$..numero_serie_equipamento''',
+                            );
+    });
     context.watch<FFAppState>();
 
     return Scaffold(
@@ -363,19 +369,12 @@ class _DetalheEquipamentoRetirarWidgetState
                 padding: EdgeInsetsDirectional.fromSTEB(0, 25, 0, 0),
                 child: FFButtonWidget(
                   onPressed: () async {
-                    _model.apiResultnsu =
-                        await EquipamentoGroup.pOSTSolicitacaoCall.call(
-                      documento: FFAppState().documento,
-                      numeroSerieEquipamento: getJsonField(
-                        widget.detalhesEquip,
-                        r'''$..numero_serie_equipamento''',
-                      ).toString(),
+                    _model.apiResultnsu = await EquipamentoGroup.gETTaxaEquipamentoCall.call(
+                      numeroSerieEquipamento: FFAppState().kit.toString(),
                     );
                     if ((_model.apiResultnsu?.succeeded ?? true)) {
-                      FFAppState().reservado = false;
-                      FFAppState().horaReserva = DateTime.now(); 
                       context.goNamed(
-                        'MapaAlugado',
+                        'SelecionarPlano',
                         queryParams: {
                           'detalhesEquip': serializeParam(
                             getJsonField(
@@ -384,7 +383,7 @@ class _DetalheEquipamentoRetirarWidgetState
                             ),
                             ParamType.JSON,
                           ),
-                          'detailUser': serializeParam(
+                          'detalhesUser': serializeParam(
                             getJsonField(
                               widget.detailUser,
                               r'''$''',
@@ -397,34 +396,30 @@ class _DetalheEquipamentoRetirarWidgetState
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            getJsonField(
-                              (_model.apiResultnsu?.jsonBody ?? ''),
-                              r'''$..error''',
-                            ).toString(),
+                            "error",
                             style: TextStyle(
                               color: Colors.white,
                             ),
                           ),
                           duration: Duration(milliseconds: 4000),
-                          backgroundColor:
-                              FlutterFlowTheme.of(context).alternate,
+                          backgroundColor: FlutterFlowTheme.of(context).alternate,
                         ),
                       );
                     }
-
                     setState(() {});
                   },
-                  text: 'Retirar agora',
+                  text: 'Selecionar tempo',
                   options: FFButtonOptions(
                     width: 250,
                     height: 45,
                     padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                     iconPadding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                     color: Color(0xFF1D4F9A),
-                    textStyle: FlutterFlowTheme.of(context).subtitle2.override(
+                    textStyle: FlutterFlowTheme.of(context).title1.override(
                           fontFamily: 'Poppins',
                           color: Colors.white,
                         ),
+                    elevation: 2,
                     borderSide: BorderSide(
                       color: Colors.white,
                       width: 1,

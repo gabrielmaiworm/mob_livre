@@ -33,6 +33,7 @@ class UsuarioGroup {
   static PUTFotoUsuarioCall pUTFotoUsuarioCall = PUTFotoUsuarioCall();
   static  PUTSenhaCall pUTSenhaCall = PUTSenhaCall();
   static  CriarPixCall criarPixCall = CriarPixCall();
+  static  POSTSaldoUserCall pOSTSaldoUserCall = POSTSaldoUserCall();
 }
 
 class RedefinirSenhaCall {
@@ -60,6 +61,33 @@ class RedefinirSenhaCall {
     );
   }
 }
+
+class POSTSaldoUserCall {
+  Future<ApiCallResponse> call({
+    String? documento = '',
+  }) {
+    final body = '''
+{
+  "documento": "${documento}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'POST Saldo User',
+      apiUrl: '${UsuarioGroup.baseUrl}usuario-saldo',
+      callType: ApiCallType.POST,
+      headers: {
+        ...UsuarioGroup.headers,
+      },
+      params: {},
+      body: body,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
 
 class LoginCall {
   Future<ApiCallResponse> call({
@@ -430,12 +458,18 @@ class CriarPixCall {
     String? description = '',
     String? email  = '',
     double? transactionAmount = 0.0,
+    String? documento = '',
+    String? nome = '',
+    String? sobrenome = '',
   }) {
     final body = '''
 {
-  "description": "Aluguel KIT LIVRE",
+  "description": "Adicionar creditos MOBLIVRE: ",
   "email": "${email}",
-  "transaction_amount": ${transactionAmount}
+  "transaction_amount": ${transactionAmount},
+  "documento": "${documento}",
+  "nome": "${nome}",
+  "sobrenome": "${sobrenome}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'Criar pix',
@@ -540,6 +574,8 @@ class EquipamentoGroup {
   static Map<String, String> headers = {};
   static GETDetalhesEquipamentoCall gETDetalhesEquipamentoCall =
       GETDetalhesEquipamentoCall();
+      static GETTaxaEquipamentoCall gETTaxaEquipamentoCall =
+      GETTaxaEquipamentoCall();
   static POSTSolicitacaoCall pOSTSolicitacaoCall = POSTSolicitacaoCall();
   static PUTDevolucaoCall pUTDevolucaoCall = PUTDevolucaoCall();
   static PUTEmergenciaCall pUTEmergenciaCall = PUTEmergenciaCall();
@@ -569,16 +605,37 @@ class GETDetalhesEquipamentoCall {
     );
   }
 }
+class GETTaxaEquipamentoCall {
+  Future<ApiCallResponse> call({
+    String? numeroSerieEquipamento = '',
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'GET Taxa Equipamento',
+      apiUrl: '${EquipamentoGroup.baseUrl}taxa-kit/${numeroSerieEquipamento}',
+      callType: ApiCallType.GET,
+      headers: {
+        ...EquipamentoGroup.headers,
+      },
+      params: {},
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
 
 class POSTSolicitacaoCall {
   Future<ApiCallResponse> call({
     String? numeroSerieEquipamento = '',
     String? documento = '',
+    double? valor = 0.0
   }) {
     final body = '''
 {
   "numero_serie_equipamento": "${numeroSerieEquipamento}",
-  "documento": "${documento}"
+  "documento": "${documento}",
+  "valor": ${valor}
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'POST Solicitacao',
