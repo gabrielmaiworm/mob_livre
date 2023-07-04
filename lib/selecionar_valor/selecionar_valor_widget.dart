@@ -169,7 +169,7 @@ class _SelecionarValorWidgetState extends State<SelecionarValorWidget> {
                                   ),
                             ),
                             Text(
-                              'Créditos',
+                              'Reais',
                               style: FlutterFlowTheme.of(context)
                                   .bodyText1
                                   .override(
@@ -258,7 +258,7 @@ class _SelecionarValorWidgetState extends State<SelecionarValorWidget> {
                                   ),
                             ),
                             Text(
-                              'Créditos',
+                              'Reais',
                               style: FlutterFlowTheme.of(context)
                                   .bodyText1
                                   .override(
@@ -347,7 +347,7 @@ class _SelecionarValorWidgetState extends State<SelecionarValorWidget> {
                                   ),
                             ),
                             Text(
-                              'Créditos',
+                              'Reais',
                               style: FlutterFlowTheme.of(context)
                                   .bodyText1
                                   .override(
@@ -436,7 +436,7 @@ class _SelecionarValorWidgetState extends State<SelecionarValorWidget> {
                                   ),
                             ),
                             Text(
-                              'Créditos',
+                              'Reais',
                               style: FlutterFlowTheme.of(context)
                                   .bodyText1
                                   .override(
@@ -525,7 +525,7 @@ class _SelecionarValorWidgetState extends State<SelecionarValorWidget> {
                                   ),
                             ),
                             Text(
-                              'Créditos',
+                              'Reais',
                               style: FlutterFlowTheme.of(context)
                                   .bodyText1
                                   .override(
@@ -560,7 +560,7 @@ class _SelecionarValorWidgetState extends State<SelecionarValorWidget> {
                             padding:
                                 MediaQuery.of(bottomSheetContext).viewInsets,
                             child: Container(
-                              height: MediaQuery.of(context).size.height * 0.35,
+                              height: MediaQuery.of(context).size.height * 0.4,
                               child: AdicionarSaldoWidget(),
                             ),
                           ),

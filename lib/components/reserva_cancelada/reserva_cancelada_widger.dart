@@ -89,7 +89,7 @@ class _ReservaCanceladaWidgetState extends State<ReservaCanceladaWidget> {
                           ],
                         ),
                         Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 100),
+                          padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 90),
                           child: Lottie.asset(
                             'assets/lottie_animations/38993-ocl-canceled.json',
                             width: 150,
@@ -139,7 +139,7 @@ class _ReservaCanceladaWidgetState extends State<ReservaCanceladaWidget> {
                               },
                               text: 'Sim',
                               options: FFButtonOptions(
-                                width: 150,
+                                width: 135,
                                 height: 40,
                                 padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                                 iconPadding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
@@ -161,7 +161,7 @@ class _ReservaCanceladaWidgetState extends State<ReservaCanceladaWidget> {
                               },
                               text: 'Não',
                               options: FFButtonOptions(
-                                width: 150,
+                                width: 135,
                                 height: 40,
                                 padding:
                                     EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),

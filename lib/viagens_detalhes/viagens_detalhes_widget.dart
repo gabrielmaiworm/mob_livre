@@ -33,12 +33,12 @@ class _ViagensDetalhesWidgetState extends State<ViagensDetalhesWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => ViagensDetalhesModel());
+    final sugestao = getJsonField(widget.detalhesViagem, r'''$..sugestao''').toString();
+    _model.textController ??= TextEditingController( 
+        text: sugestao.isNotEmpty ? sugestao : "Sem sugestões...",);
 
-    _model.textController ??= TextEditingController(
-        text: getJsonField(
-      widget.detalhesViagem,
-      r'''$..sugestao''',
-    ).toString().toString());
+
+
   }
 
   @override
@@ -320,7 +320,7 @@ class _ViagensDetalhesWidgetState extends State<ViagensDetalhesWidget> {
                       children: [
                         Expanded(
                           child: Text(
-                            'Você avaliou:',
+                            'Avaliação:',
                             style:
                                 FlutterFlowTheme.of(context).bodyText1.override(
                                       fontFamily: 'Poppins',

@@ -635,24 +635,10 @@ class _MapaAlugadoWidgetState extends State<MapaAlugadoWidget> {
                           ),
                         if (FFAppState().maisOpcoes == false)
                           Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(20, 20, 20, 20),
+                            padding: EdgeInsetsDirectional.fromSTEB(20, 0, 20, 20),
                             child: Column(
                               mainAxisSize: MainAxisSize.max,
                               children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: Image.network(
-                                    //  valueOrDefault(getJsonField(
-                                  //     widget.detalhesEquip,
-                                  //     r'''$..foto64''',
-                                  //     ).toString(), 'https://tix.life/wp-content/uploads/2019/08/KIT-LIVRE-CHIVAS-3.jpg')
-                                       'https://tix.life/wp-content/uploads/2019/08/KIT-LIVRE-CHIVAS-3.jpg',
-                                    width: MediaQuery.of(context).size.width,
-                                    height:
-                                        MediaQuery.of(context).size.height * 0.15,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
                                 Padding(
                                   padding:
                                       EdgeInsetsDirectional.fromSTEB(0, 25, 0, 0),
@@ -764,41 +750,23 @@ class _MapaAlugadoWidgetState extends State<MapaAlugadoWidget> {
                                   child: Row(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
+                                    children: [  
                                       Expanded(
                                         child: Padding(
                                           padding: EdgeInsetsDirectional.fromSTEB(
                                               10, 0, 0, 0),
                                           child: SelectionArea(
-                                              child: Column(
-                                            children: [
-                                              Text(
-                                                'Horário de retirada',
-                                                textAlign: TextAlign.center,
-                                                style: FlutterFlowTheme.of(context)
-                                                    .bodyText1
-                                                    .override(
-                                                      fontFamily: 'Poppins',
-                                                      color: Colors.white,
-                                                      fontSize: 18,
-                                                      fontWeight: FontWeight.w600,
-                                                    ),
-                                              ),
-                                              Center(
-                                                child: Text("${dateTimeFormat('Hm', DateTime.fromMillisecondsSinceEpoch(dateTime.now
-                                                ))} ",
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyText1
-                                                        .override(
-                                                          fontFamily: 'Poppins',
-                                                          color: Colors.white,
-                                                          fontSize: 22,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                        )),
-                                              ),
-                                            ],
+                                              child: Text(
+                                            'ID do conjunto: ${FFAppState().kit}',
+                                            textAlign: TextAlign.center,
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyText1
+                                                .override(
+                                                  fontFamily: 'Poppins',
+                                                  color: Colors.white,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
                                           )),
                                         ),
                                       ),
@@ -807,18 +775,58 @@ class _MapaAlugadoWidgetState extends State<MapaAlugadoWidget> {
                                 ),
                                 Padding(
                                   padding:
+                                      EdgeInsetsDirectional.fromSTEB(0, 15, 0, 0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [  
+                                      Expanded(
+                                        child: Padding(
+                                          padding: EdgeInsetsDirectional.fromSTEB(
+                                              0, 0, 0, 0),
+                                          child: SelectionArea(
+                                              child: Text(
+                                            'Tempo restante:',
+                                            textAlign: TextAlign.center,
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyText1
+                                                .override(
+                                                  fontFamily: 'Poppins',
+                                                  color: Colors.white,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                          )),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(0,5,0,0),
+                                  child: Center(
+                                          child: CountTimer(
+                                            seconds: FFAppState().relogio,
+                                            onFinish: () {
+                                              print('Contagem regressiva concluída!');
+                                            },
+                                          ),
+                                        ),
+                                ),
+                                Padding(
+                                  padding:
                                       EdgeInsetsDirectional.fromSTEB(0, 15, 0, 15),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
+                                    children: [  
                                       Expanded(
                                         child: Padding(
                                           padding: EdgeInsetsDirectional.fromSTEB(
                                               10, 0, 0, 0),
                                           child: SelectionArea(
                                               child: Text(
-                                            'Devolva esse conjunto na mesma estação de você retirou.',
+                                            'Devolva esse conjunto na mesma estação em que você retirou.',
                                             textAlign: TextAlign.center,
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyText1
@@ -1164,6 +1172,17 @@ class _MapaAlugadoWidgetState extends State<MapaAlugadoWidget> {
                         alignment: AlignmentDirectional(-0.88, -0.96),
                         child: InkWell(
                           onTap: () async {
+                            _model.apiResultTempo = await EquipamentoGroup.pOSTTempoUsoCall.call(
+                              documento: FFAppState().documento,
+                            );
+                            final relogio = await getJsonField(_model.apiResultTempo, r'''$..relogio''') ?? 0.0;
+                            setState(() {
+                              FFAppState().relogio = getJsonField(
+                              _model.apiResultTempo!.jsonBody,
+                              r'''$..relogio''',
+                              );
+                            });
+
                             scaffoldKey.currentState!.openDrawer();
                           },
                           child: Container(
@@ -1189,6 +1208,67 @@ class _MapaAlugadoWidgetState extends State<MapaAlugadoWidget> {
           ),
         ),
       ),
+    );
+  }
+}
+class CountTimer extends StatefulWidget {
+  final int seconds;
+  final VoidCallback onFinish;
+
+  CountTimer({required this.seconds, required this.onFinish});
+
+  @override
+  _CountTimerState createState() => _CountTimerState();
+}
+
+class _CountTimerState extends State<CountTimer> {
+  late int _remainingSeconds;
+  late String _formattedTime;
+  late Timer _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _remainingSeconds = widget.seconds;
+    _formattedTime = _formatTime(_remainingSeconds);
+    _startTimer();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  void _startTimer() {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        if (_remainingSeconds > 0) {
+          _remainingSeconds--;
+          _formattedTime = _formatTime(_remainingSeconds);
+        } else {
+          _timer.cancel();
+          widget.onFinish();
+        }
+      });
+    });
+  }
+
+String _formatTime(int seconds) {
+  final isNegative = seconds < 0;
+  final absoluteSeconds = seconds.abs();
+  final minutes = (absoluteSeconds ~/ 60).toString().padLeft(2, '0');
+  final remainingSeconds = (absoluteSeconds % 60).toString().padLeft(2, '0');
+  final sign = isNegative ? '-' : '';
+  return '$sign$minutes:$remainingSeconds';
+}
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      _formattedTime,
+      style: TextStyle(fontSize: 20, color: Colors.white),
     );
   }
 }

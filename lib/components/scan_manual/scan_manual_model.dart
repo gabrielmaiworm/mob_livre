@@ -21,6 +21,7 @@ class ScanManualModel extends FlutterFlowModel {
   var qrCode = '';
   // Stores action output result for [Backend Call - API (GET Detalhes Equipamento)] action in Button widget.
   ApiCallResponse? apiResult4dt;
+  ApiCallResponse? resultApi;
 
   /// Initialization and disposal methods.
 

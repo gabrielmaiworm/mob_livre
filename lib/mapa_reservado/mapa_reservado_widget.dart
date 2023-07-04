@@ -128,8 +128,12 @@ class _MapaReservadoWidgetState extends State<MapaReservadoWidget> {
                                     shape: BoxShape.circle,
                                   ),
                                   child: Image.network(
-                                    'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__480.png',
-                                  ),
+                                                valueOrDefault<String>(
+                                                  FFAppState().fotoPerfil,
+                                                  'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__480.png',
+                                                ),
+                                                fit: BoxFit.cover,
+                                              ),
                                 ),
                               ),
                               Expanded(
@@ -516,19 +520,7 @@ class _MapaReservadoWidgetState extends State<MapaReservadoWidget> {
                           child: Column(
                             mainAxisSize: MainAxisSize.max,
                             children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: Image.network(
-                                //  valueOrDefault(getJsonField(
-                                //     widget.detalhesEquip,
-                                //     r'''$..foto64''',
-                                //     ).toString(), 'https://tix.life/wp-content/uploads/2019/08/KIT-LIVRE-CHIVAS-3.jpg')
-                                     'https://tix.life/wp-content/uploads/2019/08/KIT-LIVRE-CHIVAS-3.jpg',
-                                  width: MediaQuery.of(context).size.width,
-                                  height: MediaQuery.of(context).size.height * 0.15,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
+                              
                               Padding(
                                 padding:
                                     EdgeInsetsDirectional.fromSTEB(0, 15, 0, 15),
@@ -590,7 +582,7 @@ class _MapaReservadoWidgetState extends State<MapaReservadoWidget> {
                                             10, 0, 0, 0),
                                         child: SelectionArea(
                                             child: Text(
-                                          'Cancele sua reserva grátis até\n10m antes da retirada.\nApós esse horário será cobrado uma tarifa de R\$ 0,00.',
+                                          'Cancele sua reserva grátis em até\n10m antes da retirada.\n',
                                           textAlign: TextAlign.center,
                                           style: FlutterFlowTheme.of(context)
                                               .bodyText1

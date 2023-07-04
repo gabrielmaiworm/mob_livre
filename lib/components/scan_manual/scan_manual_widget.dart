@@ -97,6 +97,7 @@ class _ScanManualWidgetState extends State<ScanManualWidget> {
                       child: TextFormField(
                         controller: _model.numeroSerieController,
                         obscureText: false,
+                        keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                           hintStyle:
                               FlutterFlowTheme.of(context).subtitle2.override(
@@ -159,16 +160,26 @@ class _ScanManualWidgetState extends State<ScanManualWidget> {
                           .gETDetalhesEquipamentoCall
                           .call(
                         numeroSerieEquipamento: _model.numeroSerieController!.text);
-                      if ((_model.resultTextApi?.succeeded ?? true)) {
                         setState(() {
-                          FFAppState().dadosEquipamento =
-                              (_model.resultTextApi?.jsonBody ?? '');
                           FFAppState().kit = getJsonField(
                             (_model.resultTextApi?.jsonBody ?? ''),
                             r'''$..kit''',
                           );
                         });
-
+                      _model.resultApi = await EquipamentoGroup
+                          .gETTaxaEquipamentoCall
+                          .call(
+                        numeroSerieEquipamento: FFAppState().kit); 
+                        setState(() {
+                          FFAppState().taxaMinuto = getJsonField(
+                            (_model.resultApi?.jsonBody ?? ''),
+                            r'''$..taxaMinuto''',
+                          );
+                          FFAppState().dadosEquipamento =
+                              (_model.resultTextApi?.jsonBody ?? '');
+                        }
+                        );
+                      if ((_model.resultTextApi?.succeeded ?? true)) {
                         context.pushNamed(
                           'DetalheEquipamentoRetirar',
                           queryParams: {
@@ -222,20 +233,30 @@ class _ScanManualWidgetState extends State<ScanManualWidget> {
                       true, // whether to show the flash icon
                       ScanMode.QR,
                     );
-
                     if (_model.qrCode != null && _model.qrCode != '') {
+                       
                       _model.apiResult4dt = await EquipamentoGroup
                           .gETDetalhesEquipamentoCall
                           .call(
                         numeroSerieEquipamento: _model.qrCode,
                       );
                       setState(() {
-                        FFAppState().dadosEquipamento =
-                            (_model.apiResult4dt?.jsonBody ?? '');
                         FFAppState().kit = getJsonField(
                           (_model.apiResult4dt?.jsonBody ?? ''),
                           r'''$..kit''',
                         );
+                      });
+                      _model.resultApi = await EquipamentoGroup
+                          .gETTaxaEquipamentoCall
+                          .call(
+                        numeroSerieEquipamento: FFAppState().kit);
+                      setState(() {
+                        FFAppState().taxaMinuto = getJsonField(
+                            (_model.resultApi?.jsonBody ?? ''),
+                            r'''$..taxaMinuto''',
+                          );
+                        FFAppState().dadosEquipamento =
+                            (_model.apiResult4dt?.jsonBody ?? '');
                       });
                       if ((_model.apiResult4dt?.succeeded ?? true)) {
                         context.pushNamed(

@@ -57,13 +57,13 @@ class _SairWidgetState extends State<SairWidget> {
                 padding: EdgeInsetsDirectional.fromSTEB(20, 0, 20, 50),
                 child: Container(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.42,
+                  height: MediaQuery.of(context).size.height * 0.35,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(15, 15, 15, 35),
+                    padding: EdgeInsetsDirectional.fromSTEB(15, 5, 15, 5),
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -160,7 +160,7 @@ class _SairWidgetState extends State<SairWidget> {
                               },
                               text: 'Sim',
                               options: FFButtonOptions(
-                                width: 150,
+                                width: 135,
                                 height: 40,
                                 padding:
                                     EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
@@ -186,7 +186,7 @@ class _SairWidgetState extends State<SairWidget> {
                               },
                               text: 'Não',
                               options: FFButtonOptions(
-                                width: 150,
+                                width: 135,
                                 height: 40,
                                 padding:
                                     EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),

@@ -21,6 +21,8 @@ class MapaAlugadoModel extends FlutterFlowModel {
   // Stores action output result for [Backend Call - API (GET Detalhes Equipamento)] action in Button widget.
   ApiCallResponse? apiResult4dt;
 
+  ApiCallResponse? apiResultTempo;
+
   /// Initialization and disposal methods.
 
   void initState(BuildContext context) {}

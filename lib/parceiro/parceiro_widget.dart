@@ -149,7 +149,7 @@ String getPicture() {
                   children: [
                     Container(
                       width: MediaQuery.of(context).size.width * 0.9,
-                      height: MediaQuery.of(context).size.height * 0.18,
+                      height: MediaQuery.of(context).size.height * 0.21,
                       decoration: BoxDecoration(
                         color: Color(0xFF1D4F9A),
                         borderRadius: BorderRadius.circular(8),

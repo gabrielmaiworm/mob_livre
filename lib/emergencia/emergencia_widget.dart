@@ -103,7 +103,7 @@ class _EmergenciaWidgetState extends State<EmergenciaWidget> {
                     children: [
                       Expanded(
                         child: Text(
-                          'Você acionou a emergência!\nJá recebemos o seu chamado, estamos te localizando para enviar ajuda.  ',
+                          'Você acionou a emergência!',
                           textAlign: TextAlign.center,
                           style: FlutterFlowTheme.of(context)
                               .bodyText1

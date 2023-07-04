@@ -464,7 +464,7 @@ class CriarPixCall {
   }) {
     final body = '''
 {
-  "description": "Adicionar creditos MOBLIVRE: ",
+  "description": "Adicionar creditos MobLivre: ",
   "email": "${email}",
   "transaction_amount": ${transactionAmount},
   "documento": "${documento}",
@@ -582,6 +582,7 @@ class EquipamentoGroup {
   static PUTResolveEmergenciaCall pUTResolveEmergenciaCall = PUTResolveEmergenciaCall();
     static POSTReservaCall pOSTReservaCall = POSTReservaCall();
     static PUTCancelarReservaCall pUTCancelarReservaCall = PUTCancelarReservaCall();
+    static POSTTempoUsoCall pOSTTempoUsoCall = POSTTempoUsoCall();
 }
 
 class GETDetalhesEquipamentoCall {
@@ -607,7 +608,7 @@ class GETDetalhesEquipamentoCall {
 }
 class GETTaxaEquipamentoCall {
   Future<ApiCallResponse> call({
-    String? numeroSerieEquipamento = '',
+    dynamic? numeroSerieEquipamento = '',
   }) {
     return ApiManager.instance.makeApiCall(
       callName: 'GET Taxa Equipamento',
@@ -640,6 +641,32 @@ class POSTSolicitacaoCall {
     return ApiManager.instance.makeApiCall(
       callName: 'POST Solicitacao',
       apiUrl: '${EquipamentoGroup.baseUrl}solicitacao',
+      callType: ApiCallType.POST,
+      headers: {
+        ...EquipamentoGroup.headers,
+      },
+      params: {},
+      body: body,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
+class POSTTempoUsoCall {
+  Future<ApiCallResponse> call({
+    String? documento = ''
+  }) {
+    final body = '''
+{
+  "documento": "${documento}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'POST Tempo de Uso',
+      apiUrl: '${EquipamentoGroup.baseUrl}solicitacao-relogio',
       callType: ApiCallType.POST,
       headers: {
         ...EquipamentoGroup.headers,

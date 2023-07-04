@@ -89,7 +89,7 @@ class _DevolucaoConcluidaWidgetState extends State<DevolucaoConcluidaWidget> {
                           ],
                         ),
                         Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 70),
+                          padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 45),
                           child: Lottie.asset(
                             'assets/lottie_animations/success.json',
                             width: 150,

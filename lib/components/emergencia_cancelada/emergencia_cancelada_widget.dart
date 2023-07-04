@@ -60,7 +60,7 @@ class _EmergenciaCanceladaWidgetState extends State<EmergenciaCanceladaWidget> {
                 padding: EdgeInsetsDirectional.fromSTEB(20, 0, 20, 50),
                 child: Container(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.42,
+                  height: MediaQuery.of(context).size.height * 0.45,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
@@ -90,7 +90,7 @@ class _EmergenciaCanceladaWidgetState extends State<EmergenciaCanceladaWidget> {
                           ],
                         ),
                         Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 100),
+                          padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 60),
                           child: Lottie.asset(
                             'assets/lottie_animations/38993-ocl-canceled.json',
                             width: 150,
@@ -148,7 +148,7 @@ class _EmergenciaCanceladaWidgetState extends State<EmergenciaCanceladaWidget> {
                               },
                               text: 'Sim',
                               options: FFButtonOptions(
-                                width: 150,
+                                width: 135,
                                 height: 40,
                                 padding:
                                     EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
@@ -174,7 +174,7 @@ class _EmergenciaCanceladaWidgetState extends State<EmergenciaCanceladaWidget> {
                               },
                               text: 'Não',
                               options: FFButtonOptions(
-                                width: 150,
+                                width: 135,
                                 height: 40,
                                 padding:
                                     EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),

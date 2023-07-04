@@ -163,6 +163,13 @@ class FFAppState extends ChangeNotifier {
     prefs.setDouble('ff_credito', _value);
   }
 
+  int _taxaMinuto = 0;
+  int get taxaMinuto => _taxaMinuto;
+  set taxaMinuto(int _value) {
+    _taxaMinuto = _value;
+    prefs.setInt('ff_taxaMinuto', _value);
+  }
+
   String _detalhesLesao = '';
   String get detalhesLesao => _detalhesLesao;
   set detalhesLesao(String _value) {
@@ -297,6 +304,11 @@ class FFAppState extends ChangeNotifier {
   double get saldo => _saldo;
   set saldo(double _value) {
     _saldo = _value;
+  }
+  int _relogio = 0;
+  int get relogio => _relogio;
+  set relogio(int _value) {
+    _relogio = _value;
   }
 
   double _plano = 0.0;

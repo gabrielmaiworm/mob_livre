@@ -494,9 +494,9 @@ class _LoginSenhaWidgetState extends State<LoginSenhaWidget> {
                           } else {
                             if (getJsonField(
                                   (_model.apiResultw03?.jsonBody ?? ''),
-                                  r'''$..reservas''',
-                                ) !=
-                                null) {
+                                  r'''$..status''',
+                                ) ==
+                                'Reservado') {
                               context.pushNamed('MapaReservado');
                             } else {
                               context.pushNamed(

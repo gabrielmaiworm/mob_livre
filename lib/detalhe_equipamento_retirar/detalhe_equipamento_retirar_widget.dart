@@ -1,3 +1,6 @@
+import 'package:flutter/scheduler.dart';
+
+import '../components/devolucao_concluida/devolucao_concluida_widget.dart';
 import '../flutter_flow/flutter_flow_model.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -6,7 +9,7 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-
+import 'package:intl/intl.dart';
 import 'detalhe_equipamento_retirar_model.dart';
 export 'detalhe_equipamento_retirar_model.dart';
 
@@ -15,11 +18,9 @@ class DetalheEquipamentoRetirarWidget extends StatefulWidget {
     Key? key,
     this.detalhesEquip,
     this.detailUser,
-    this.detalhesParceiro,
   }) : super(key: key);
 
   final dynamic detalhesEquip;
-  final dynamic detalhesParceiro;
   final dynamic detailUser;
 
   @override
@@ -32,79 +33,108 @@ class _DetalheEquipamentoRetirarWidgetState
   late DetalheEquipamentoRetirarModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final _unfocusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => DetalheEquipamentoRetirarModel());
+
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+    _model.apiResultki5 =
+              await UsuarioGroup.pOSTSaldoUserCall.call(
+            documento: FFAppState().documento,
+          );
+    setState(() {
+          FFAppState().credito = double.parse(getJsonField(
+                              (_model.apiResultki5?.jsonBody ?? ''),
+                              r'''$..saldo''',
+          ));
+        });
+      _model.apiResultki56 =
+          await EquipamentoGroup.gETTaxaEquipamentoCall.call(
+        numeroSerieEquipamento: FFAppState().kit.toString(),
+      );
+      if ((_model.apiResultki56?.succeeded ?? true)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Taxas carregadas com sucesso.',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            duration: Duration(milliseconds: 4000),
+            backgroundColor: Color(0xFF5DEA5C),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Falha ao carregar taxas.',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            duration: Duration(milliseconds: 4000),
+            backgroundColor: FlutterFlowTheme.of(context).alternate,
+          ),
+        );
+      }
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
   void dispose() {
     _model.dispose();
 
-    _unfocusNode.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+    final formatador = NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');
     setState(() {
       FFAppState().numeroSEquip = getJsonField(
-                              widget.detalhesEquip,
-                              r'''$..numero_serie_equipamento''',
-                            );
+      widget.detalhesEquip,
+      r'''$..numero_serie_equipamento''',
+      ).toString();
     });
-    context.watch<FFAppState>();
 
-    return Scaffold(
-      key: scaffoldKey,
-      backgroundColor: Colors.white,
-      appBar: AppBar(
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
+      child: Scaffold(
+        key: scaffoldKey,
         backgroundColor: Colors.white,
-        automaticallyImplyLeading: true,
-        title: SelectionArea(
-            child: Text(
-          'Conjunto',
-          style: FlutterFlowTheme.of(context).bodyText1.override(
-                fontFamily: 'Poppins',
-                color: Color(0xFF1D4F9A),
-                fontSize: 20,
-              ),
-        )),
-        actions: [],
-        centerTitle: true,
-        elevation: 3,
-      ),
-      body: SafeArea(
-        child: GestureDetector(
-          onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Material(
-                color: Colors.transparent,
-                elevation: 1,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(35),
-                    bottomRight: Radius.circular(35),
-                    topLeft: Radius.circular(0),
-                    topRight: Radius.circular(0),
-                  ),
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          automaticallyImplyLeading: true,
+          title: SelectionArea(
+              child: Text(
+            'Detalhes do Conjunto',
+            style: FlutterFlowTheme.of(context).bodyText1.override(
+                  fontFamily: 'Poppins',
+                  color: Color(0xFF1D4F9A),
+                  fontSize: 20,
                 ),
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.25,
-                  decoration: BoxDecoration(
-                    color: FlutterFlowTheme.of(context).secondaryBackground,
-                    image: DecorationImage(
-                      fit: BoxFit.contain,
-                      image: Image.network(
-                        'https://imgs.casasbahia.com.br/1501531919/1xg.jpg?imwidth=500',
-                      ).image,
-                    ),
+          )),
+          actions: [],
+          centerTitle: true,
+          elevation: 3,
+        ),
+        body: SafeArea(
+          top: true,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Material(
+                  color: Colors.transparent,
+                  elevation: 1,
+                  shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(35),
                       bottomRight: Radius.circular(35),
@@ -112,163 +142,100 @@ class _DetalheEquipamentoRetirarWidgetState
                       topRight: Radius.circular(0),
                     ),
                   ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(10, 20, 10, 0),
-                child: Card(
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                  color: Color(0xFFFEFEFE),
-                  elevation: 1,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height * 0.25,
+                    decoration: BoxDecoration(
+                      color: FlutterFlowTheme.of(context).secondaryBackground,
+                      image: DecorationImage(
+                        fit: BoxFit.contain,
+                        image: Image.network(
+                          'https://imgs.casasbahia.com.br/1501531919/1xg.jpg?imwidth=500',
+                        ).image,
+                      ),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(35),
+                        bottomRight: Radius.circular(35),
+                        topLeft: Radius.circular(0),
+                        topRight: Radius.circular(0),
+                      ),
+                    ),
                   ),
-                  child: Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(5, 5, 5, 5),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                getJsonField(
-                                  widget.detalhesEquip,
-                                  r'''$..nome_equipamento''',
-                                ).toString(),
-                                textAlign: TextAlign.center,
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyText1
-                                    .override(
-                                      fontFamily: 'Poppins',
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryColor,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(0, 5, 0, 0),
-                          child: Row(
+                ),
+                
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(10, 20, 10, 0),
+                  child: Card(
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    color: Color(0xFFFEFEFE),
+                    elevation: 1,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(5, 5, 5, 5),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Row(
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              if (getJsonField(
-                                    widget.detalhesEquip,
-                                    r'''$..rebocado''',
-                                  ).toString() != null)
-                              Text(
-                                  getJsonField(
-                                    widget.detalhesEquip,
-                                    r'''$..rebocado''',
-                                  ).toString(),     
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyText1
-                                    .override(
-                                      fontFamily: 'Poppins',
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryColor,
-                                      fontSize: 15,
-                                    ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(5, 40, 5, 0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'ID Conjunto',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyText1
-                                    .override(
-                                      fontFamily: 'Poppins',
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryColor,
-                                    ),
-                              ),
                               Expanded(
                                 child: Text(
                                   getJsonField(
                                     widget.detalhesEquip,
-                                    r'''$..kit''',
+                                    r'''$..nome_equipamento''',
                                   ).toString(),
-                                  textAlign: TextAlign.end,
+                                  textAlign: TextAlign.center,
                                   style: FlutterFlowTheme.of(context)
                                       .bodyText1
                                       .override(
                                         fontFamily: 'Poppins',
                                         color: FlutterFlowTheme.of(context)
                                             .primaryColor,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(5, 10, 5, 0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Carga da bateria',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyText1
-                                    .override(
-                                      fontFamily: 'Poppins',
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryColor,
-                                    ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  '${getJsonField(
-                                    widget.detalhesEquip,
-                                    r'''$..carga''',
-                                  ).toString()}%',
-                                  textAlign: TextAlign.end,
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(0, 5, 0, 0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  valueOrDefault<String>(
+                                    getJsonField(
+                                      widget.detalhesEquip,
+                                      r'''$..rebocado''',
+                                    ).toString(),
+                                    'Rebocado',
+                                  ),
                                   style: FlutterFlowTheme.of(context)
                                       .bodyText1
                                       .override(
                                         fontFamily: 'Poppins',
                                         color: FlutterFlowTheme.of(context)
                                             .primaryColor,
+                                        fontSize: 15,
                                       ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(5, 10, 5, 0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Tempo de uso (h)',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyText1
-                                    .override(
-                                      fontFamily: 'Poppins',
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryColor,
-                                    ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  '10:00',
-                                  textAlign: TextAlign.end,
+                          Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(5, 40, 5, 0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'ID Conjunto',
                                   style: FlutterFlowTheme.of(context)
                                       .bodyText1
                                       .override(
@@ -277,37 +244,34 @@ class _DetalheEquipamentoRetirarWidgetState
                                             .primaryColor,
                                       ),
                                 ),
-                              ),
-                            ],
+                                Expanded(
+                                  child: Text(
+                                    getJsonField(
+                                      widget.detalhesEquip,
+                                      r'''$..kit''',
+                                    ).toString(),
+                                    textAlign: TextAlign.end,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyText1
+                                        .override(
+                                          fontFamily: 'Poppins',
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryColor,
+                                        ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(5, 10, 5, 0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Parceiro',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyText1
-                                    .override(
-                                      fontFamily: 'Poppins',
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryColor,
-                                    ),
-                              ),
-                              if (getJsonField(
-                                    widget.detalhesEquip,
-                                    r'''$..razao_social''',
-                                  ).toString() == 'null')
-                              Expanded(
-                                child: Text(
-                                  getJsonField(
-                                    widget.detalhesParceiro,
-                                    r'''$..nome_fantasia''',
-                                  ).toString(),
-                                  textAlign: TextAlign.end,
+                          Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(5, 10, 5, 0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Carga da bateria',
                                   style: FlutterFlowTheme.of(context)
                                       .bodyText1
                                       .override(
@@ -316,65 +280,256 @@ class _DetalheEquipamentoRetirarWidgetState
                                             .primaryColor,
                                       ),
                                 ),
-                              ),
-                              if (getJsonField(
-                                    widget.detalhesEquip,
-                                    r'''$..razao_social''',
-                                  ).toString() != 'null')
-                              Expanded(
-                                child: Text(
-                                  getJsonField(
-                                    widget.detalhesEquip,
-                                    r'''$..razao_social''',
-                                  ).toString(),
-                                  textAlign: TextAlign.end,
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyText1
-                                      .override(
-                                        fontFamily: 'Poppins',
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryColor,
-                                      ),
+                                Expanded(
+                                  child: Text(
+                                    '${getJsonField(
+                                      widget.detalhesEquip,
+                                      r'''$..carga''',
+                                    ).toString()}%',
+                                    textAlign: TextAlign.end,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyText1
+                                        .override(
+                                          fontFamily: 'Poppins',
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryColor,
+                                        ),
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                          Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(5, 10, 5, 0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Parceiro',
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyText1
+                                      .override(
+                                        fontFamily: 'Poppins',
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryColor,
+                                      ),
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    getJsonField(
+                                      widget.detalhesEquip,
+                                      r'''$..razao_social''',
+                                    ).toString(),
+                                    textAlign: TextAlign.end,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyText1
+                                        .override(
+                                          fontFamily: 'Poppins',
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryColor,
+                                        ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(35, 30, 35, 0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        'Clique no botão abaixo e aguarde o conjunto ser destravado da estação.',
-                        textAlign: TextAlign.center,
-                        style: FlutterFlowTheme.of(context).bodyText1.override(
-                              fontFamily: 'Poppins',
-                              color: Color(0xFF1D4F9A),
-                              fontSize: 15,
-                            ),
+                
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(35, 30, 35, 0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+                          child: Text(
+                            'Selecione o tempo que deseja alugar:',
+                            textAlign: TextAlign.center,
+                            style: FlutterFlowTheme.of(context)
+                                .bodyText1
+                                .override(
+                                  fontFamily: 'Poppins',
+                                  color: Color(0xFF1D4F9A),
+                                  fontSize: 15,
+                                ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0, 25, 0, 0),
-                child: FFButtonWidget(
-                  onPressed: () async {
-                    _model.apiResultnsu = await EquipamentoGroup.gETTaxaEquipamentoCall.call(
-                      numeroSerieEquipamento: FFAppState().kit.toString(),
+                Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(25, 10, 25, 0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Saldo:',
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyText1
+                                      .override(
+                                        fontFamily: 'Poppins',
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryColor,
+                                      ),
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    formatador.format(FFAppState().credito),
+                                    textAlign: TextAlign.end,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyText1
+                                        .override(
+                                          fontFamily: 'Poppins',
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryColor,
+                                        ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
+                  child: Slider(
+                    activeColor: FlutterFlowTheme.of(context).primaryColor,
+                    inactiveColor: Color(0xFFA5A5A5),
+                    min: 0,
+                    max: double.parse(((FFAppState().credito - 0.2) / FFAppState().taxaMinuto).toStringAsFixed(2)),
+                    value: (_model.sliderValue ??= 0),
+                    onChanged: (newValue) {
+                      newValue = double.parse(newValue.toStringAsFixed(2));
+                      setState(() => _model.sliderValue = newValue);
+                    },
+                  ),
+                ),
+                Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(25, 10, 25, 0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Taxa por minuto',
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyText1
+                                      .override(
+                                        fontFamily: 'Poppins',
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryColor,
+                                      ),
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    formatador.format(FFAppState().taxaMinuto),
+                                    textAlign: TextAlign.end,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyText1
+                                        .override(
+                                          fontFamily: 'Poppins',
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryColor,
+                                        ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(25, 10, 25, 0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Minutos disponíveis',
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyText1
+                                      .override(
+                                        fontFamily: 'Poppins',
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryColor,
+                                      ),
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    '${_model.sliderValue!} min',
+                                    textAlign: TextAlign.end,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyText1
+                                        .override(
+                                          fontFamily: 'Poppins',
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryColor,
+                                        ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(25, 10, 25, 0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Valor total:',
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyText1
+                                      .override(
+                                        fontFamily: 'Poppins',
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryColor,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    formatador.format(_model.sliderValue! * FFAppState().taxaMinuto),
+                                    textAlign: TextAlign.end,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyText1
+                                        .override(
+                                          fontFamily: 'Poppins',
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryColor,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0, 25, 0, 30),
+                  child: FFButtonWidget(
+                    onPressed: () async {
+                     _model.apiResultnsu =
+                        await EquipamentoGroup.pOSTSolicitacaoCall.call(
+                      documento: FFAppState().documento,
+                      numeroSerieEquipamento: FFAppState().numeroSEquip,
+                      valor: double.parse((_model.sliderValue! * FFAppState().taxaMinuto).toStringAsFixed(2)),
                     );
                     if ((_model.apiResultnsu?.succeeded ?? true)) {
+                      
                       context.goNamed(
-                        'SelecionarPlano',
+                        'MapaAlugado',
                         queryParams: {
                           'detalhesEquip': serializeParam(
                             getJsonField(
@@ -383,7 +538,7 @@ class _DetalheEquipamentoRetirarWidgetState
                             ),
                             ParamType.JSON,
                           ),
-                          'detalhesUser': serializeParam(
+                          'detailUser': serializeParam(
                             getJsonField(
                               widget.detailUser,
                               r'''$''',
@@ -391,44 +546,65 @@ class _DetalheEquipamentoRetirarWidgetState
                             ParamType.JSON,
                           ),
                         }.withoutNulls,
+                        
                       );
-                    } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            "error",
+                            "Você retirou o conjunto com sucesso!",
                             style: TextStyle(
                               color: Colors.white,
                             ),
                           ),
                           duration: Duration(milliseconds: 4000),
-                          backgroundColor: FlutterFlowTheme.of(context).alternate,
+                          backgroundColor:
+                              Color(0xFF5DEA5C),
+                        ),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            getJsonField(
+                              (_model.apiResultnsu?.jsonBody ?? ''),
+                              r'''$..error''',
+                            ).toString(),
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          duration: Duration(milliseconds: 4000),
+                          backgroundColor:
+                              FlutterFlowTheme.of(context).alternate,
                         ),
                       );
                     }
+
                     setState(() {});
                   },
-                  text: 'Selecionar tempo',
-                  options: FFButtonOptions(
-                    width: 250,
-                    height: 45,
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                    iconPadding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                    color: Color(0xFF1D4F9A),
-                    textStyle: FlutterFlowTheme.of(context).title1.override(
-                          fontFamily: 'Poppins',
-                          color: Colors.white,
-                        ),
-                    elevation: 2,
-                    borderSide: BorderSide(
-                      color: Colors.white,
-                      width: 1,
+                    text: 'Confirmar',
+                    options: FFButtonOptions(
+                      width: 250,
+                      height: 45,
+                      padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                      iconPadding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                      color: Color(0xFF1D4F9A),
+                      textStyle:
+                          FlutterFlowTheme.of(context).title1.override(
+                                fontFamily: 'Poppins',
+                                color: Colors.white,
+                              ),
+                      elevation: 2,
+                      borderSide: BorderSide(
+                        color: Colors.white,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

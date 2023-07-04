@@ -1,4 +1,5 @@
 import '../../flutter_flow/flutter_flow_model.dart';
+import '../../flutter_flow/flutter_flow_widgets.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -74,10 +75,11 @@ class _AdicionarSaldoWidgetState extends State<AdicionarSaldoWidget> {
               children: [
                 Expanded(
                   child: Text(
-                    'Qual o valor que deseja adicionar em créditos?',
+                    'Digite o valor da recarga',
                     textAlign: TextAlign.center,
                     style: FlutterFlowTheme.of(context).bodyText2.override(
                           fontFamily: 'Poppins',
+                          color: Color(0xFF1D4F9A),
                           fontSize: 18,
                         ),
                   ),
@@ -85,7 +87,7 @@ class _AdicionarSaldoWidgetState extends State<AdicionarSaldoWidget> {
               ],
             ),
             Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
+              padding: EdgeInsetsDirectional.fromSTEB(0, 15, 0, 15),
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -94,6 +96,7 @@ class _AdicionarSaldoWidgetState extends State<AdicionarSaldoWidget> {
                     child: Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
                       child: TextFormField(
+                        keyboardType: TextInputType.number,
                         controller: _model.saldoController,
                         obscureText: false,
                         decoration: InputDecoration(
@@ -143,18 +146,15 @@ class _AdicionarSaldoWidgetState extends State<AdicionarSaldoWidget> {
                       ),
                     ),
                   ),
-                  FlutterFlowIconButton(
-                    borderColor: Colors.transparent,
-                    borderRadius: 30,
-                    borderWidth: 1,
-                    buttonSize: 45,
-                    fillColor: FlutterFlowTheme.of(context).primaryColor,
-                    icon: Icon(
-                      Icons.send,
-                      color: Colors.white,
-                      size: 25,
-                    ),
-                    onPressed: () async {
+                  
+                ],
+              ),
+            ),
+                  Padding(
+                                  padding:
+                                      EdgeInsetsDirectional.fromSTEB(0, 10, 0, 5),
+                                  child: FFButtonWidget(
+                                    onPressed: () async {
                       setState(() {
                         FFAppState().saldo =
                             double.parse(_model.saldoController!.text);
@@ -173,11 +173,13 @@ class _AdicionarSaldoWidgetState extends State<AdicionarSaldoWidget> {
                             (_model.apiResult7v10?.jsonBody ?? ''),
                             r'''$..id''',
                           ).toString();
-                        });
-                        await launchURL(getJsonField(
+                          FFAppState().urlPagamento = getJsonField(
                           (_model.apiResult7v10?.jsonBody ?? ''),
                           r'''$..ticket_url''',
-                        ).toString());
+                        ).toString();
+                        });
+
+                        context.pushNamed('MercadoPago');
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -195,13 +197,52 @@ class _AdicionarSaldoWidgetState extends State<AdicionarSaldoWidget> {
 
                       setState(() {});
                     },
+                                    text: 'Pagar com Pix',
+                                    options: FFButtonOptions(
+                                      width: 250,
+                                      height: 45,
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0, 0, 0, 0),
+                                      iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                          0, 0, 0, 0),
+                                      color: Color(0xFF1D4F9A),
+                                      textStyle: FlutterFlowTheme.of(context)
+                                          .subtitle2
+                                          .override(
+                                            fontFamily: 'Poppins',
+                                            color: Colors.white,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                      borderSide: BorderSide(
+                                        color: Color(0xFF1D4F9A),
+                                        width: 1,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                ),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Text(
+                    'O sistema só aceita pagamento via pix.',
+                    textAlign: TextAlign.center,
+                    style: FlutterFlowTheme.of(context).bodyText2.override(
+                          fontFamily: 'Poppins',
+                          color: Color(0xFF1D4F9A),
+                          fontSize: 14,
+                        ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         ),
       ),
+      
     );
   }
 }

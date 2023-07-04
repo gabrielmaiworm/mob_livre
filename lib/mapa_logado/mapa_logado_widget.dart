@@ -183,9 +183,12 @@ class _MapaLogadoWidgetState extends State<MapaLogadoWidget> {
                                               type: PageTransitionType.fade,
                                               child: FlutterFlowExpandedImageView(
                                                 image: Image.network(
+                                                valueOrDefault<String>(
+                                                  FFAppState().fotoPerfil,
                                                   'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__480.png',
-                                                  fit: BoxFit.contain,
                                                 ),
+                                                fit: BoxFit.cover,
+                                              ),
                                                 allowRotation: false,
                                                 tag: 'circleImageTag',
                                                 useHeroAnimation: true,
