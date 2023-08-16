@@ -142,25 +142,6 @@ class _DetalheEquipamentoRetirarWidgetState
                       topRight: Radius.circular(0),
                     ),
                   ),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height * 0.25,
-                    decoration: BoxDecoration(
-                      color: FlutterFlowTheme.of(context).secondaryBackground,
-                      image: DecorationImage(
-                        fit: BoxFit.contain,
-                        image: Image.network(
-                          'https://imgs.casasbahia.com.br/1501531919/1xg.jpg?imwidth=500',
-                        ).image,
-                      ),
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(35),
-                        bottomRight: Radius.circular(35),
-                        topLeft: Radius.circular(0),
-                        topRight: Radius.circular(0),
-                      ),
-                    ),
-                  ),
                 ),
                 
                 Padding(
@@ -405,7 +386,7 @@ class _DetalheEquipamentoRetirarWidgetState
                     activeColor: FlutterFlowTheme.of(context).primaryColor,
                     inactiveColor: Color(0xFFA5A5A5),
                     min: 0,
-                    max: double.parse(((FFAppState().credito - 0.2) / FFAppState().taxaMinuto).toStringAsFixed(2)),
+                    max: FFAppState().credito <= 0 ? 0 : double.parse(((FFAppState().credito - 0.2) / FFAppState().taxaMinuto).toStringAsFixed(2)),
                     value: (_model.sliderValue ??= 0),
                     onChanged: (newValue) {
                       newValue = double.parse(newValue.toStringAsFixed(2));
@@ -465,7 +446,7 @@ class _DetalheEquipamentoRetirarWidgetState
                                 ),
                                 Expanded(
                                   child: Text(
-                                    '${_model.sliderValue!} min',
+                                    '${_model.sliderValue ?? 0} min',
                                     textAlign: TextAlign.end,
                                     style: FlutterFlowTheme.of(context)
                                         .bodyText1
@@ -500,7 +481,7 @@ class _DetalheEquipamentoRetirarWidgetState
                                 ),
                                 Expanded(
                                   child: Text(
-                                    formatador.format(_model.sliderValue! * FFAppState().taxaMinuto),
+                                    formatador.format((_model.sliderValue ?? 0) * FFAppState().taxaMinuto),
                                     textAlign: TextAlign.end,
                                     style: FlutterFlowTheme.of(context)
                                         .bodyText1

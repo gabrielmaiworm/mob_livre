@@ -296,7 +296,7 @@ class _MapaDeslogadoWidgetState extends State<MapaDeslogadoWidget> {
                                     controller: googleMapsController,
                                     onCameraIdle: (latLng) => googleMapsCenter = latLng,
                                     initialLocation: googleMapsCenter ??= currentUserLocationValue,
-                                    markerColor: GoogleMarkerColor.violet,
+                                    markerColor: GoogleMarkerColor.blue,
                                     markers: docLatAndLong,
                                     mapType: MapType.normal,
                                     style: GoogleMapStyle.standard,

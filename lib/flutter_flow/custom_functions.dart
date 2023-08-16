@@ -136,12 +136,32 @@ double? returnDistanceBetweenTwoPoints(
 }
 
 String formatDateTimeCompleto(String date) {
-  DateTime parseDate = DateTime.parse(date);
-  DateFormat format = DateFormat('dd MMM yyyy, HH:MM');
-  String formatedDate = format.format(parseDate);
-  return formatedDate;
+  DateTime parseDate = DateTime.parse(date.split('.')[0]);
+  DateFormat format = DateFormat('dd MMM yyyy, HH:mm');
+  String formattedDate = format.format(parseDate);
+  return formattedDate;
 }
 
+
+String formatDateTimeHorario(String date) {
+  // Extrai a parte da data da string original
+  String datePart = date.split(' ')[0];
+  
+  // Converte a parte da data para DateTime
+  DateTime parseDate = DateTime.parse(datePart);
+  
+  // Formata a hora e os minutos separadamente
+  List<String> timeParts = date.split(' ')[1].split(':');
+  int hour = int.parse(timeParts[0]);
+  int minute = int.parse(timeParts[1]);
+
+  // Formata a data e a hora no formato desejado
+  String formattedDate = DateFormat("dd/MM/yyyy").format(parseDate);
+  String formattedTime = "${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}";
+
+  // Retorna a data e a hora formatadas
+  return "$formattedTime";
+}
 
 String formatMsToHour(int ms) {
   Duration duration = Duration(milliseconds: ms);

@@ -54,6 +54,7 @@ class _ViagensDetalhesWidgetState extends State<ViagensDetalhesWidget> {
     context.watch<FFAppState>();
     var avaliacaoField = getJsonField(widget.detalhesViagem, r'''$..avaliacao''');
     var avaliacaoString = avaliacaoField.toString();
+    final formatador = NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
       child: Scaffold(
@@ -141,10 +142,10 @@ class _ViagensDetalhesWidgetState extends State<ViagensDetalhesWidget> {
                           ),
                         ),
                         Text(
-                          'R\$ ${getJsonField(
+                          formatador.format(getJsonField(
                             widget.detalhesViagem,
-                            r'''$..avaliacao''',
-                          ).toString()},00',
+                            r'''$..total_pago''',
+                          )),
                           style: FlutterFlowTheme.of(context).bodyText1.override(
                                 fontFamily: 'Poppins',
                                 color: Color(0xFF1D4F9A),
@@ -269,10 +270,7 @@ class _ViagensDetalhesWidgetState extends State<ViagensDetalhesWidget> {
                       children: [
                         Expanded(
                           child: Text(
-                            'Distância percorrida: ${getJsonField(
-                              widget.detalhesViagem,
-                              r'''$..avaliacao''',
-                            ).toString()} km',
+                            'Distância percorrida: - km',
                             style:
                                 FlutterFlowTheme.of(context).bodyText1.override(
                                       fontFamily: 'Poppins',

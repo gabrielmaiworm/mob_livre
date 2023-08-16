@@ -49,7 +49,7 @@ class _ViagensWidgetState extends State<ViagensWidget> {
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
-
+    final formatador = NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
       child: Scaffold(
@@ -217,7 +217,7 @@ class _ViagensWidgetState extends State<ViagensWidget> {
                                             columnHistoricoViagemResponse
                                                 .jsonBody,
                                             r'''$..[0].data_solicitacao''',
-                                          ).toString())} - ${functions.formatDateTimeCompleto(
+                                          ).toString())} - ${functions.formatDateTimeHorario(
                                               getJsonField(
                                             columnHistoricoViagemResponse
                                                 .jsonBody,
@@ -242,11 +242,10 @@ class _ViagensWidgetState extends State<ViagensWidget> {
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
                                         Text(
-                                          'R\$ ${getJsonField(
-                                            columnHistoricoViagemResponse
-                                                .jsonBody,
-                                            r'''$..[0].parceiro.taxa_minuto''',
-                                          ).toString()},00',
+                                          formatador.format(getJsonField(
+                                            columnHistoricoViagemResponse.jsonBody,
+                                            r'''$..[0].total_pago''',
+                                          )),
                                           style: FlutterFlowTheme.of(context)
                                               .bodyText1
                                               .override(
@@ -381,7 +380,7 @@ class _ViagensWidgetState extends State<ViagensWidget> {
                                                                     getJsonField(
                                                                   viagemItemItem,
                                                                   r'''$..data_solicitacao''',
-                                                                ).toString())} - ${functions.formatDateTimeCompleto(
+                                                                ).toString())} - ${functions.formatDateTimeHorario(
                                                                     getJsonField(
                                                                   viagemItemItem,
                                                                   r'''$..data_devolucao''',
@@ -401,10 +400,10 @@ class _ViagensWidgetState extends State<ViagensWidget> {
                                                                       ),
                                                                 ),
                                                                 Text(
-                                                                  'R\$ ${getJsonField(
-                                                                    viagemItemItem,
-                                                                    r'''$..parceiro.taxa_minuto''',
-                                                                  ).toString()},00',
+                                                              formatador.format(getJsonField(
+                                                                viagemItemItem,
+                                                                r'''$..total_pago''',
+                                                              )),
                                                                   style: FlutterFlowTheme.of(
                                                                           context)
                                                                       .bodyText1

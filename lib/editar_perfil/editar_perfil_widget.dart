@@ -1309,9 +1309,9 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                                 FFAppState().complemento =
                                     _model.complementoController!.text;
                               });
-                              if(FFAppState().dadosEquipamento == 'null') {
+                              
                               context.pushNamed(
-                                'MapaLogado',
+                                'MeuPerfil',
                                 queryParams: {
                                   'dadosUser': serializeParam(
                                     widget.dadosUser,
@@ -1319,17 +1319,7 @@ class _EditarPerfilWidgetState extends State<EditarPerfilWidget> {
                                   ),
                                 }.withoutNulls,
                               );
-                              } else {
-                                 context.pushNamed(
-                                'MapaAlugado',
-                                queryParams: {
-                                  'dadosUser': serializeParam(
-                                    widget.dadosUser,
-                                    ParamType.JSON,
-                                  ),
-                                }.withoutNulls,
-                              );
-                              }
+                              
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(

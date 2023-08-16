@@ -5,6 +5,7 @@ import '../backend/api_requests/api_calls.dart';
 import '../backend/api_requests/api_manager.dart';
 import '../components/reserva_cancelada/reserva_cancelada_widger.dart';
 import '../components/sair/sair_widget.dart';
+import '../flutter_flow/flutter_flow_expanded_image_view.dart';
 import '../flutter_flow/flutter_flow_model.dart';
 import 'package:mob_livree/mapa/parceiro_panel.dart';
 import '/components/email_enviado_copy_widget.dart';
@@ -173,23 +174,50 @@ class _MapaAlugadoWidgetState extends State<MapaAlugadoWidget> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding:
-                                    EdgeInsetsDirectional.fromSTEB(0, 0, 20, 0),
-                                child: Container(
-                                  width: 100,
-                                  height: 100,
-                                  clipBehavior: Clip.antiAlias,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Image.network(
-                                    valueOrDefault<String>(
-                                      FFAppState().fotoPerfil,
-                                      'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__480.png',
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0, 0, 20, 0),
+                                      child: InkWell(
+                                        onTap: () async {
+                                          await Navigator.push(
+                                            context,
+                                            PageTransition(
+                                              type: PageTransitionType.fade,
+                                              child: FlutterFlowExpandedImageView(
+                                                image: Image.network(
+                                                valueOrDefault<String>(
+                                                  FFAppState().fotoPerfil,
+                                                  'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__480.png',
+                                                ),
+                                                fit: BoxFit.cover,
+                                              ),
+                                                allowRotation: false,
+                                                tag: 'circleImageTag',
+                                                useHeroAnimation: true,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: Hero(
+                                          tag: 'circleImageTag',
+                                          transitionOnUserGestures: true,
+                                          child: Container(
+                                            width: 100,
+                                            height: 100,
+                                            clipBehavior: Clip.antiAlias,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: Image.network(
+                                                valueOrDefault<String>(
+                                                  FFAppState().fotoPerfil,
+                                                  'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__480.png',
+                                                ),
+                                                fit: BoxFit.cover,
+                                              ),
+                                          ),
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              ),
                               Expanded(
                                 child: Padding(
                                   padding:
@@ -746,7 +774,7 @@ class _MapaAlugadoWidgetState extends State<MapaAlugadoWidget> {
                                 ),
                                 Padding(
                                   padding:
-                                      EdgeInsetsDirectional.fromSTEB(0, 15, 0, 15),
+                                      EdgeInsetsDirectional.fromSTEB(0, 15, 0, 5),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -765,7 +793,7 @@ class _MapaAlugadoWidgetState extends State<MapaAlugadoWidget> {
                                                   fontFamily: 'Poppins',
                                                   color: Colors.white,
                                                   fontSize: 14,
-                                                  fontWeight: FontWeight.w500,
+                                                  fontWeight: FontWeight.bold,
                                                 ),
                                           )),
                                         ),
@@ -773,6 +801,7 @@ class _MapaAlugadoWidgetState extends State<MapaAlugadoWidget> {
                                     ],
                                   ),
                                 ),
+                                if(FFAppState().relogio >= 0)
                                 Padding(
                                   padding:
                                       EdgeInsetsDirectional.fromSTEB(0, 15, 0, 0),
@@ -786,7 +815,39 @@ class _MapaAlugadoWidgetState extends State<MapaAlugadoWidget> {
                                               0, 0, 0, 0),
                                           child: SelectionArea(
                                               child: Text(
+                                                
                                             'Tempo restante:',
+                                            textAlign: TextAlign.center,
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyText1
+                                                .override(
+                                                  fontFamily: 'Poppins',
+                                                  color: Colors.white,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                          )),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                if(FFAppState().relogio < 0)
+                                Padding(
+                                  padding:
+                                      EdgeInsetsDirectional.fromSTEB(0, 15, 0, 0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [  
+                                      Expanded(
+                                        child: Padding(
+                                          padding: EdgeInsetsDirectional.fromSTEB(
+                                              0, 0, 0, 0),
+                                          child: SelectionArea(
+                                              child: Text(
+                                                
+                                            'Tempo excedido:',
                                             textAlign: TextAlign.center,
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyText1
@@ -807,9 +868,7 @@ class _MapaAlugadoWidgetState extends State<MapaAlugadoWidget> {
                                   child: Center(
                                           child: CountTimer(
                                             seconds: FFAppState().relogio,
-                                            onFinish: () {
-                                              print('Contagem regressiva concluída!');
-                                            },
+
                                           ),
                                         ),
                                 ),
@@ -1149,11 +1208,11 @@ class _MapaAlugadoWidgetState extends State<MapaAlugadoWidget> {
                                       googleMapsCenter = latLng,
                                   initialLocation: googleMapsCenter ??=
                                       currentUserLocationValue,
-                                  markerColor: GoogleMarkerColor.violet,
+                                  markerColor: GoogleMarkerColor.blue,
                                   markers: docLatAndLong,
                                   mapType: MapType.normal,
                                   style: GoogleMapStyle.standard,
-                                  initialZoom: 10,
+                                  initialZoom: 14,
                                   allowInteraction: true,
                                   allowZoom: true,
                                   showZoomControls: true,
@@ -1211,64 +1270,74 @@ class _MapaAlugadoWidgetState extends State<MapaAlugadoWidget> {
     );
   }
 }
+
 class CountTimer extends StatefulWidget {
   final int seconds;
-  final VoidCallback onFinish;
 
-  CountTimer({required this.seconds, required this.onFinish});
+  CountTimer({required this.seconds});
 
   @override
   _CountTimerState createState() => _CountTimerState();
 }
 
 class _CountTimerState extends State<CountTimer> {
-  late int _remainingSeconds;
-  late String _formattedTime;
-  late Timer _timer;
+  int remainingSeconds = 0;
+  bool isPositive = true;
+  late Timer timer;
 
   @override
   void initState() {
     super.initState();
-    _remainingSeconds = widget.seconds;
-    _formattedTime = _formatTime(_remainingSeconds);
-    _startTimer();
+    remainingSeconds = widget.seconds;
+    startTimer();
   }
 
   @override
   void dispose() {
-    _timer.cancel();
+    timer.cancel();
     super.dispose();
   }
 
-  void _startTimer() {
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+  @override
+  Widget build(BuildContext context) {
+    // Determine the text color based on the sign of remainingSeconds
+    Color textColor = remainingSeconds >= 0 ? Colors.white : Colors.red;
+
+    return Text(
+      formatTime(remainingSeconds),
+      style: TextStyle(fontSize: 24, color: textColor),
+    );
+  }
+
+  void startTimer() {
+    // Create a timer that updates the remaining seconds every second
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
-        if (_remainingSeconds > 0) {
-          _remainingSeconds--;
-          _formattedTime = _formatTime(_remainingSeconds);
-        } else {
-          _timer.cancel();
-          widget.onFinish();
+        // Decrease/increase the remaining seconds based on the sign
+        remainingSeconds += isPositive ? -1 : 1;
+
+        // When the countdown reaches zero, reset the timer
+        if (remainingSeconds == 0) {
+          isPositive = true;
+          timer.cancel();
+          startTimer();
         }
       });
     });
   }
 
-String _formatTime(int seconds) {
-  final isNegative = seconds < 0;
-  final absoluteSeconds = seconds.abs();
-  final minutes = (absoluteSeconds ~/ 60).toString().padLeft(2, '0');
-  final remainingSeconds = (absoluteSeconds % 60).toString().padLeft(2, '0');
-  final sign = isNegative ? '-' : '';
-  return '$sign$minutes:$remainingSeconds';
-}
+  String formatTime(int seconds) {
+    int minutes = seconds ~/ 60;
+    int secs = seconds % 60;
 
+    // Format the time as a string (e.g., "mm:ss")
+    String minutesStr = minutes.toString().padLeft(2, '0');
+    String secondsStr = secs.toString().padLeft(2, '0');
 
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      _formattedTime,
-      style: TextStyle(fontSize: 20, color: Colors.white),
-    );
+    if (seconds >= 0) {
+      return '$minutesStr:$secondsStr';
+    } else {
+      return '$minutesStr minutos';
+    }
   }
 }

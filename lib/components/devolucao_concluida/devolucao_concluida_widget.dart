@@ -105,6 +105,8 @@ class _DevolucaoConcluidaWidgetState extends State<DevolucaoConcluidaWidget> {
                             FFButtonWidget(
                               onPressed: () async {
                                 context.goNamed('MapaLogado');
+                                FFAppState().relogio = 0;
+                                
                               },
                               text: 'Continuar',
                               options: FFButtonOptions(

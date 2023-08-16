@@ -574,6 +574,8 @@ class EquipamentoGroup {
   static Map<String, String> headers = {};
   static GETDetalhesEquipamentoCall gETDetalhesEquipamentoCall =
       GETDetalhesEquipamentoCall();
+      static GETDetalhesEquipamentoReservaCall gETDetalhesEquipamentoReservaCall =
+      GETDetalhesEquipamentoReservaCall();
       static GETTaxaEquipamentoCall gETTaxaEquipamentoCall =
       GETTaxaEquipamentoCall();
   static POSTSolicitacaoCall pOSTSolicitacaoCall = POSTSolicitacaoCall();
@@ -592,6 +594,28 @@ class GETDetalhesEquipamentoCall {
     return ApiManager.instance.makeApiCall(
       callName: 'GET Detalhes Equipamento',
       apiUrl: '${EquipamentoGroup.baseUrl}estoque',
+      callType: ApiCallType.GET,
+      headers: {
+        ...EquipamentoGroup.headers,
+      },
+      params: {
+        'numero_serie_equipamento': numeroSerieEquipamento,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
+class GETDetalhesEquipamentoReservaCall {
+  Future<ApiCallResponse> call({
+    String? numeroSerieEquipamento = '',
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'GET Detalhes Equipamento Reserva',
+      apiUrl: '${EquipamentoGroup.baseUrl}estoque-reservado',
       callType: ApiCallType.GET,
       headers: {
         ...EquipamentoGroup.headers,

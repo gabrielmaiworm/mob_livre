@@ -6,6 +6,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mob_livree/index.dart';
 import 'package:mob_livree/parceiro/parceiro_widget.dart';
 
+import '../app_state.dart';
+
 
 
 
@@ -44,13 +46,19 @@ class ParceiroPanel extends StatelessWidget {
                 Expanded(
                   child: Column(
                     children: [
+                     
                       Spacer(),
-                      
+                       
                       Row(
                         children: [
+                          if(FFAppState().dadosEquipamento == "null") 
                           Expanded(
-                            child: ElevatedButton(
+                            
+                            child: 
+                            
+                            ElevatedButton(
                               onPressed: 
+                              
                                   ()  {
                                     Navigator.of(context)
                                           .push(MaterialPageRoute(builder: (context) => ParceiroWidget(kits: parceiro['kits'],detalhesParceiro: parceiro)));
@@ -66,6 +74,7 @@ class ParceiroPanel extends StatelessWidget {
                           ),
                         ],
                       ),
+                      
                     ],
                   ),
                 )

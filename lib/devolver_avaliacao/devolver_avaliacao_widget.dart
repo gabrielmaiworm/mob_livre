@@ -253,6 +253,9 @@ class _DevolverAvaliacaoWidgetState extends State<DevolverAvaliacaoWidget> {
                         ),
                       );
                       if ((_model.apiResult?.succeeded ?? true)) {
+                        FFAppState().update(() {
+                        FFAppState().dadosEquipamento = "null";  
+                        });
                         await showModalBottomSheet(
                           isScrollControlled: true,
                           backgroundColor: Colors.transparent,
@@ -268,7 +271,7 @@ class _DevolverAvaliacaoWidgetState extends State<DevolverAvaliacaoWidget> {
                               ),
                             );
                           },
-                        ).then((value) => setState(() {}));
+                        ).then((value) => setState(() {FFAppState().dadosEquipamento = "null";  }));
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(

@@ -95,25 +95,6 @@ class _DetalheEquipamentoWidgetState extends State<DetalheEquipamentoWidget> {
                     topRight: Radius.circular(0),
                   ),
                 ),
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.25,
-                  decoration: BoxDecoration(
-                    color: FlutterFlowTheme.of(context).secondaryBackground,
-                    image: DecorationImage(
-                      fit: BoxFit.contain,
-                      image: Image.network(
-                        'https://imgs.casasbahia.com.br/1501531919/1xg.jpg?imwidth=500',
-                      ).image,
-                    ),
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(35),
-                      bottomRight: Radius.circular(35),
-                      topLeft: Radius.circular(0),
-                      topRight: Radius.circular(0),
-                    ),
-                  ),
-                ),
               ),
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(10, 20, 10, 0),
@@ -246,38 +227,6 @@ class _DetalheEquipamentoWidgetState extends State<DetalheEquipamentoWidget> {
                             ],
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(5, 10, 5, 0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Tempo de uso (h)',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyText1
-                                    .override(
-                                      fontFamily: 'Poppins',
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryColor,
-                                    ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  '10:00',
-                                  textAlign: TextAlign.end,
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyText1
-                                      .override(
-                                        fontFamily: 'Poppins',
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryColor,
-                                      ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
                         // Padding(
                         //   padding: EdgeInsetsDirectional.fromSTEB(5, 10, 5, 0),
                         //   child: Row(
@@ -334,9 +283,11 @@ class _DetalheEquipamentoWidgetState extends State<DetalheEquipamentoWidget> {
                   ),
                 ),
               ),
+              
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
-                child: FFButtonWidget(
+                child: 
+                FFButtonWidget(
                   onPressed: () async {
                     _model.apiResultnsu = await UsuarioGroup.buscarUsuarioPorEmailCall.call(
                       email: FFAppState().emailPersist,

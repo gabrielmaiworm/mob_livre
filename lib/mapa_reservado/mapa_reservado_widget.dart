@@ -4,6 +4,8 @@ import 'package:stop_watch_timer/stop_watch_timer.dart';
 import '../components/reserva_cancelada/reserva_cancelada_widger.dart';
 import '../components/sair/sair_widget.dart';
 import '../components/scan_manual/scan_manual_widget.dart';
+import '../components/scan_manual_reserva/scan_manual_reserva_widget.dart';
+import '../flutter_flow/flutter_flow_expanded_image_view.dart';
 import '../flutter_flow/flutter_flow_model.dart';
 import '../flutter_flow/flutter_flow_timer.dart';
 import '/backend/api_requests/api_calls.dart';
@@ -45,10 +47,15 @@ class _MapaReservadoWidgetState extends State<MapaReservadoWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
+    LatLng? currentUserLocationValue;
+    LatLng? googleMapsCenter;
+    final googleMapsController = Completer<GoogleMapController>();
 
   @override
   void initState() {
     super.initState();
+    getCurrentUserLocation(defaultLocation: LatLng(0.0, 0.0), cached: true)
+        .then((loc) => setState(() => currentUserLocationValue = loc));
     _model = createModel(context, () => MapaReservadoModel());
   }
 
@@ -63,6 +70,20 @@ class _MapaReservadoWidgetState extends State<MapaReservadoWidget> {
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
+    if (currentUserLocationValue == null) {
+      return Container(
+        color: FlutterFlowTheme.of(context).primaryBackground,
+        child: Center(
+          child: SizedBox(
+            width: 50,
+            height: 50,
+            child: CircularProgressIndicator(
+              color: FlutterFlowTheme.of(context).primaryColor,
+            ),
+          ),
+        ),
+      );
+    }
 
     return WillPopScope(
       onWillPop: () async => false,
@@ -118,24 +139,50 @@ class _MapaReservadoWidgetState extends State<MapaReservadoWidget> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding:
-                                    EdgeInsetsDirectional.fromSTEB(0, 0, 20, 0),
-                                child: Container(
-                                  width: 100,
-                                  height: 100,
-                                  clipBehavior: Clip.antiAlias,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Image.network(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0, 0, 20, 0),
+                                      child: InkWell(
+                                        onTap: () async {
+                                          await Navigator.push(
+                                            context,
+                                            PageTransition(
+                                              type: PageTransitionType.fade,
+                                              child: FlutterFlowExpandedImageView(
+                                                image: Image.network(
                                                 valueOrDefault<String>(
                                                   FFAppState().fotoPerfil,
                                                   'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__480.png',
                                                 ),
                                                 fit: BoxFit.cover,
                                               ),
-                                ),
-                              ),
+                                                allowRotation: false,
+                                                tag: 'circleImageTag',
+                                                useHeroAnimation: true,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: Hero(
+                                          tag: 'circleImageTag',
+                                          transitionOnUserGestures: true,
+                                          child: Container(
+                                            width: 100,
+                                            height: 100,
+                                            clipBehavior: Clip.antiAlias,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: Image.network(
+                                                valueOrDefault<String>(
+                                                  FFAppState().fotoPerfil,
+                                                  'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__480.png',
+                                                ),
+                                                fit: BoxFit.cover,
+                                              ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                               Expanded(
                                 child: Padding(
                                   padding:
@@ -571,7 +618,7 @@ class _MapaReservadoWidgetState extends State<MapaReservadoWidget> {
                               ),
                               Padding(
                                 padding:
-                                    EdgeInsetsDirectional.fromSTEB(0, 15, 0, 15),
+                                    EdgeInsetsDirectional.fromSTEB(0, 15, 0, 0),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -582,7 +629,36 @@ class _MapaReservadoWidgetState extends State<MapaReservadoWidget> {
                                             10, 0, 0, 0),
                                         child: SelectionArea(
                                             child: Text(
-                                          'Cancele sua reserva grátis em até\n10m antes da retirada.\n',
+                                          'Conjunto reservado: ${FFAppState().kit}\n',
+                                          textAlign: TextAlign.center,
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyText1
+                                              .override(
+                                                fontFamily: 'Poppins',
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                        )),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    EdgeInsetsDirectional.fromSTEB(0, 5, 0, 15),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            10, 0, 0, 0),
+                                        child: SelectionArea(
+                                            child: Text(
+                                          'Após o horário informado, seu conjuto sairá da reserva.\n',
                                           textAlign: TextAlign.center,
                                           style: FlutterFlowTheme.of(context)
                                               .bodyText1
@@ -613,7 +689,7 @@ class _MapaReservadoWidgetState extends State<MapaReservadoWidget> {
                                                       padding: MediaQuery.of(context).viewInsets,
                                                       child: Container(
                                                         height: MediaQuery.of(context).size.height * 0.45,
-                                                        child: ScanManualWidget(),
+                                                        child: ScanManualReservaWidget(),
                                                       ),
                                                     );
                                                   },
@@ -815,12 +891,12 @@ class _MapaReservadoWidgetState extends State<MapaReservadoWidget> {
                   child: Stack(
                     children: [
                       FlutterFlowGoogleMap(
-                        controller: _model.googleMapsController,
+                        controller: googleMapsController,
                         onCameraIdle: (latLng) =>
-                            _model.googleMapsCenter = latLng,
-                        initialLocation: _model.googleMapsCenter ??=
-                            LatLng(13.106061, -59.613158),
-                        markerColor: GoogleMarkerColor.violet,
+                            googleMapsCenter = latLng,
+                        initialLocation: googleMapsCenter ??=
+                            currentUserLocationValue,
+                        markerColor: GoogleMarkerColor.blue,
                         mapType: MapType.normal,
                         style: GoogleMapStyle.standard,
                         initialZoom: 14,

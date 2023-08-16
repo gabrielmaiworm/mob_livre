@@ -28,7 +28,7 @@ class _VerificacaoEmailWidgetState extends State<VerificacaoEmailWidget> {
                 padding: EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
                 child: Container(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.3,
+                  height: MediaQuery.of(context).size.height * 0.35,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
