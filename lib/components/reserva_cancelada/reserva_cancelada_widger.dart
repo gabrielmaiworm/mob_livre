@@ -109,10 +109,11 @@ class _ReservaCanceladaWidgetState extends State<ReservaCanceladaWidget> {
                                   kit: FFAppState().kit.toString(),
                                 );
                                 if ((_model.apiResultxu1?.succeeded ?? true)) {
-                                    setState(() {
+                                  FFAppState().update(() {
                                     FFAppState().reservado = false;
                                     FFAppState().kit = 0;
                                     FFAppState().relogio = 0;
+                                    FFAppState().userController = false;
                                   });
                                   context.goNamed(
                                     'MapaLogado',

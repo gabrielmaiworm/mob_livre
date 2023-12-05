@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
+import 'package:pinput/pinput.dart';
 
 class CadastroDadosWidget extends StatefulWidget {
   const CadastroDadosWidget({Key? key}) : super(key: key);
@@ -21,6 +22,7 @@ class CadastroDadosWidget extends StatefulWidget {
 class _CadastroDadosWidgetState extends State<CadastroDadosWidget> {
   ApiCallResponse? apiCallOutput;
   TextEditingController? celularController;
+  TextEditingController? pinController;
   final celularMask = MaskTextInputFormatter(mask: '(##) #####-####');
   TextEditingController? cpfController;
   final cpfMask = MaskTextInputFormatter(mask: '###.###.###-##');
@@ -42,18 +44,30 @@ class _CadastroDadosWidgetState extends State<CadastroDadosWidget> {
     nomeController = TextEditingController();
     sobrenomeController = TextEditingController();
     dataNascimentoController = TextEditingController();
+    pinController = TextEditingController();
   }
 
   @override
   void dispose() {
     _unfocusNode.dispose();
     celularController?.dispose();
+    pinController?.dispose();
     cpfController?.dispose();
     nomeController?.dispose();
     sobrenomeController?.dispose();
     dataNascimentoController?.dispose();
     super.dispose();
   }
+
+ final defaultPinTheme = PinTheme(
+  width: 56,
+  height: 56,
+  textStyle: TextStyle(fontSize: 20, color: Color.fromRGBO(30, 60, 87, 1), fontWeight: FontWeight.w600),
+  decoration: BoxDecoration(
+    border: Border.all(color: Color.fromRGBO(29, 79, 154, 1)),
+    borderRadius: BorderRadius.circular(20),
+  ),
+);
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +150,7 @@ class _CadastroDadosWidgetState extends State<CadastroDadosWidget> {
                                     .bodyText2
                                     .override(
                                       fontFamily: 'Poppins',
-                                      color: Color(0xFF1D4F9A),
+                                      color: Color.fromRGBO(29, 79, 154, 1),
                                     ),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
@@ -527,6 +541,35 @@ class _CadastroDadosWidgetState extends State<CadastroDadosWidget> {
                       ),
                     ),
                     Padding(
+                      padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                                'Crie seu PIN de 4 digitos',
+                                style: FlutterFlowTheme.of(context).bodyText1.override(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Color(0xFF1D4F9A),
+                                    ),
+                              ),
+                        ],
+                      ),
+                    ),
+                   Padding(
+                     padding: const EdgeInsetsDirectional.fromSTEB(0, 5, 0, 15),
+                     child: Center(
+                       child: Pinput(             
+                        length: 4,
+                        defaultPinTheme: defaultPinTheme,
+                        showCursor: true,
+                        controller: pinController,
+                        onCompleted: (pin) => print(pinController),
+                        ),
+                     ),
+                   ),
+                    Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(0, 30, 0, 0),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
@@ -579,6 +622,7 @@ class _CadastroDadosWidgetState extends State<CadastroDadosWidget> {
                             if (switchValue != null) {
                               apiCallOutput =
                                   await UsuarioGroup.cadastrarUsuarioCall.call(
+                                pin: pinController!.text,
                                 nome: nomeController!.text,
                                 sobrenome: sobrenomeController!.text,
                                 dataDeNascicmento:

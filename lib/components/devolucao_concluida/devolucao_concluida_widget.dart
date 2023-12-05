@@ -103,10 +103,11 @@ class _DevolucaoConcluidaWidgetState extends State<DevolucaoConcluidaWidget> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             FFButtonWidget(
-                              onPressed: () async {
+                              onPressed: () {
                                 context.goNamed('MapaLogado');
+                                FFAppState().update(() {
                                 FFAppState().relogio = 0;
-                                
+                                });
                               },
                               text: 'Continuar',
                               options: FFButtonOptions(

@@ -21,12 +21,15 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:dio/dio.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
 import 'mapa_alugado_model.dart';
 export 'mapa_alugado_model.dart';
 
 FlutterFlowMarker? marker;
 List<FlutterFlowMarker> docLatAndLong = [];
+ var speedInMps = 0.0;
+ var speedInKmh;
 
 class MapaAlugadoWidget extends StatefulWidget {
   const MapaAlugadoWidget({
@@ -44,7 +47,6 @@ class MapaAlugadoWidget extends StatefulWidget {
 
 class _MapaAlugadoWidgetState extends State<MapaAlugadoWidget> {
   late MapaAlugadoModel _model;
-  
 
   void setSelectedParceiro(dynamic parceiro) =>
       setState(() => selectedParceiro = parceiro);
@@ -71,7 +73,7 @@ class _MapaAlugadoWidgetState extends State<MapaAlugadoWidget> {
       marker =
           FlutterFlowMarker(parceiro['documento_empresa'], latLng, () async {
         setSelectedParceiro(parceiro);
-        panelController.open();
+        // panelController.open();
       });
       docLatAndLong.add(marker!);
       parceirosToAdd.add(parceiro);
@@ -90,12 +92,19 @@ class _MapaAlugadoWidgetState extends State<MapaAlugadoWidget> {
     super.initState();
     _model = createModel(context, () => MapaAlugadoModel());
     getLatAndLong();
-    getCurrentUserLocation(defaultLocation: LatLng(0.0, 0.0), cached: true)
+    getCurrentUserLocation(defaultLocation: LatLng(23.5558, 46.6396), cached: true)
         .then((loc) => setState(() => currentUserLocationValue = loc));
+        Geolocator.getPositionStream()
+          .listen((position) {
+            speedInMps =
+            position.speed;
+            speedInKmh = (speedInMps * 1.6);
+        });
   }
 
   @override
   void dispose() {
+    
     _model.dispose();
 
     _unfocusNode.dispose();
@@ -1205,9 +1214,8 @@ class _MapaAlugadoWidgetState extends State<MapaAlugadoWidget> {
                                 body: FlutterFlowGoogleMap(
                                   controller: googleMapsController,
                                   onCameraIdle: (latLng) =>
-                                      googleMapsCenter = latLng,
-                                  initialLocation: googleMapsCenter ??=
-                                      currentUserLocationValue,
+                                      currentUserLocationValue = latLng,
+                                  initialLocation: currentUserLocationValue,
                                   markerColor: GoogleMarkerColor.blue,
                                   markers: docLatAndLong,
                                   mapType: MapType.normal,
@@ -1259,6 +1267,40 @@ class _MapaAlugadoWidgetState extends State<MapaAlugadoWidget> {
                           ),
                         ),
                       ),
+                      Align(
+                        alignment: AlignmentDirectional(-0.88, -0.7),
+                        child: Container(
+                          width: 65.0,  // Define o diâmetro do círculo
+                          height: 65.0, // Define o diâmetro do círculo
+                          decoration: BoxDecoration(
+                            color: Color(0xFF1D4F9A), // Cor do círculo
+                            shape: BoxShape.circle,    // Faz o container ficar em forma de círculo
+                          ),
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  speedInKmh.toStringAsFixed(0), 
+                                  style: TextStyle(
+                                    color: Colors.white, // Cor do texto
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w700,        // Tamanho do texto
+                                  ),
+                                ),
+                                Text(
+                                  'km/h', 
+                                  style: TextStyle(
+                                    color: Colors.white, // Cor do texto
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w700,        // Tamanho do texto
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -1289,13 +1331,14 @@ class _CountTimerState extends State<CountTimer> {
   void initState() {
     super.initState();
     remainingSeconds = widget.seconds;
-    startTimer();
+      startTimer();
   }
 
   @override
   void dispose() {
-    timer.cancel();
     super.dispose();
+    timer.cancel();
+    
   }
 
   @override
@@ -1312,6 +1355,7 @@ class _CountTimerState extends State<CountTimer> {
   void startTimer() {
     // Create a timer that updates the remaining seconds every second
     timer = Timer.periodic(Duration(seconds: 1), (timer) {
+       if (mounted) {
       setState(() {
         // Decrease/increase the remaining seconds based on the sign
         remainingSeconds += isPositive ? -1 : 1;
@@ -1323,7 +1367,7 @@ class _CountTimerState extends State<CountTimer> {
           startTimer();
         }
       });
-    });
+    }});
   }
 
   String formatTime(int seconds) {

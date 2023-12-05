@@ -12,7 +12,7 @@ const _kPrivateApiFunctionName = 'ffPrivateApiCall';
 /// Start Usuario Group Code
 
 class UsuarioGroup {
-  static String baseUrl = 'http://177.70.102.109:3005/';
+  static String baseUrl = 'http://5devs.online:3005/';
   static Map<String, String> headers = {};
   static RedefinirSenhaCall redefinirSenhaCall = RedefinirSenhaCall();
   static LoginCall loginCall = LoginCall();
@@ -34,6 +34,7 @@ class UsuarioGroup {
   static  PUTSenhaCall pUTSenhaCall = PUTSenhaCall();
   static  CriarPixCall criarPixCall = CriarPixCall();
   static  POSTSaldoUserCall pOSTSaldoUserCall = POSTSaldoUserCall();
+  static  AlterarPinCall alterarPinCall = AlterarPinCall();
 }
 
 class RedefinirSenhaCall {
@@ -265,6 +266,7 @@ class CadastrarUsuarioCall {
     String? detalheLesao = '',
     String? fotoDocumento64 = '',
     String? fotoComDocumento64 = '',
+    String? pin = '',
     int? nivel,
     String? senha = '',
     String? telefone = '',
@@ -274,6 +276,7 @@ class CadastrarUsuarioCall {
 {
   "nome": "${nome}",
   "email": "${email}",
+  "pin": "${pin}",
   "data_de_nascicmento": "${dataDeNascicmento}",
   "documento": "${documento}",
   "telefone_fixo": "${telefoneFixo}",
@@ -300,6 +303,34 @@ class CadastrarUsuarioCall {
     return ApiManager.instance.makeApiCall(
       callName: 'Cadastrar Usuario',
       apiUrl: '${UsuarioGroup.baseUrl}usuario',
+      callType: ApiCallType.POST,
+      headers: {
+        ...UsuarioGroup.headers,
+      },
+      params: {},
+      body: body,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
+class AlterarPinCall {
+  Future<ApiCallResponse> call({
+    String? documento = '',
+    String? pin = '',
+  }) {
+    final body = '''
+{
+  "pin": "${pin}",
+  "documento": "${documento}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'Alterar PIN',
+      apiUrl: '${UsuarioGroup.baseUrl}usuario-pin-update',
       callType: ApiCallType.POST,
       headers: {
         ...UsuarioGroup.headers,
@@ -520,7 +551,7 @@ class UsuarioSolicitacaoCall {
 /// Start Parceiro Group Code
 
 class ParceiroGroup {
-  static String baseUrl = 'http://177.70.102.109:3005/';
+  static String baseUrl = 'http://5devs.online:3005/';
   static Map<String, String> headers = {};
   static GETParceirosCall gETParceirosCall = GETParceirosCall();
   static GETDetalhesParceiroCall gETDetalhesParceiroCall =
@@ -570,7 +601,7 @@ class GETDetalhesParceiroCall {
 /// Start Equipamento Group Code
 
 class EquipamentoGroup {
-  static String baseUrl = 'http://177.70.102.109:3005/';
+  static String baseUrl = 'http://5devs.online:3005/';
   static Map<String, String> headers = {};
   static GETDetalhesEquipamentoCall gETDetalhesEquipamentoCall =
       GETDetalhesEquipamentoCall();

@@ -349,7 +349,24 @@ class _MeuPerfilWidgetState extends State<MeuPerfilWidget> {
                                     EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
                                 child: FFButtonWidget(
                                   onPressed: () async {
-                                    context.pushNamed('SelecionarValor');
+                                    // context.pushNamed('SelecionarValor');
+
+                                    await showDialog(
+                                      context: context,
+                                      builder: (alertDialogContext) {
+                                        return AlertDialog(
+                                          title: Text('Ambiente de teste'),
+                                          content: Text('Peça a um organizador para que insira créditos em sua conta.'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(alertDialogContext),
+                                              child: Text('Ok'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
                                   },
                                   text: 'Adicionar crédito',
                                   options: FFButtonOptions(
@@ -503,6 +520,84 @@ class _MeuPerfilWidgetState extends State<MeuPerfilWidget> {
                                                   context.pushNamed('NovaSenha');
                                                 },
                                                 text: 'Atualizar senha',
+                                                options: FFButtonOptions(
+                                                  width: 130,
+                                                  height: 40,
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(0, 0, 0, 0),
+                                                  iconPadding:
+                                                      EdgeInsetsDirectional
+                                                          .fromSTEB(0, 0, 0, 0),
+                                                  color:
+                                                      FlutterFlowTheme.of(context)
+                                                          .primaryColor,
+                                                  textStyle:
+                                                      FlutterFlowTheme.of(context)
+                                                          .title1
+                                                          .override(
+                                                            fontSize: 16,
+                                                            fontFamily: 'Poppins',
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                  elevation: 0,
+                                                  borderSide: BorderSide(
+                                                    color: Colors.transparent,
+                                                    width: 1,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Expanded(
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    elevation: 3,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      height: MediaQuery.of(context).size.height *
+                                          0.06,
+                                      decoration: BoxDecoration(
+                                        color:
+                                            FlutterFlowTheme.of(context).primaryColor,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            5, 5, 5, 5),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Icon(
+                                              Icons.vpn_key_outlined,
+                                              color: Colors.white,
+                                              size: 30,
+                                            ),
+                                            Expanded(
+                                              child: FFButtonWidget(
+                                                onPressed: () async {
+                                                  context.pushNamed('NovoPin');
+                                                },
+                                                text: 'Atualizar PIN',
                                                 options: FFButtonOptions(
                                                   width: 130,
                                                   height: 40,

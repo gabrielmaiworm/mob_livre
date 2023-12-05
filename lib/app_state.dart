@@ -37,6 +37,7 @@ class FFAppState extends ChangeNotifier {
     _complemento = prefs.getString('ff_complemento') ?? _complemento;
     _logado = prefs.getBool('ff_logado') ?? _logado;
     _reservado = prefs.getBool('ff_reservado') ?? _reservado;
+    _userController = prefs.getBool('ff_userController') ?? _userController;
     _kit = prefs.getInt('ff_kit') ?? _kit;
     _kitS = prefs.getString('ff_kitS') ?? _kitS;
     _horaMs = prefs.getInt('ff_horaMs') ?? _horaMs;
@@ -280,6 +281,13 @@ class FFAppState extends ChangeNotifier {
   set reservado(bool _value) {
     _reservado = _value;
     prefs.setBool('ff_reservado', _value);
+  }
+
+  bool _userController = false;
+  bool get userController => _userController;
+  set userController(bool _value) {
+    _userController = _value;
+    prefs.setBool('ff_userController', _value);
   }
 
   bool _maisOpcoes = false;

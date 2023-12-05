@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:page_transition/page_transition.dart';
 import '../../blue_slider/blue_slider.dart';
 import '../../devolver_avaliacao/devolver_avaliacao_widget.dart';
+import '../../novo_pin/novo_pin_widget.dart';
 import '../flutter_flow_theme.dart';
 
 import '../../auth/firebase_user_provider.dart';
@@ -174,6 +175,11 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               name: 'NovaSenha',
               path: 'novaSenha',
               builder: (context, params) => NovaSenhaWidget(),
+            ),
+            FFRoute(
+              name: 'NovoPin',
+              path: 'novoPin',
+              builder: (context, params) => NovoPinWidget(),
             ),
             FFRoute(
               name: 'RedefinirSenhaFinalizado',

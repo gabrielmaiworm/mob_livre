@@ -54,7 +54,7 @@ class _MapaReservadoWidgetState extends State<MapaReservadoWidget> {
   @override
   void initState() {
     super.initState();
-    getCurrentUserLocation(defaultLocation: LatLng(0.0, 0.0), cached: true)
+    getCurrentUserLocation(defaultLocation: LatLng(23.5558, 46.6396), cached: true)
         .then((loc) => setState(() => currentUserLocationValue = loc));
     _model = createModel(context, () => MapaReservadoModel());
   }
@@ -893,9 +893,8 @@ class _MapaReservadoWidgetState extends State<MapaReservadoWidget> {
                       FlutterFlowGoogleMap(
                         controller: googleMapsController,
                         onCameraIdle: (latLng) =>
-                            googleMapsCenter = latLng,
-                        initialLocation: googleMapsCenter ??=
-                            currentUserLocationValue,
+                            currentUserLocationValue = latLng,
+                        initialLocation: currentUserLocationValue,
                         markerColor: GoogleMarkerColor.blue,
                         mapType: MapType.normal,
                         style: GoogleMapStyle.standard,

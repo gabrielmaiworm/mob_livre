@@ -17,6 +17,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:dio/dio.dart';
+import 'package:geolocator/geolocator.dart';
 
 import 'mapa_logado_model.dart';
 export 'mapa_logado_model.dart';
@@ -40,7 +41,11 @@ class MapaLogadoWidget extends StatefulWidget {
 class _MapaLogadoWidgetState extends State<MapaLogadoWidget> {
   late MapaLogadoModel _model;
 
-  void setSelectedParceiro(dynamic parceiro) => setState(() => selectedParceiro = parceiro);
+  void setSelectedParceiro(dynamic parceiro) {
+    if (mounted == true) {
+    setState(() => selectedParceiro = parceiro);
+    }
+  } 
   PanelController panelController = PanelController();
   dynamic selectedParceiro;
   List<dynamic> parceiros = [];
@@ -52,7 +57,7 @@ class _MapaLogadoWidgetState extends State<MapaLogadoWidget> {
   final googleMapsController = Completer<GoogleMapController>();
 
   Future<List<FlutterFlowMarker>> getLatAndLong() async {
-    String url = "http://177.70.102.109:3005/parceiro-equipamento";
+    String url = "http://5devs.online:3005/parceiro-equipamento";
 
     final response = await Dio().get(url);
     final responseBody = response.data;
@@ -67,30 +72,33 @@ class _MapaLogadoWidgetState extends State<MapaLogadoWidget> {
       docLatAndLong.add(marker!);
       parceirosToAdd.add(parceiro);
     }
-
-    setState(() {
-      print(responseBody);
-      parceiros = parceirosToAdd;
-    });
+    
+    if (mounted == true) {
+        setState(() {
+          print(responseBody);
+          parceiros = parceirosToAdd;
+        });
+    }
 
     return docLatAndLong;
   }
-
+  
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => MapaLogadoModel());
     getLatAndLong();
-    getCurrentUserLocation(defaultLocation: LatLng(0.0, 0.0), cached: true)
+    getCurrentUserLocation(defaultLocation: LatLng(23.5558, 46.6396), cached: true)
         .then((loc) => setState(() => currentUserLocationValue = loc));
   }
+  
+  
 
   @override
   void dispose() {
     _model.dispose();
-
     _unfocusNode.dispose();
-    super.dispose();
+     super.dispose();
   }
 
   @override
@@ -233,6 +241,7 @@ class _MapaLogadoWidgetState extends State<MapaLogadoWidget> {
                                               child: SelectionArea(
                                                   child: Text(
                                                 FFAppState().nome,
+
                                                 style:
                                                     FlutterFlowTheme.of(context)
                                                         .bodyText1
@@ -736,7 +745,6 @@ class _MapaLogadoWidgetState extends State<MapaLogadoWidget> {
                                 ),
                               );
                             }
-                            final googleMapGETParceirosResponse = snapshot.data!;
                             return GestureDetector(
                               onTap: () => FocusScope.of(context).unfocus(),
                               child: SlidingUpPanel(
@@ -749,8 +757,8 @@ class _MapaLogadoWidgetState extends State<MapaLogadoWidget> {
                                 panel: ParceiroPanel(parceiro: selectedParceiro),
                                 body: FlutterFlowGoogleMap(
                                   controller: googleMapsController,
-                                  onCameraIdle: (latLng) => googleMapsCenter = latLng,
-                                  initialLocation: googleMapsCenter ??= currentUserLocationValue,
+                                  onCameraIdle: (latLng) => currentUserLocationValue = latLng,
+                                  initialLocation: currentUserLocationValue,
                                   markerColor: GoogleMarkerColor.blue,
                                   markers: docLatAndLong,
                                   mapType: MapType.normal,
@@ -771,7 +779,7 @@ class _MapaLogadoWidgetState extends State<MapaLogadoWidget> {
                         ),
                       ),
                       Align(
-                        alignment: AlignmentDirectional(-0.88, -0.96),
+                        alignment: AlignmentDirectional(-0.8, -0.96),
                         child: InkWell(
                           onTap: () async {
                             scaffoldKey.currentState!.openDrawer();

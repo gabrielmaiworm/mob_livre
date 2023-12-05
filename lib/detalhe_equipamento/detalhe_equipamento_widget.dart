@@ -118,7 +118,7 @@ class _DetalheEquipamentoWidgetState extends State<DetalheEquipamentoWidget> {
                               child: Text(
                                  (() {
                                     final nomeEquipamento = getJsonField(widget.detalhesEquip, r'''$..nome_equipamento''');
-                                    return nomeEquipamento != null ? nomeEquipamento.toString() : getJsonField(FFAppState().dadosEquipamento, r'''$..nome_equipamento''').toString();
+                                    return nomeEquipamento != null ? nomeEquipamento.toString() : getJsonField(widget.detalhesEquip, r'''$..nome_equipamento''').toString();
                                   })(),
                                 textAlign: TextAlign.center,
                                 style: FlutterFlowTheme.of(context)
@@ -144,7 +144,7 @@ class _DetalheEquipamentoWidgetState extends State<DetalheEquipamentoWidget> {
                                 valueOrDefault<String>(
                                    (() {
                                     final rebocado = getJsonField(widget.detalhesEquip, r'''$..rebocado''');
-                                    return rebocado != null ? rebocado.toString() : getJsonField(FFAppState().dadosEquipamento, r'''$..rebocado''').toString();
+                                    return rebocado != null ? rebocado.toString() : getJsonField(widget.detalhesEquip, r'''$..rebocado''').toString();
                                   })(),
                                   'Rebocado',
                                     ),
@@ -180,7 +180,7 @@ class _DetalheEquipamentoWidgetState extends State<DetalheEquipamentoWidget> {
                                 child: Text(
                                   (() {
                                     final kit = getJsonField(widget.detalhesEquip, r'''$..kit''');
-                                    return kit != null ? kit.toString() : getJsonField(FFAppState().dadosEquipamento, r'''$..kit''').toString();
+                                    return kit != null ? kit.toString() : getJsonField(widget.detalhesEquip, r'''$..kit''').toString();
                                   })(),
                                   textAlign: TextAlign.end,
                                   style: FlutterFlowTheme.of(context).bodyText1.override(
@@ -212,7 +212,7 @@ class _DetalheEquipamentoWidgetState extends State<DetalheEquipamentoWidget> {
                                 child: Text(
                                   '${ (() {
                                     final carga = getJsonField(widget.detalhesEquip, r'''$..carga''');
-                                    return carga != null ? carga.toString() : getJsonField(FFAppState().dadosEquipamento, r'''$..carga''').toString();
+                                    return carga != null ? carga.toString() : getJsonField(widget.detalhesEquip, r'''$..carga''').toString();
                                   })()}%',
                                   textAlign: TextAlign.end,
                                   style: FlutterFlowTheme.of(context)
@@ -338,7 +338,7 @@ class _DetalheEquipamentoWidgetState extends State<DetalheEquipamentoWidget> {
                         },
                       ).then((value) => setState(() {}));
                     }
-                    setState(() {                
+                    FFAppState().update(() {                
                       FFAppState().horaMs = DateTime.now().millisecondsSinceEpoch;
                       FFAppState().numeroEquipamento = getJsonField(
                                     widget.detalhesEquip,

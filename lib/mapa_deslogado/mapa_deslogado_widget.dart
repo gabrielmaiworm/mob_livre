@@ -64,7 +64,7 @@ class _MapaDeslogadoWidgetState extends State<MapaDeslogadoWidget> {
   @override
   void initState() {
     super.initState();
-    getCurrentUserLocation(defaultLocation: LatLng(0.0, 0.0), cached: true)
+    getCurrentUserLocation(defaultLocation: LatLng(23.5558, 46.6396), cached: true)
         .then((loc) => setState(() => currentUserLocationValue = loc));
     getLatAndLong();
   }
@@ -294,8 +294,8 @@ class _MapaDeslogadoWidgetState extends State<MapaDeslogadoWidget> {
                                   panel: ParceiroPanel(parceiro: selectedParceiro),
                                   body: FlutterFlowGoogleMap(
                                     controller: googleMapsController,
-                                    onCameraIdle: (latLng) => googleMapsCenter = latLng,
-                                    initialLocation: googleMapsCenter ??= currentUserLocationValue,
+                                    onCameraIdle: (latLng) => currentUserLocationValue = latLng,
+                                    initialLocation: currentUserLocationValue,
                                     markerColor: GoogleMarkerColor.blue,
                                     markers: docLatAndLong,
                                     mapType: MapType.normal,

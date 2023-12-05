@@ -147,6 +147,7 @@ class _DefinirHorarioWidgetState extends State<DefinirHorarioWidget> {
                                         documento: FFAppState().documento,
                                       );
                                       FFAppState().update(() {
+                                        FFAppState().userController = true;
                                         FFAppState().reservado = true;
                                         FFAppState().horaMs = DateTime.now().millisecondsSinceEpoch;
                                       });

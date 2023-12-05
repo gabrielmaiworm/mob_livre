@@ -112,7 +112,8 @@ class _ViagensWidgetState extends State<ViagensWidget> {
                       );
                     }
                     final columnHistoricoViagemResponse = snapshot.data!;
-                    return SingleChildScrollView(
+                    return (columnHistoricoViagemResponse.statusCode != 500) 
+                              ? SingleChildScrollView(
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -140,7 +141,7 @@ class _ViagensWidgetState extends State<ViagensWidget> {
                             ),
                           ),
                           Padding(
-                            padding:
+                            padding: 
                                 EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
                             child: Container(
                               width: MediaQuery.of(context).size.width,
@@ -206,23 +207,14 @@ class _ViagensWidgetState extends State<ViagensWidget> {
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        10, 0, 10, 0),
+                                    padding: EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
                                         Text(
-                                          "${functions.formatDateTimeCompleto(
-                                              getJsonField(
-                                            columnHistoricoViagemResponse
-                                                .jsonBody,
-                                            r'''$..[0].data_solicitacao''',
-                                          ).toString())} - ${functions.formatDateTimeHorario(
-                                              getJsonField(
-                                            columnHistoricoViagemResponse
-                                                .jsonBody,
-                                            r'''$..[0].data_devolucao''',
-                                          ).toString())}",
+                                          (getJsonField(columnHistoricoViagemResponse.jsonBody, r'''$..[0].data_solicitacao''') != null && getJsonField(columnHistoricoViagemResponse.jsonBody, r'''$..[0].data_devolucao''') != null) 
+                                          ? "${functions.formatDateTimeCompleto(getJsonField(columnHistoricoViagemResponse.jsonBody, r'''$..[0].data_solicitacao''').toString())} - ${functions.formatDateTimeHorario(getJsonField(columnHistoricoViagemResponse.jsonBody, r'''$..[0].data_devolucao''').toString())}"
+                                          : "Sem data",
                                           style: FlutterFlowTheme.of(context)
                                               .bodyText1
                                               .override(
@@ -242,18 +234,15 @@ class _ViagensWidgetState extends State<ViagensWidget> {
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
                                         Text(
-                                          formatador.format(getJsonField(
-                                            columnHistoricoViagemResponse.jsonBody,
-                                            r'''$..[0].total_pago''',
-                                          )),
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyText1
-                                              .override(
-                                                fontFamily: 'Poppins',
-                                                color: Color(0xFF1D4F9A),
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w500,
-                                              ),
+                                          getJsonField(columnHistoricoViagemResponse.jsonBody, r'''$..[0].total_pago''') != null 
+                                            ? formatador.format(getJsonField(columnHistoricoViagemResponse.jsonBody, r'''$..[0].total_pago'''))
+                                            : 'Valor Indisponível',
+                                          style: FlutterFlowTheme.of(context).bodyText1.override(
+                                            fontFamily: 'Poppins',
+                                            color: Color(0xFF1D4F9A),
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -270,7 +259,21 @@ class _ViagensWidgetState extends State<ViagensWidget> {
                                 final viagemItem = getJsonField(
                                   columnHistoricoViagemResponse.jsonBody,
                                   r'''$..results''',
-                                ).toList();
+                                )?.toList();  // Usando o operador ?. para tratar possíveis nulos
+
+                                if (viagemItem == null || viagemItem.isEmpty) {
+                                  return Center(
+                                    child: Text(
+                                      'Não há viagens feitas ainda.',
+                                      style: TextStyle(
+                                        // Estilize conforme necessário
+                                        fontFamily: 'Poppins',
+                                        fontSize: 16,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  );
+                                };
                                 return ListView.builder(
                                   padding: EdgeInsets.zero,
                                   primary: false,
@@ -376,47 +379,26 @@ class _ViagensWidgetState extends State<ViagensWidget> {
                                                                       ),
                                                                 ),
                                                                 Text(
-                                                                  "${functions.formatDateTimeCompleto(
-                                                                    getJsonField(
-                                                                  viagemItemItem,
-                                                                  r'''$..data_solicitacao''',
-                                                                ).toString())} - ${functions.formatDateTimeHorario(
-                                                                    getJsonField(
-                                                                  viagemItemItem,
-                                                                  r'''$..data_devolucao''',
-                                                                ).toString())}",
-                                                                  style: FlutterFlowTheme.of(
-                                                                          context)
+                                                                  (getJsonField(viagemItemItem, r'''$..data_solicitacao''') != null && getJsonField(viagemItemItem, r'''$..data_devolucao''') != null) 
+                                                                    ? "${functions.formatDateTimeCompleto(getJsonField(viagemItemItem, r'''$..data_solicitacao''').toString())} - ${functions.formatDateTimeHorario(getJsonField(viagemItemItem, r'''$..data_devolucao''').toString())}"
+                                                                    : "Sem data",
+                                                                  style: FlutterFlowTheme.of(context)
                                                                       .bodyText1
                                                                       .override(
-                                                                        fontFamily:
-                                                                            'Poppins',
-                                                                        color: FlutterFlowTheme.of(
-                                                                                context)
-                                                                            .primaryColor,
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .w500,
+                                                                        fontFamily: 'Poppins',
+                                                                        color: FlutterFlowTheme.of(context).primaryColor,
+                                                                        fontWeight: FontWeight.w500,
                                                                       ),
                                                                 ),
                                                                 Text(
-                                                              formatador.format(getJsonField(
-                                                                viagemItemItem,
-                                                                r'''$..total_pago''',
-                                                              )),
-                                                                  style: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyText1
-                                                                      .override(
-                                                                        fontFamily:
-                                                                            'Poppins',
-                                                                        color: FlutterFlowTheme.of(
-                                                                                context)
-                                                                            .primaryColor,
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .w500,
-                                                                      ),
+                                                                  getJsonField(viagemItemItem, r'''$..total_pago''') != null 
+                                                                    ? formatador.format(getJsonField(viagemItemItem, r'''$..total_pago'''))
+                                                                    : 'Valor Indisponível',
+                                                                  style: FlutterFlowTheme.of(context).bodyText1.override(
+                                                                    fontFamily: 'Poppins',
+                                                                    color: FlutterFlowTheme.of(context).primaryColor,
+                                                                    fontWeight: FontWeight.w500,
+                                                                  ),
                                                                 ),
                                                               ],
                                                             ),
@@ -457,7 +439,17 @@ class _ViagensWidgetState extends State<ViagensWidget> {
                           ),
                         ],
                       ),
-                    );
+                    ) : Center(
+                                    child: Text(
+                                      'Histórico de viagens vazio.',
+                                      style: TextStyle(
+                                        // Estilize conforme necessário
+                                        fontFamily: 'Poppins',
+                                        fontSize: 16,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  );
                   },
                 ),
               ),

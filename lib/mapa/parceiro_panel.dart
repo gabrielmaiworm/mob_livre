@@ -8,10 +8,6 @@ import 'package:mob_livree/parceiro/parceiro_widget.dart';
 
 import '../app_state.dart';
 
-
-
-
-
 class ParceiroPanel extends StatelessWidget {
   const ParceiroPanel({Key? key, this.parceiro}) : super(key: key);
 
@@ -26,8 +22,6 @@ class ParceiroPanel extends StatelessWidget {
       return "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkSenGcBScqxajGbHY_QpQ9X1UTCUPEDUjSA&usqp=CAU";
     }
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +45,7 @@ class ParceiroPanel extends StatelessWidget {
                        
                       Row(
                         children: [
-                          if(FFAppState().dadosEquipamento == "null") 
+                          if(FFAppState().userController == false) 
                           Expanded(
                             
                             child: 

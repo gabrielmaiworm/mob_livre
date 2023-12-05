@@ -43,11 +43,18 @@ class _DevolverAvaliacaoWidgetState extends State<DevolverAvaliacaoWidget> {
 
   @override
   void dispose() {
+   
     _model.dispose();
-
     _unfocusNode.dispose();
-    super.dispose();
+     super.dispose();
   }
+
+  @override
+    void setState(fn) {
+      if (mounted) {
+        super.setState(fn);
+      }
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -255,6 +262,7 @@ class _DevolverAvaliacaoWidgetState extends State<DevolverAvaliacaoWidget> {
                       if ((_model.apiResult?.succeeded ?? true)) {
                         FFAppState().update(() {
                         FFAppState().dadosEquipamento = "null";  
+                        FFAppState().userController = false;
                         });
                         await showModalBottomSheet(
                           isScrollControlled: true,

@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'dart:math';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'lat_lng.dart' as latlng;
+import 'dart:ui' as ui;
 
 export 'dart:async' show Completer;
 export 'package:google_maps_flutter/google_maps_flutter.dart' hide LatLng;
@@ -83,6 +86,7 @@ class _FlutterFlowGoogleMapState extends State<FlutterFlowGoogleMap> {
   double get initialZoom => max(double.minPositive, widget.initialZoom);
   LatLng get initialPosition =>
       widget.initialLocation?.toGoogleMaps() ?? const LatLng(0.0, 0.0);
+  BitmapDescriptor? customIcon;
 
   late Completer<GoogleMapController> _controller;
   late LatLng currentMapCenter;
@@ -94,6 +98,17 @@ class _FlutterFlowGoogleMapState extends State<FlutterFlowGoogleMap> {
     super.initState();
     currentMapCenter = initialPosition;
     _controller = widget.controller;
+    getBytesFromAsset('assets/images/marker-pin.png', 85).then((onValue) {
+      customIcon = BitmapDescriptor.fromBytes(onValue);
+
+    });
+  }
+
+  static Future<Uint8List> getBytesFromAsset(String path, int width) async {
+    ByteData data = await rootBundle.load(path);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(), targetHeight: 150, targetWidth: 150);
+    ui.FrameInfo fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!.buffer.asUint8List();
   }
 
   @override
@@ -122,8 +137,7 @@ class _FlutterFlowGoogleMapState extends State<FlutterFlowGoogleMap> {
                 (m) => Marker(
                   markerId: MarkerId(m.markerId),
                   position: m.location.toGoogleMaps(),
-                  icon: BitmapDescriptor.defaultMarkerWithHue(
-                      googleMarkerColorMap[widget.markerColor]!),
+                  icon: customIcon ?? BitmapDescriptor.defaultMarker,
                   onTap: () async {
                     await m.onTap?.call();
                     if (widget.centerMapOnMarkerTap) {

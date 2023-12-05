@@ -434,7 +434,7 @@ String getPicture() {
                               return ListView.builder(
                                 padding: EdgeInsets.zero,
                                 shrinkWrap: true,
-                                primary: true,
+                                // primary: true,
                                 scrollDirection: Axis.vertical,
                                 itemCount: listaKit.length,
                                 itemBuilder: (context, listaKitIndex) {
@@ -459,10 +459,6 @@ String getPicture() {
                                           Expanded(
                                             child: InkWell(
                                               onTap: () async {
-                                                
-                                                setState(() {
-                                                  FFAppState().dadosEquipamento = listaKitItem;
-                                                });
                                                 Navigator.of(context)
                                                 .push(MaterialPageRoute(builder: (context) => DetalheEquipamentoWidget(detalhesEquip: listaKitItem, detalhesParceiro: widget.detalhesParceiro)));
                                                  

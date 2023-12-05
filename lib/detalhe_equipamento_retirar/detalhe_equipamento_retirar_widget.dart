@@ -542,6 +542,9 @@ class _DetalheEquipamentoRetirarWidgetState
                               Color(0xFF5DEA5C),
                         ),
                       );
+                      FFAppState().update(() {
+                        FFAppState().userController = true;
+                      });
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
